@@ -1,0 +1,16 @@
+# private drafts and sources: never publish
+sources/private/
+# dependencies and build
+node_modules/
+dist/
+.astro/
+# local Claude Code settings
+.claude/settings.local.json
+# OS
+.DS_Store
+Thumbs.db
+# Playwright MCP scratch output
+.playwright-mcp/
+# third-party reference screenshots: keep local, never publish
+research/moodboard/*
+!research/moodboard/.gitkeep
