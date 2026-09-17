@@ -39,9 +39,10 @@ Second batch, by category:
 - Deploy: GitHub Pages. Currently on **legacy build type** (Jekyll from `main` root),
   which renders `README.md` as the homepage. Switch it to GitHub Actions on the first
   Astro deploy, otherwise Jekyll processes the repo instead of publishing the build output.
-- Branch `main`: **not protected yet** (checked 2026-09-17 — no ruleset, no classic
-  protection, force push still possible). TODO: add a ruleset blocking force push and
-  branch deletion.
+- Branch `main`: **deliberately left unprotected** while the repository has a single
+  contributor (checked 2026-09-17 — no ruleset, no classic protection, force push still
+  possible). TODO: add a ruleset blocking force push and branch deletion as soon as other
+  people start contributing to the site.
 - Custom domain (ta-llm.io) added later via `public/CNAME`
 - No cookies / no tracking without consent. English first.
 
