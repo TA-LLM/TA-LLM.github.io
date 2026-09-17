@@ -21,6 +21,31 @@ Source notes, referenced below by short name:
 
 ---
 
+## 0. Purpose and audience
+
+The primary goal of this site is the **scientific visibility and authority of the project
+within the research community**. It is **not** a recruitment page for thesis students.
+
+Secondary goals:
+
+1. **Researchers** — visiting positions, collaborations, joint work.
+2. **Companies** — funding, and application of the project's results.
+
+Consequences applied throughout this document:
+
+- **Publications and released resources rank above everything except the themes
+  themselves.** Someone arriving from a paper, a talk or a shared link must reach the
+  scientific record in one click.
+- **The hero carries no call to action** — the question is the message, with one discreet
+  mono link onward to the research themes (§3).
+- **"Join us" becomes "Collaborate"**, addressed to researchers and companies only. It sits
+  low on the home page and lives mainly as a page of its own.
+- **Open Graph images are a first-class feature, not polish** (§7). Among researchers the
+  dominant diffusion channel is a shared link, so what that link looks like when pasted
+  *is* the site's reach.
+
+---
+
 ## 1. Confirmed patterns and decisions
 
 Each decision names the sites that support it. "N/M" means N of the M sites where the
@@ -153,6 +178,15 @@ property was measured.
     stat band reinterpreted as *4 themes · 3 goals · 3 years · 1 question*. `[institutes §6.10-11]`
     `[networks §7.4-5]`
 
+25. **Frame scientific figures in a paper block.** Figures taken from papers are almost
+    always drawn on white, with black strokes and unthemed axis labels. Dropped straight
+    onto the ink page they read as holes punched through the design. Every paper figure,
+    plot and architecture diagram goes inside a **paper `#F3EEE4` block** with its own
+    padding and caption — the same device as §1.6, so the white becomes deliberate surface
+    instead of raw contrast. Diagrams we author ourselves are inline SVG and theme with the
+    page. *(Not from the reference sites: none of the 13 publishes paper figures on a dark
+    page. This is our own rule.)*
+
 ---
 
 ## 2. What to avoid, with the measurement
@@ -186,29 +220,59 @@ property was measured.
 ## 3. Information architecture, revised
 
 **Site map.** Home · Research (overview + 4 theme pages) · Publications (filterable +
-a page per key paper) · People · Events · News · Resources · Join us · About (incl. funding).
-Unchanged from `CLAUDE.md` except: **About gains a `#funding` section**, and **Events and
-News gain feeds** (RSS) and **Events an iCal subscribe link**.
+a page per key paper) · Resources · People · Events · News · Collaborate · About (incl.
+funding).
+
+Changes from `CLAUDE.md`: **"Join us" becomes "Collaborate"** with two audiences,
+researchers and companies, not students (§0); **Resources becomes a first-class section**
+with the page model below; **About gains a `#funding` section**; **News and Publications
+gain RSS**, **Events gains iCal**.
 
 **Theme page template**, from ELLIS's node pages, renamed for us: *What we are studying ·
 Why it is hard · Approach · People · Publications · Links*. `[networks §7.6]`
+
+### Events and News stay two collections
+
+- **Events** — dated future appointments: seminars, talks, workshops. `<time datetime>`,
+  iCal subscribe, and an **archive** where each past event keeps its slides and recording.
+- **News** — short dated announcements: accepted papers, releases, awards, new members,
+  new collaborations.
+- **Explanatory writing stays inside News**, distinguished by a `type` field
+  (`announcement | blog`) rather than by a second collection. If the blog-style entries
+  become numerous they split out into their own Blog section later, without disturbing the
+  announcement stream.
+- **Rule: a home section does not render when it has no recent content.** An empty "Events"
+  block makes a young project look inactive; an absent one does not.
+
+### Resources page model
+
+One entry per released artefact — dataset, benchmark, model, code — each carrying:
+
+- **what it is**, and which theme (01–04) it belongs to;
+- **licence**, stated explicitly (artefact licence, and the data licence where it differs);
+- **how to cite it**, as a copyable BibTeX block in mono;
+- **where it lives** — Hugging Face, GitHub, a Zenodo DOI — as outbound links;
+- **`Dataset` JSON-LD**, or `SoftwareSourceCode` for code, so the artefact is
+  machine-discoverable for the same reason papers carry `ScholarlyArticle` (§1.17);
+- **version and date**, in mono, wrapped in `<time datetime>`.
 
 ### Home — desktop (1440)
 
 | # | Section | Notes |
 |---|---|---|
-| 1 | **Hero** | `h1` = "Large Language Models: a matter of time?" with the amber "?". Canvas behind, lazy-started, paused off-screen. Per-word stagger, once, plus `sr-only` full sentence. **No CTA in the hero** — 3/4 references have none and it keeps the question as the only message |
+| 1 | **Hero** | `h1` = "Large Language Models: a matter of time?" with the amber "?". Canvas behind, lazy-started, paused off-screen. Per-word stagger, once, plus `sr-only` full sentence. **No CTA** — 3/4 references have none, and the question stays the only message. One discreet mono link onward, *"Research themes →"*, and nothing else |
 | 2 | **Three goals** | 3-up, 1px-gap grid, mono numerals |
 | 3 | **Four themes 01–04** | 1px-gap ruled grid, 4-up. Theme colour appears only as the eyebrow + a 1px edge rule. Each links to its theme page |
 | 4 | **Stat band** | *4 themes · 3 goals · 3 years · 1 question* in display serif, one figure in amber. `clamp()`, not ELLIS's 96→48px step |
 | 5 | **Why TA-LLM** | The comparison, as a **paper block** on the ink page. Amber text becomes `#8A5A10` inside it |
 | 6 | **Latest publications** | 5 rows of the year timeline + result count + link to the full list |
-| 7 | **Events** | Next 2–3, `<time datetime>`, iCal link |
-| 8 | **News** | 3 latest |
-| 9 | **Join us** | Three audiences — students / researchers / industry — each with its own destination; application form is an outbound link |
+| 7 | **Released resources** | 3–4 most recent artefacts — dataset, benchmark, model, code — each with its theme eyebrow, licence and destination; links to `/resources`. Immediately after publications because together they *are* the scientific record (§0) |
+| 8 | **Events** | Next 2–3, `<time datetime>`, iCal link. Not rendered if nothing is upcoming |
+| 9 | **News** | 3 latest |
 | 10 | **Team** | PI + roles, links to People |
-| 11 | **Funder plinth** | Full-bleed paper band: logos + mono funding line (§4) |
-| 12 | **Footer** | Nav, three contact addresses by audience, legal line |
+| 11 | **Collaborate** | Two audiences — researchers (visiting, joint work) and companies (funding, applying the results) — each with its own destination. The external form stays an outbound link. Low on the page by design: it is a secondary goal (§0) |
+| 12 | **Funder plinth** | Full-bleed paper band: logos + mono funding line (§4) |
+| 13 | **Footer** | Nav, contact addresses by audience, legal line |
 
 ### Home — mobile, designed at 390 (not a shrunk desktop)
 
@@ -220,7 +284,8 @@ present; these are the ones that need a different design rather than a narrower 
   **full-screen overlay** with 1px hairlines between items, chevrons on expandable groups,
   socials at the bottom — ELLIS's, the best mobile menu in the five batches.
 - **Hero**: `h1` at the `clamp()` floor **with the lighter/optical cut**, not merely smaller.
-  Canvas drops particle count; under `reduce` it renders one static frame.
+  Canvas drops particle count; under `reduce` it renders one static frame. The single mono
+  link stays — it is the only interactive element above the fold.
 - **Four themes**: **stacked 1-up ruled rows**, mono numeral as a left eyebrow — not a 2×2
   squeeze. The ruled-table reading survives; a 2×2 of small cards does not.
 - **Stat band**: 2×2, not a 6-up row compressed.
@@ -228,6 +293,11 @@ present; these are the ones that need a different design rather than a narrower 
   scrolling table.
 - **Publications preview**: 3 rows; theme eyebrow above, title, mono date below — stacked,
   not a truncated 12-column row.
+- **Released resources**: 2 entries instead of 3–4, with licence and destination stacked
+  under the title rather than set beside it.
+- **Order carries more weight here**, because everything is sequential: the §0 priority is
+  literal — themes, publications and resources come before the team, and Collaborate sits
+  directly above the funder plinth.
 - **Year rail**: collapses from a sticky side rail to a horizontal scrollable chip row
   pinned under the header on `/publications`.
 - **Funder plinth**: logos 2-up at 56px height; the mono line wraps to 3 lines and stays at
@@ -289,15 +359,26 @@ that convergence is exactly what our display serif is meant to escape.
 **Display serif: Fraunces** (OFL), preferred over Instrument Serif because its `opsz` axis
 makes the mobile cut-swap (§1.10) one variable adjustment rather than a second file.
 
+**Pin Fraunces' `SOFT` and `WONK` axes to sober values.** `SOFT` rounds the terminals and
+`WONK` swaps in the quirky single-storey alternates; left near their expressive defaults
+they read editorial-playful, which is wrong for a MUR-funded research project. Set both
+close to their neutral end once, as tokens, and let `opsz` and `wght` do all the work.
+
 **Mono: JetBrains Mono** (OFL), unchanged.
 
-**Text sans — three OFL, self-hostable candidates:**
+**Text sans — five OFL, self-hostable candidates:**
 
 | Font | Why | Watch out |
 |---|---|---|
 | **Public Sans** *(recommended)* | Designed for the US public sector, i.e. exactly our register: institutional, unfussy, built to recede behind a display face. Variable, excellent at 14–18px, generous Latin coverage. It lets Fraunces carry all the identity, which is the whole point of the pairing | Slightly stiff for very long prose; we have little of it |
 | **Source Sans 3** | Humanist rather than grotesque, warmer, designed by Adobe for UI *and* long-form reading. The best choice if the theme pages turn out to be essay-length. Complements Fraunces' humanist warmth rather than contrasting it | Widely used, so slightly less distinctive |
 | **IBM Plex Sans** | An engineered, technical voice with real personality, and it shares a design system with IBM Plex Mono — an option if we ever want one family spanning text and data | Aionic already uses IBM Plex Mono; picking the Plex family echoes the reference site closest to our topic. Coherence gained, differentiation lost |
+| **Instrument Sans** | Drawn as the companion to Instrument Serif, so it pairs with an expressive display serif by construction — same workshop, compatible proportions. Slightly narrow and contemporary, it keeps a character of its own next to Fraunces instead of reading as a neutral default. Variable | The youngest of the five and the least proven in long text |
+| **Archivo** | A grotesque built for both text and headlines, with wide weight and width ranges. It holds its ground against an expressive serif rather than disappearing behind it — which suits a page where the serif does the talking but the sans carries all the data-dense UI. Variable | The width axis is a temptation: pin it |
+
+**How the choice gets made:** set all five at **16px in the mockup** and compare there, not
+in a specimen. At body size the difference between these candidates is x-height, aperture
+and how JetBrains Mono sits beside them — none of which is visible at display sizes.
 
 **Rules for all of them** (`[university §6.3-avoid]`): **at most five faces** — display
 serif regular, sans regular, sans medium, mono regular, one italic if the content demands
@@ -325,6 +406,10 @@ self-hosted but 17 TrueType faces.
    grammar: the unavailable direction is a `<button disabled>`, the available one an
    `<a href>`. Always print the result count. A single year over ~60 papers collapses; the
    page never does.
+   **Theme and year are always combinable**: `?theme=topology`, `?year=2027` and both
+   together are all valid views. That is what keeps the page readable at any volume — the
+   theme filter alone is enough while the corpus is small, and the year narrows it once it
+   is not.
 4. **Zero third-party origins, zero cookies, no consent banner.** A static Astro build on
    GitHub Pages with self-hosted fonts, KaTeX rendered at build time and no analytics can
    ship **one** origin. Ai2 runs a whole institute site on two. This makes the no-tracking
@@ -342,35 +427,97 @@ self-hosted but 17 TrueType faces.
 
 ---
 
-## 7. Proposed changes to CLAUDE.md — for approval
+## 7. What is still missing
 
-Not applied. Each is a small edit to an existing section.
+Not covered by the reference analysis and not yet in `CLAUDE.md`, in priority order.
 
-1. **Stack** — record that the deploy target is a single-origin static build: no
-   third-party requests, no analytics, no consent banner.
-2. **Design system → Type** — replace "text sans (Inter or Geist)" with **Public Sans**
-   (recommended), Source Sans 3 or IBM Plex Sans; state the preference for **Fraunces** over
-   Instrument Serif because of the `opsz` axis; add the **five-faces / WOFF2 / Latin subset /
-   metric-matched fallback** rule.
-3. **Design system → Colors** — add the `-100` light-theme tints of the four theme colours
-   for section washes (§1.5), and rename the theme tokens `--theme-rlaif`, `--theme-cl`,
+1. **Open Graph images generated at build time — high priority.** For every paper, theme
+   and news entry, rendered from the content itself: title, authors, and for a theme the
+   question it asks. Among researchers a shared link *is* the distribution channel — in
+   Mastodon, Bluesky and X posts, in Slack, in email previews — so what the card looks like
+   decides how far the work travels. This is the highest-leverage item on the list and it is
+   fully automatable from the content collections and `publications.bib`.
+2. **Internal search with Pagefind.** Indexed at build, runs client-side, needs no backend
+   and no third-party origin — the only kind of search compatible with §6.4. It becomes
+   necessary as soon as the publications and news corpora grow past browsing distance.
+3. **The unglamorous set**: `sitemap.xml`, `robots.txt`, a real favicon set, and a
+   **designed 404**. On a research site a 404 usually means a moved paper URL, so the page
+   should offer the publications list and the search box rather than an apology.
+4. **Privacy notice and accessibility statement.** A publicly funded Italian project needs
+   both. The zero-cookie, zero-third-party posture (§6.4) makes the privacy notice short
+   and unusually honest, and the accessibility statement is where the WCAG AA commitment
+   becomes a public claim. **To be verified with Politecnico together with the MUR wording
+   in §4** — the accessibility statement in particular may have a prescribed form for
+   Italian public-sector sites.
+
+---
+
+## 8. Proposed changes to CLAUDE.md — for approval
+
+Not applied. Each is a small edit to an existing section, except where marked "new".
+
+### Purpose and content
+
+1. **Project** — record the audience priority of §0: the primary goal is scientific
+   visibility and authority in the research community; **not** thesis-student recruitment.
+   Secondary goals are researchers (visiting, collaborations) and companies (funding,
+   applying the results). This is the line that settles every later hierarchy question.
+2. **Information architecture** — rename **"Join us" to "Collaborate"** with two audiences,
+   researchers and companies, not three; move it low on the home page. Add `/about#funding`,
+   RSS for News and Publications, iCal for Events. Record the theme-page template (§3), and
+   that the four themes are named items in the Research nav.
+3. **Information architecture** — record that **Events and News stay two collections**, that
+   explanatory writing lives in News behind a `type` field (`announcement | blog`) with the
+   option to split a Blog out later, and the rule that **a home section is not rendered when
+   it has no recent content**.
+4. **Stack** — add `resources` to the content collections (`people`, `publications`,
+   `events`, `news`, `themes`, **`resources`**).
+5. **Stack** — record that the deploy target is a single-origin static build: no third-party
+   requests, no analytics, no consent banner.
+
+### Design system
+
+6. **Type** — replace "text sans (Inter or Geist)" with the five OFL candidates: **Public
+   Sans**, Source Sans 3, IBM Plex Sans, **Instrument Sans**, **Archivo**, decided by
+   comparing them **at 16px in the mockup**. State the preference for **Fraunces** over
+   Instrument Serif because of the `opsz` axis, and **pin Fraunces' `SOFT` and `WONK` axes
+   to sober values**. Add the **five-faces / WOFF2 / Latin subset / metric-matched
+   fallback** rule.
+7. **Colors** — add the `-100` light-theme tints of the four theme colours for section
+   washes (§1.5), and rename the theme tokens `--theme-rlaif`, `--theme-cl`,
    `--theme-topology`, `--theme-agentic` rather than by colour name.
-4. **Design system → Layout** — add the **1px-gap ruled grid** as the standard list device
-   and the **band-level `data-theme`** mechanism for "one accent per view".
-5. **Design system → Motion** — add: reduced motion checked **in JS** as well as CSS,
-   motion declared opt-in with `no-preference`, canvas sized to `devicePixelRatio`, the
-   once-only per-word hero stagger with an `sr-only` duplicate.
-6. **Design system → Accessibility** — add: exactly one `<h1>`, `<main>` + skip link, muted
-   tokens computed to ≥4.5:1 and checked in CI.
-7. **Information architecture** — add `/about#funding`, RSS for News and Publications, iCal
-   for Events; record the theme-page template (§3); record that the four themes are named
-   items in the Research nav.
-8. **New section, "Publications"** — year timeline, URL-held filter state, printed result
-   count, sticky year rail, `<time datetime>` + `ScholarlyArticle` JSON-LD.
-9. **New section, "Funding and logos"** — the §4 decisions, including the explicit list of
-   items to verify with Politecnico.
-10. **Working rules** — add the `scrollWidth === innerWidth` assertion at 390px to the
-    post-change screenshot step, and the apex+`www` certificate check after the `CNAME`
+8. **Layout** — add the **1px-gap ruled grid** as the standard list device, the band-level
+   **`data-theme`** mechanism for "one accent per view", and the rule that **paper figures
+   from papers are framed in a paper block**, never dropped raw onto the ink page (§1.25).
+9. **Motion** — add: reduced motion checked **in JS** as well as CSS, motion declared
+   opt-in with `no-preference`, canvas sized to `devicePixelRatio`, the once-only per-word
+   hero stagger with an `sr-only` duplicate. Record that the hero has **no CTA**, only one
+   discreet mono link to the research themes.
+10. **Accessibility** — add: exactly one `<h1>`, `<main>` + skip link, muted tokens computed
+    to ≥4.5:1 and checked in CI.
+
+### New sections
+
+11. **"Publications"** — year timeline, **theme and year filters always combinable**, filter
+    state held in the URL, printed result count, sticky year rail, `<time datetime>` +
+    `ScholarlyArticle` JSON-LD.
+12. **"Resources"** — the page model of §3: one entry per artefact with licence, copyable
+    BibTeX citation, outbound links to Hugging Face / GitHub / Zenodo, `Dataset` (or
+    `SoftwareSourceCode`) JSON-LD, and a version and date in mono.
+13. **"Funding and logos"** — the §4 decisions, including the explicit list of items to
+    verify with Politecnico.
+14. **"Discoverability"** — **Open Graph images generated at build** for papers, themes and
+    news (high priority: a shared link is the main diffusion channel among researchers),
+    **Pagefind** for internal search, plus `sitemap.xml`, `robots.txt`, a favicon set and a
+    designed 404 that offers the publications list and the search box.
+15. **"Legal"** — privacy notice and accessibility statement, both **to be verified with
+    Politecnico together with the MUR wording**; the accessibility statement may have a
+    prescribed form for Italian public-sector sites.
+
+### Working rules
+
+16. **Working rules** — add the `scrollWidth === innerWidth` assertion at 390px to the
+    post-change screenshot step, and the apex + `www` certificate check after the `CNAME`
     switch.
-11. **Reference sites** — point to this file as the entry point, with the six notes as the
-    evidence behind it.
+17. **Reference sites** — point to `research/notes/synthesis.md` as the entry point, with
+    the six analysis notes as the evidence behind it.
