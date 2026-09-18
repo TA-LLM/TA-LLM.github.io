@@ -480,8 +480,9 @@ Not covered by the reference analysis and not yet in `CLAUDE.md`, in priority or
 Not applied. Each is a small edit to an existing section, except where marked "new".
 
 > **Update 2026-09-18.** Decisions D1, D2, D5, D6 (still open), D7 and D12 from `taste.md`
-> have been written into `CLAUDE.md` directly; they partly overlap items 6, 8 and 9 below.
-> Everything in this list remains a proposal.
+> have been written into `CLAUDE.md` directly; they partly overlap items 8 and 9 below.
+> Item 6 was approved and applied the same day. Everything else in this list remains a
+> proposal.
 
 ### Purpose and content
 
@@ -509,7 +510,7 @@ Not applied. Each is a small edit to an existing section, except where marked "n
    comparing them **at 16px in the mockup**. State the preference for **Fraunces** over
    Instrument Serif because of the `opsz` axis, and **pin Fraunces' `SOFT` and `WONK` axes
    to sober values**. Add the **five-faces / WOFF2 / Latin subset / metric-matched
-   fallback** rule.
+   fallback** rule. — **Approved and applied 2026-09-18.**
 7. **Colors** — add the `-100` light-theme tints of the four theme colours for section
    washes (§1.5), and rename the theme tokens `--theme-rlaif`, `--theme-cl`,
    `--theme-topology`, `--theme-agentic` rather than by colour name.

@@ -379,7 +379,40 @@ What this means in practice:
 
 ---
 
-## 4. Decisions requested
+## 4. Decisions
+
+### 4.1 Outcomes — decided 2026-09-18
+
+| # | Decision | Outcome | Also recorded in |
+|---|---|---|---|
+| **D1** | Data on ink or on paper | **Ink everywhere**, data-dense pages included, with an **ink vs paper A/B of `/publications`** in the mockup. The **light theme is a real alternative**, reachable from the theme toggle and designed component by component — not a derived fallback | `CLAUDE.md` · synthesis §1.2 |
+| **D2** | Radius and shadows | **No shadows anywhere.** Radius 0 inside ruled grids and rows, 8–12px on standalone surfaces (mega-menu panel, paper blocks, hero frame) | `CLAUDE.md` · synthesis §1.1 |
+| **D3** | Carousels | **No carousels anywhere on the site, People included.** Static grids with focus-and-recede instead: one element in focus, the others recede. Carousels hide content, and on mobile they are almost always worse than a list | — |
+| **D4** | Photography | **No stock photography, and no commissioned photo series for the theme headers.** The only photographs on the site are the real portraits in People, plus real photos of events where they exist. Theme headers use the animated concept SVGs, not photographs | — |
+| **D5** | What the hero shows | **One luminous ring built from a real time series** — its radius modulated by the series values, not a generic decorative glow. Fallback: a field of flowing lines | `CLAUDE.md` · synthesis §1.21 |
+| **D6** | Display face | **Still open.** Settled by a side-by-side test at hero size in the mockup, in the same pass as the 16px comparison of the five text-sans candidates | `CLAUDE.md` · synthesis §5 |
+| **D7** | 2D canvas or WebGL | **2D canvas.** Reduced motion checked in JS at start and on change, device pixel ratio capped, loop paused off-screen and on hidden tabs | `CLAUDE.md` · synthesis §6.2 |
+| **D8** | Pointer-reactive background | **No** | — |
+| **D9** | Publications: rows or table | **Rows grouped by year**, with the details of `filter_ui_2`: printed result count, mono identifiers, sort by year, monochrome with one accent for the exception, a *last updated* line | — |
+| **D10** | Timeline components | **Home: only the amber bar that fills up to "today".** The full 2026→2029 project timeline with milestones goes on **`/about`** — on the home page in 2026 it would be almost empty | — |
+| **D11** | Newsletter | **No newsletter.** RSS for News and Publications, iCal for Events | — |
+| **D12** | Stack | **Astro components, CSS custom properties, vanilla TypeScript.** No React, no Tailwind; the React-island fallback was not adopted | `CLAUDE.md` · synthesis §6.8 |
+| **D13** | Primary button | **Static amber button with dark text and a discreet hover** | — |
+
+Where the outcome goes beyond or differs from the recommendation in §4.2:
+
+- **D1** adds that the light theme is a first-class alternative, not a fallback.
+- **D4** allows real photos of events alongside the People portraits.
+- **D5** adds the constraint that the ring must be driven by real data, and names a
+  fallback.
+- **D6** stays open instead of settling on Fraunces up front.
+- **D10** puts the filling bar on the home page and the project timeline on `/about`,
+  instead of the bar on the `/publications` year rail. *Still to place in the mockup:
+  where on the home page the bar sits.*
+- **D12** drops the React-island fallback.
+- **D13** adds a discreet hover to the static button.
+
+### 4.2 Options as proposed
 
 Each conflict above, with the options and a recommendation. Settled matters (no hero CTA,
 one accent per view, no iridescent multicolour) are not reopened.
@@ -400,6 +433,6 @@ one accent per view, no iridescent multicolour) are not reopened.
 | **D12** | **Stack** — every prompt is React + Tailwind + shadcn | (a) Astro components, CSS custom properties, small vanilla TS, no React, no Tailwind; (b) as (a), plus a React island (`@astrojs/react`) only for the publications filter if vanilla proves unwieldy; (c) adopt Tailwind in Astro and port the components | **(a), with (b) as a fallback.** Every prompt needs rewriting anyway — shadcn paths, `next` imports, animation libraries with no reduced-motion guard — and the design system is a short list of tokens that `CLAUDE.md` already puts on `:root`. Tailwind would add a second vocabulary for the same tokens; it is a legitimate choice, but it is yours to make |
 | **D13** | **Animated primary button** (`shiny_button`) | (a) no: a static ink-on-amber button, as in `comparison_table`; (b) yes, for the single primary action in Collaborate | **(a).** Keep the moving amber light where it carries meaning — in the hero canvas — and keep controls still |
 
-Answers can be given as a list, e.g. `D1 a · D2 b · D3 a …`. Once decided, the ones that
-change the design system (D1, D2, D5, D6, D7, D12) belong in `CLAUDE.md` and
-`synthesis.md`; this note stays as the record of why.
+The design-system decisions (D1, D2, D5, D6, D7, D12) are also written into `CLAUDE.md`
+and `synthesis.md`; the others (D3, D4, D8, D9, D10, D11, D13) are recorded here only.
+This note stays as the record of why.
