@@ -1,5 +1,6 @@
 ---
 import PageIntro from "../components/PageIntro.astro";
+import PolitoLogo from "../components/PolitoLogo.astro";
 import Todo from "../components/Todo.astro";
 import { PROJECT } from "../config/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -12,7 +13,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   <section id="funding" class="container funding" aria-labelledby="funding-title">
     <h2 id="funding-title" class="funding__title">Funding</h2>
-    <dl class="funding__list" data-reveal-children>
+    <dl class="funding__list" data-reveal>
       <div><dt class="label muted">Funder</dt><dd>{PROJECT.funder}</dd></div>
       <div><dt class="label muted">Programme</dt><dd>{PROJECT.programme}</dd></div>
       <div><dt class="label muted">Project code</dt><dd class="mono">{PROJECT.code}</dd></div>
@@ -23,7 +24,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <time datetime={PROJECT.start}>18/08/2026</time> – <time datetime={PROJECT.end}>17/08/2029</time>
         </dd>
       </div>
-      <div><dt class="label muted">Host</dt><dd>{PROJECT.host}</dd></div>
+      <div>
+        <dt class="label muted">Host</dt>
+        <dd class="host">
+          {PROJECT.host}
+          <PolitoLogo height="4.5rem" />
+        </dd>
+      </div>
       <div><dt class="label muted">Principal investigator</dt><dd>Luca Cagliero</dd></div>
     </dl>
     <p><Todo what="mandatory attribution wording, logos and scholarship funding (DAUIN) to be verified with Politecnico" /></p>
@@ -68,6 +75,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   .funding__list dd {
     margin: 0;
+  }
+
+  .host {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-s);
   }
 
   .mono {

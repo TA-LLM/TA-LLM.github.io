@@ -15,6 +15,7 @@
   --paper: #F3EEE4;
   --paper-muted: #A3A29F;         /* muted paper, for text on ink only */
   --amber: #E6A23C;
+  --polito-blue: #003054;         /* Politecnico di Torino, sampled from its logo */
 
   /* Theme colours, as fills and graphics on ink. */
   --sage: #7FB3A0;
@@ -41,6 +42,7 @@
   --focus: var(--amber);
   --thread-fill: var(--amber);    /* D10 project thread */
   --thread-track: var(--rule);
+  --institution-mark: var(--paper); /* host logo, in negative on ink */
 
   /* Theme colours by role (taste.md D1 / synthesis §1.4): the fill is the
      original colour; `-ink` is the variant safe for text and lines on the
@@ -155,6 +157,7 @@
   --focus: var(--amber-deep);
   --thread-fill: var(--amber-deep); /* non-text graphic, needs ≥3:1 */
   --thread-track: var(--rule);
+  --institution-mark: var(--polito-blue); /* the logo in its own colour */
 
   --theme-rlaif-ink: var(--amber-deep);
   --theme-cl-ink: var(--sage-deep);

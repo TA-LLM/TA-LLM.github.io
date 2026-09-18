@@ -14,7 +14,7 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
     <ul role="list" class="themes">
       {
         themes.map((theme) => (
-          <li class="theme" data-theme-key={theme.data.colour} data-glyph-host data-reveal>
+          <li class="theme" data-theme-key={theme.data.colour} data-glyph-host data-reveal-children>
             <span class="theme__mark">
               <span class="label theme__number">{theme.data.number}</span>
               <span class="theme__glyph" style={`view-transition-name: glyph-${theme.data.colour}`}>

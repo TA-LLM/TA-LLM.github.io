@@ -234,7 +234,9 @@ time,
 /* ------------------------------------------------------------------ motion
    One choreography for the whole site (src/scripts/reveal.ts, Head.astro).
    The hidden states exist only under html.motion, which is never set under
-   reduced motion; transforms and clip-paths only, so nothing shifts layout. */
+   reduced motion; transforms and clip-paths only, so nothing shifts layout.
+   In a ruled table (1px gaps over a rule-coloured ground) reveal a row's
+   content, not the row: a fading row would let the ground show through. */
 html.motion [data-reveal]:not(.is-revealed) {
   opacity: 0;
   transform: translateY(14px);
