@@ -50,10 +50,40 @@
 
   apply(current());
 
-  for (const button of document.querySelectorAll("[data-theme-toggle]")) {
+  /* The new theme spreads from the button as a circle (View Transitions).
+     Without the API, or under reduced motion, it simply switches. */
+  function switchTo(next: Theme, origin: HTMLElement): void {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      apply(next);
+      return;
+    }
+    root.classList.add("theme-switching");
+    if (!document.startViewTransition) {
+      apply(next);
+      window.setTimeout(() => root.classList.remove("theme-switching"), 700);
+      return;
+    }
+    const box = origin.getBoundingClientRect();
+    const x = box.left + box.width / 2;
+    const y = box.top + box.height / 2;
+    const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+    const transition = document.startViewTransition(() => apply(next));
+    transition.ready
+      .then(() => {
+        root.animate(
+          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+          { duration: 700, easing: "cubic-bezier(0.16, 1, 0.3, 1)", pseudoElement: "::view-transition-new(root)" },
+        );
+      })
+      .catch(() => {});
+    transition.finished.finally(() => root.classList.remove("theme-switching"));
+  }
+
+  for (const button of document.querySelectorAll<HTMLElement>("[data-theme-toggle]")) {
     button.addEventListener("click", () => {
       const next: Theme = current() === "dark" ? "light" : "dark";
-      apply(next);
+      switchTo(next, button);
       try {
         window.localStorage.setItem(KEY, next);
       } catch {
@@ -106,9 +136,28 @@
     display: none;
   }
 
+  /* During the circular reveal, the old page stays still underneath. */
+  :global(html.theme-switching::view-transition-old(root)),
+  :global(html.theme-switching::view-transition-new(root)) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
   @media (prefers-reduced-motion: no-preference) {
     .theme-toggle {
       transition: border-color var(--dur-fast) var(--ease);
+    }
+
+    /* On a switch, the icon that appears turns in. */
+    :global(html.theme-switching) .theme-toggle__icon {
+      animation: toggle-icon-in 600ms var(--ease) both;
+    }
+  }
+
+  @keyframes toggle-icon-in {
+    from {
+      opacity: 0;
+      transform: rotate(-90deg) scale(0.6);
     }
   }
 </style>

@@ -12,7 +12,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   <section id="funding" class="container funding" aria-labelledby="funding-title">
     <h2 id="funding-title" class="funding__title">Funding</h2>
-    <dl class="funding__list">
+    <dl class="funding__list" data-reveal-children>
       <div><dt class="label muted">Funder</dt><dd>{PROJECT.funder}</dd></div>
       <div><dt class="label muted">Programme</dt><dd>{PROJECT.programme}</dd></div>
       <div><dt class="label muted">Project code</dt><dd class="mono">{PROJECT.code}</dd></div>

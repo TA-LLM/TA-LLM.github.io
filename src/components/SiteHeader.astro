@@ -25,8 +25,8 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
       <nav id="site-nav" class="nav" aria-label="Primary">
         <ul role="list" class="nav__list">
           {
-            NAV.map((item) => (
-              <li>
+            NAV.map((item, i) => (
+              <li style={`--i: ${i}`}>
                 <a class="nav__link" href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>
                   {item.label}
                 </a>
@@ -101,11 +101,18 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
     display: contents;
   }
 
+  /* Named, so page-to-page transitions leave the bar in place. */
   .site-header {
     position: sticky;
     top: 0;
     z-index: var(--z-header);
     background: var(--surface);
+    view-transition-name: site-header;
+  }
+
+  /* The theme switch reveals the whole page at once, header included. */
+  :global(html.theme-switching) .site-header {
+    view-transition-name: none;
   }
 
   .bar {
@@ -227,20 +234,41 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
       letter-spacing: var(--label-tracking);
       text-transform: uppercase;
       color: var(--text-muted);
-      text-decoration: underline;
-      text-decoration-color: transparent;
-      text-underline-offset: 0.5em;
+      text-decoration: none;
+      position: relative;
+    }
+
+    /* The underline draws in from the left and leaves to the right. */
+    .nav__link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(50% + 0.95em);
+      height: 1px;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: right center;
     }
 
     .nav__link:hover {
       color: var(--text);
     }
 
+    .nav__link:hover::after {
+      transform: scaleX(1);
+      transform-origin: left center;
+    }
+
     /* The current-page underline is a state indicator: it needs ≥3:1, so it
        uses the text-safe accent (amber on ink, deep amber on paper). */
     .nav__link[aria-current="page"] {
       color: var(--text);
-      text-decoration-color: var(--accent-text);
+    }
+
+    .nav__link[aria-current="page"]::after {
+      background: var(--accent-text);
+      transform: scaleX(1);
     }
 
     .bar__actions {
@@ -250,7 +278,38 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
 
   @media (prefers-reduced-motion: no-preference) {
     .nav__link {
-      transition: color var(--dur-fast) var(--ease), text-decoration-color var(--dur-fast) var(--ease);
+      transition: color var(--dur-fast) var(--ease);
+    }
+
+    .nav__link::after {
+      transition: transform 420ms var(--ease);
+    }
+
+    /* Phone overlay: the panel fades in and the entries follow in sequence,
+       at a third of the site's stagger step (eight entries, not a list to
+       read). Closing is instant: exits run faster than entrances. */
+    @media (max-width: 63.99rem) {
+      site-header[data-open] .nav {
+        animation: menu-in var(--dur-base) var(--ease) both;
+      }
+
+      site-header[data-open] .nav__list > li {
+        animation: menu-item-in 600ms var(--ease) both;
+        animation-delay: calc(80ms + var(--i) * var(--stagger-step) / 3);
+      }
+    }
+  }
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes menu-item-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
     }
   }
 </style>

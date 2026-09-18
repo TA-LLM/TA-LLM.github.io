@@ -21,14 +21,19 @@ const { Content } = await render(theme);
 ---
 
 <BaseLayout title={title} description={approved ? summary : undefined}>
-  <PageIntro eyebrow={`Theme ${number}`} title={title} lede={approved ? summary : undefined}>
-    <span slot="mark" class="theme-mark" data-theme-key={colour}>
+  <PageIntro
+    eyebrow={`Theme ${number}`}
+    title={title}
+    lede={approved ? summary : undefined}
+    titleTransition={`title-${colour}`}
+  >
+    <span slot="mark" class="theme-mark" data-theme-key={colour} style={`view-transition-name: glyph-${colour}`}>
       <ThemeGlyph theme={colour} size={112} animated />
     </span>
   </PageIntro>
 
   <section class="container meta" aria-label="Supervision">
-    <dl class="meta__list">
+    <dl class="meta__list" data-reveal-children>
       <div>
         <dt class="label muted">Supervisor</dt>
         <dd>{supervisor}</dd>
@@ -47,7 +52,7 @@ const { Content } = await render(theme);
 
   {
     approved && (
-      <article class="container body" data-theme-key={colour}>
+      <article class="container body" data-theme-key={colour} data-reveal-children>
         <Content />
       </article>
     )
@@ -90,8 +95,9 @@ const { Content } = await render(theme);
   [data-theme-key="agentic"] { --theme-ink: var(--theme-agentic-ink); }
 
   /* The glyph is this page's one accent, in the theme's text-safe colour. */
+  /* Sized to the glyph, so it can travel from the /research row as itself. */
   .theme-mark {
-    display: block;
+    display: inline-block;
     color: var(--theme-ink);
   }
 

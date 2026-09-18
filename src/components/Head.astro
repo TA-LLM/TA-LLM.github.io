@@ -42,5 +42,31 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   })();
 </script>
 
+<!-- Motion (src/scripts/reveal.ts). `motion` is set before first paint, and only
+     without reduced motion: it is what hides [data-reveal] elements until they
+     enter. If the reveal script has not started within 2.5 s, the class is
+     dropped and everything shows. Arriving through a cross-document view
+     transition, whatever is on screen is shown at once: the transition is the
+     entrance. -->
+<script is:inline>
+  (function () {
+    var root = document.documentElement;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    root.classList.add("motion");
+    setTimeout(function () {
+      if (!window.__revealReady) root.classList.remove("motion");
+    }, 2500);
+    window.addEventListener("pagereveal", function (event) {
+      if (!event.viewTransition) return;
+      var items = document.querySelectorAll("[data-reveal]");
+      for (var i = 0; i < items.length; i++) {
+        var box = items[i].getBoundingClientRect();
+        if (box.top < window.innerHeight && box.bottom > 0) items[i].classList.add("is-revealed", "is-instant");
+      }
+    });
+  })();
+</script>
+<link rel="expect" href="#main" blocking="render" />
+
 <Font cssVariable="--font-gelasio" preload />
 <Font cssVariable="--font-jetbrains-mono" preload />

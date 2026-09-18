@@ -97,6 +97,16 @@ Second batch, by category:
     `visibilitychange`); reduced motion checked in JS at start **and on change** —
     paused on the poster frame. Any future hero canvas stays **2D, not WebGL**, with
     DPR capped (`taste.md` D7).
+- Motion system (2026-09-18, "premium, not mediocre"): one choreography, one easing
+  (`--ease`), one stagger step. **Reveals** via `data-reveal` (rise), `="mask"` (headings
+  unveiled), `="line"` (rules), `data-reveal-children` (rendered Markdown), staggered per
+  batch in `src/scripts/reveal.ts`; hidden states only under `html.motion`, set before
+  paint in `Head.astro` and never under reduced motion, with a 2.5 s fail-safe.
+  **Cross-document view transitions**: header fixed (`site-header`), content crossfades,
+  a theme's glyph and title travel between /research and its page (`glyph-*`,
+  `title-*`, class `vt-title`). **Theme switch** = circular reveal from the toggle.
+  Hover: underlines enter left and leave right; theme rows draw a rule in their colour
+  and play their glyph. New pages should use these hooks, not new motion.
 - Icons (added 2026-09-18 at the user's request, superseding the `taste.md` §2.2 note
   "no icon set is needed"): **utility icons** in `src/icons/icons.ts` via `Icon.astro` —
   20×20 grid, 1.5px stroke, round caps, `currentColor`, always neutral; **four theme

@@ -25,5 +25,10 @@ const { title, description } = Astro.props;
       <slot />
     </main>
     <SiteFooter />
+    <script>
+      import { initReveal } from "../scripts/reveal";
+
+      initReveal();
+    </script>
   </body>
 </html>

@@ -16,7 +16,7 @@ interface Props {
 const { icon, label, message, href, linkText } = Astro.props;
 ---
 
-<section class="empty container" aria-label={label}>
+<section class="empty container" aria-label={label} data-reveal>
   <p class="label muted empty__label">{icon && <Icon name={icon} size={20} />}{label}</p>
   <p class="empty__message">{message}</p>
   {href && linkText && <a class="empty__link label link-arrow" href={href}>{linkText}<Icon name="arrow-right" size={16} /></a>}

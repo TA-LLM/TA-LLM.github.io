@@ -1,19 +1,31 @@
 ---
-/** Page opening: mono eyebrow, the page's single <h1>, optional lede. */
+/**
+ * Page opening: mono eyebrow, the page's single <h1>, optional lede. Enters on
+ * the site's reveal choreography: the title is unveiled from a mask, the rest
+ * rises in after it. `titleTransition` names the title for page-to-page view
+ * transitions (e.g. a theme title travelling from /research).
+ */
 interface Props {
   eyebrow?: string;
   title: string;
   lede?: string;
+  titleTransition?: string;
 }
-const { eyebrow, title, lede } = Astro.props;
+const { eyebrow, title, lede, titleTransition } = Astro.props;
 ---
 
 <header class="intro container">
-  {Astro.slots.has("mark") && <div class="intro__mark"><slot name="mark" /></div>}
-  {eyebrow && <p class="label muted intro__eyebrow">{eyebrow}</p>}
-  <h1 class="intro__title">{title}</h1>
-  {lede && <p class="intro__lede">{lede}</p>}
-  {Astro.slots.has("default") && <div class="intro__extra"><slot /></div>}
+  {Astro.slots.has("mark") && <div class="intro__mark" data-reveal><slot name="mark" /></div>}
+  {eyebrow && <p class="label muted intro__eyebrow" data-reveal>{eyebrow}</p>}
+  <h1
+    class="intro__title"
+    data-reveal="mask"
+    style={titleTransition ? `view-transition-name: ${titleTransition}; view-transition-class: vt-title` : undefined}
+  >
+    {title}
+  </h1>
+  {lede && <p class="intro__lede" data-reveal>{lede}</p>}
+  {Astro.slots.has("default") && <div class="intro__extra" data-reveal><slot /></div>}
 </header>
 
 <style>

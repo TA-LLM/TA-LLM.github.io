@@ -14,12 +14,18 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
     <ul role="list" class="themes">
       {
         themes.map((theme) => (
-          <li class="theme" data-theme-key={theme.data.colour}>
+          <li class="theme" data-theme-key={theme.data.colour} data-glyph-host data-reveal>
             <span class="theme__mark">
               <span class="label theme__number">{theme.data.number}</span>
-              <ThemeGlyph theme={theme.data.colour} size={40} />
+              <span class="theme__glyph" style={`view-transition-name: glyph-${theme.data.colour}`}>
+                <ThemeGlyph theme={theme.data.colour} size={40} hover />
+              </span>
             </span>
-            <a class="theme__title" href={`/research/${theme.id}/`}>
+            <a
+              class="theme__title"
+              href={`/research/${theme.id}/`}
+              style={`view-transition-name: title-${theme.data.colour}; view-transition-class: vt-title`}
+            >
               {theme.data.title}
             </a>
             <span class="theme__people muted">
@@ -43,10 +49,34 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
   }
 
   .theme {
+    position: relative;
     display: grid;
     gap: var(--space-2xs);
     padding-block: var(--space-m);
     background: var(--surface);
+  }
+
+  /* Focus-and-recede: the row in focus draws a rule in its theme colour, its
+     glyph plays, its title steps forward. */
+  .theme::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--theme-ink);
+    transform: scaleX(0);
+    transform-origin: right center;
+  }
+
+  .theme:is(:hover, :focus-within)::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  .theme__glyph {
+    display: block;
   }
 
   @media (min-width: 48rem) {
@@ -91,10 +121,25 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
     font-family: var(--font-display);
     font-size: var(--step-2);
     text-decoration: none;
+    justify-self: start;
   }
 
-  .theme__title:hover {
-    text-decoration: underline;
+  .theme__title:focus-visible {
+    outline-offset: 6px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .theme::after {
+      transition: transform 600ms var(--ease);
+    }
+
+    .theme__title {
+      transition: transform 600ms var(--ease);
+    }
+
+    .theme:is(:hover, :focus-within) .theme__title {
+      transform: translateX(6px);
+    }
   }
 
   .theme__people {

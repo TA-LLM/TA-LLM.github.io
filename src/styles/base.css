@@ -70,6 +70,17 @@ a {
   color: inherit;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a {
+    transition: text-decoration-color var(--dur-base) var(--ease), color var(--dur-fast) var(--ease);
+  }
 }
 
 /* A text link ending in the arrow icon: the arrow nudges forward on hover. */
@@ -219,3 +230,104 @@ time,
     scroll-behavior: auto !important;
   }
 }
+
+/* ------------------------------------------------------------------ motion
+   One choreography for the whole site (src/scripts/reveal.ts, Head.astro).
+   The hidden states exist only under html.motion, which is never set under
+   reduced motion; transforms and clip-paths only, so nothing shifts layout. */
+html.motion [data-reveal]:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+html.motion [data-reveal="mask"]:not(.is-revealed) {
+  opacity: 1;
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(0.4em);
+}
+
+html.motion [data-reveal="line"]:not(.is-revealed) {
+  opacity: 1;
+  transform: scaleX(0);
+}
+
+html.motion [data-reveal].is-revealed {
+  transition:
+    opacity 700ms var(--ease) var(--reveal-delay, 0ms),
+    transform 1000ms var(--ease) var(--reveal-delay, 0ms),
+    clip-path 1000ms var(--ease) var(--reveal-delay, 0ms);
+}
+
+html.motion [data-reveal="mask"].is-revealed {
+  clip-path: inset(-0.2em -0.2em -0.35em -0.2em);
+}
+
+[data-reveal="line"] {
+  transform-origin: left center;
+}
+
+html.motion [data-reveal].is-instant {
+  transition: none;
+}
+
+/* Page to page: the header stays, the content crossfades and settles. Shared
+   elements (a theme's glyph and title) travel between /research and the theme
+   page by name. Browsers without cross-document view transitions simply
+   navigate. */
+@view-transition {
+  navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
+
+::view-transition-old(root) {
+  animation: vt-out var(--dur-exit) var(--ease) both;
+}
+
+::view-transition-new(root) {
+  animation: vt-in 520ms var(--ease) 60ms both;
+}
+
+::view-transition-group(*) {
+  animation-duration: 640ms;
+  animation-timing-function: var(--ease);
+}
+
+/* A theme switch reveals the page as one surface: named elements join it. */
+html.theme-switching [style*="view-transition-name"] {
+  view-transition-name: none !important;
+}
+
+/* A travelling title changes its wrapping on the way: the old one leaves
+   quickly so the two never read as overlapping text. */
+::view-transition-old(*.vt-title) {
+  animation: vt-out 200ms var(--ease) both;
+}
+
+::view-transition-new(*.vt-title) {
+  animation: vt-fade 420ms var(--ease) 100ms both;
+}
+
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+

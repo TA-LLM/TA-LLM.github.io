@@ -21,11 +21,14 @@
 interface Props {
   theme: "agentic" | "topology" | "cl" | "rlaif";
   size?: number;
+  /** Always animated (the theme page's accent). */
   animated?: boolean;
+  /** Animated only while an ancestor `[data-glyph-host]` is hovered or focused. */
+  hover?: boolean;
   class?: string;
 }
 
-const { theme, size = 48, animated = false, class: className } = Astro.props;
+const { theme, size = 48, animated = false, hover = false, class: className } = Astro.props;
 
 // Eight points on the topology ring, starting at the top.
 const ring = Array.from({ length: 8 }, (_, i) => {
@@ -35,7 +38,7 @@ const ring = Array.from({ length: 8 }, (_, i) => {
 ---
 
 <svg
-  class:list={["glyph", `glyph--${theme}`, { "glyph--animated": animated }, className]}
+  class:list={["glyph", `glyph--${theme}`, { "glyph--animated": animated, "glyph--hover": hover }, className]}
   viewBox="0 0 48 48"
   width={size}
   height={size}
@@ -129,33 +132,39 @@ const ring = Array.from({ length: 8 }, (_, i) => {
   @media (prefers-reduced-motion: no-preference) {
     /* Steps light up in turn: the agent's loop (the tool with the act step),
        or the preference checks along the series. */
-    .glyph--animated .glyph__step {
+    .glyph--animated .glyph__step,
+    :global([data-glyph-host]:is(:hover, :focus-within)) .glyph--hover .glyph__step {
       animation: glyph-step 3.6s ease-in-out infinite;
     }
 
-    .glyph--animated .glyph__step--2 {
+    .glyph--animated .glyph__step--2,
+    :global([data-glyph-host]:is(:hover, :focus-within)) .glyph--hover .glyph__step--2 {
       animation-delay: 1.2s;
     }
 
-    .glyph--animated .glyph__step--3 {
+    .glyph--animated .glyph__step--3,
+    :global([data-glyph-host]:is(:hover, :focus-within)) .glyph--hover .glyph__step--3 {
       animation-delay: 2.4s;
     }
 
     /* Filtration: the balls grow until the ring closes, while the hole's bar
        is drawn; the noise bar is born and dies. */
-    .glyph--animated .glyph__ball {
+    .glyph--animated .glyph__ball,
+    :global([data-glyph-host]:is(:hover, :focus-within)) .glyph--hover .glyph__ball {
       transform-box: fill-box;
       transform-origin: center;
       animation: glyph-grow 5s ease-in-out infinite;
     }
 
-    .glyph--animated .glyph__blink {
+    .glyph--animated .glyph__blink,
+    :global([data-glyph-host]:is(:hover, :focus-within)) .glyph--hover .glyph__blink {
       animation: glyph-blink 5s ease-in-out infinite;
     }
 
     /* Time advances left to right; what was drawn stays. Revealed by a clip,
        not a dash: dash lengths do not survive the non-scaling stroke. */
-    .glyph--animated .glyph__reveal {
+    .glyph--animated .glyph__reveal,
+    :global([data-glyph-host]:is(:hover, :focus-within)) .glyph--hover .glyph__reveal {
       animation: glyph-reveal 5s ease-in-out infinite;
     }
   }
