@@ -72,6 +72,11 @@
   --step-4: clamp(2rem, 1.35rem + 2.667vw, 3.75rem);             /* 32 → 60 */
   --step-5: clamp(2.5rem, 1.386rem + 4.571vw, 5.5rem);           /* 40 → 88 */
 
+  /* Hero headline: 40px at 390 → 88px at 1440. The hero column is full width on
+     the phone and ~half on desktop, so a single container-query slope cannot hit
+     both sizes; the viewport-linear step does. */
+  --hero-title-size: var(--step-5);
+
   /* Mono label layer (synthesis §1.12): 12px, tracked, uppercase. */
   --label-size: 0.75rem;
   --label-tracking: 0.08em;

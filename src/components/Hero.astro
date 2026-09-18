@@ -1,0 +1,170 @@
+---
+/**
+ * Home hero (synthesis §3, taste.md D5/D7).
+ * - The question is the only message: no call to action, one discreet mono
+ *   link onward to the research themes.
+ * - The headline reveals once, word by word, on the site's single stagger
+ *   (index × --stagger-step); the full sentence is also in a visually hidden
+ *   span, so assistive technology reads it whole.
+ * - The ring is drawn from real data (src/data/electricity-ring.ts) and the
+ *   caption states what is being shown, with the source.
+ */
+import { RING } from "../data/electricity-ring";
+
+const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
+const format = (iso: string, withYear = false) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    ...(withYear ? { year: "numeric" } : {}),
+    timeZone: "UTC",
+  });
+const period = `${format(RING.first)}–${format(RING.last, true)}`;
+const ringLabel = `${RING.days.length} rings, one per day, showing the electricity demand of ${RING.clients} clients in Portugal from ${period}. The amber ring is ${format(RING.last, true)}, the last day in the dataset.`;
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__grid container">
+    <div class="hero__text">
+      <p class="label muted">TA-LLM · Research project, 2026–2029</p>
+      <h1 id="hero-title" class="hero__title">
+        <span class="visually-hidden">Large Language Models: a matter of time?</span>
+        <span aria-hidden="true">
+          {
+            words.map((word, i) => (
+              <>
+                <span class="hero__word" style={`--i: ${i}`}>
+                  {word}
+                  {i === words.length - 1 && <span class="hero__q">?</span>}
+                </span>
+                {i < words.length - 1 && " "}
+              </>
+            ))
+          }
+        </span>
+      </h1>
+      <a class="hero__link label" href="/research/">Research themes →</a>
+    </div>
+
+    <figure class="hero__figure">
+      <canvas class="hero__canvas" role="img" aria-label={ringLabel} data-hero-ring></canvas>
+      <figcaption class="hero__credit">
+        Each ring is one day of electricity demand across {RING.clients} clients in Portugal, {period}.
+        Amber: {format(RING.last, true)}, the last day in the data. UCI, Trindade (2015), CC BY 4.0{" · "}
+        <a href="/about/#hero-data">Source</a>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<script>
+  import { RING } from "../data/electricity-ring";
+  import { mountHeroRing } from "../scripts/hero-ring";
+
+  const canvas = document.querySelector<HTMLCanvasElement>("[data-hero-ring]");
+  if (canvas) mountHeroRing(canvas, RING);
+</script>
+
+<style>
+  .hero {
+    padding-block: var(--space-xl) var(--space-2xl);
+  }
+
+  .hero__grid {
+    display: grid;
+    gap: var(--space-l);
+    align-items: center;
+  }
+
+  @media (min-width: 64rem) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      gap: var(--space-xl);
+      min-height: min(78dvh, 48rem);
+    }
+  }
+
+  .hero__text {
+    display: grid;
+    gap: var(--space-m);
+    align-content: center;
+  }
+
+  .hero__title {
+    font-family: var(--font-display);
+    font-size: var(--hero-title-size);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+    max-width: 14ch;
+  }
+
+  .hero__word {
+    display: inline-block;
+  }
+
+  /* One accent on this view carries the concept: the question mark and the
+     "now" ring are the same amber. */
+  .hero__q {
+    color: var(--accent-text);
+  }
+
+  .hero__link {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target);
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .hero__link:hover {
+    color: var(--text);
+  }
+
+  .hero__figure {
+    margin: 0;
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .hero__canvas {
+    width: 100%;
+    aspect-ratio: 1;
+    --ring-trace: var(--text);
+    --ring-now: var(--thread-fill);
+  }
+
+  .hero__credit {
+    max-width: 44ch;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  .hero__credit a {
+    color: var(--text);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__word {
+      animation: hero-word var(--dur-slow) var(--ease) both;
+      animation-delay: calc(200ms + var(--i) * var(--stagger-step));
+    }
+
+    .hero__link {
+      transition: color var(--dur-fast) var(--ease);
+    }
+  }
+
+  @keyframes hero-word {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

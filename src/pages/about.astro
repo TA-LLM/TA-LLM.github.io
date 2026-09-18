@@ -2,7 +2,15 @@
 import PageIntro from "../components/PageIntro.astro";
 import Todo from "../components/Todo.astro";
 import { PROJECT } from "../config/site";
+import { RING } from "../data/electricity-ring";
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const lastDay = new Date(`${RING.last}T00:00:00Z`).toLocaleDateString("en-GB", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
 ---
 
 <BaseLayout title="About" description="About the TA-LLM project: funding, host institution, timeline.">
@@ -27,6 +35,43 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <div><dt class="label muted">Principal investigator</dt><dd>Luca Cagliero</dd></div>
     </dl>
     <p><Todo what="mandatory attribution wording, logos and scholarship funding (DAUIN) to be verified with Politecnico" /></p>
+  </section>
+
+  <section id="hero-data" class="container funding" aria-labelledby="hero-data-title">
+    <h2 id="hero-data-title" class="funding__title">The data in the home-page ring</h2>
+    <p class="hero-data__text">
+      The ring on the home page is drawn from real measurements: the total electricity demand of
+      {RING.clients} clients in Portugal, one ring per day, for the last {RING.days.length} complete days of the
+      dataset. The amber ring is <time datetime={RING.last}>{lastDay}</time>, the final day in the data —
+      not today's date.
+    </p>
+    <dl class="funding__list">
+      <div><dt class="label muted">Dataset</dt><dd>ElectricityLoadDiagrams20112014</dd></div>
+      <div>
+        <dt class="label muted">Citation</dt>
+        <dd>
+          Trindade, A. (2015). ElectricityLoadDiagrams20112014 [Dataset]. UCI Machine Learning Repository.
+          <a href={`https://doi.org/${RING.doi}`}>https://doi.org/{RING.doi}</a>
+        </dd>
+      </div>
+      <div>
+        <dt class="label muted">Licence</dt>
+        <dd><a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 (CC BY 4.0)</a></dd>
+      </div>
+      <div>
+        <dt class="label muted">Changes made</dt>
+        <dd>
+          Clients summed into total demand; 15-minute readings averaged into 30-minute values; values normalised to
+          the window's range ({RING.minKw.toLocaleString("en-GB")}–{RING.maxKw.toLocaleString("en-GB")} kW).
+        </dd>
+      </div>
+      <div>
+        <dt class="label muted">Period shown</dt>
+        <dd class="mono">
+          <time datetime={RING.first}>{RING.first}</time> – <time datetime={RING.last}>{RING.last}</time>
+        </dd>
+      </div>
+    </dl>
   </section>
 </BaseLayout>
 
@@ -67,6 +112,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   .funding__list dd {
     margin: 0;
+  }
+
+  .hero-data__text {
+    max-width: var(--measure);
   }
 
   .mono {
