@@ -16,3 +16,7 @@ research/moodboard/*
 !research/moodboard/.gitkeep
 # raw third-party datasets: downloaded by scripts/prepare-hero-data.mjs, never committed
 data/raw/
+
+# raw sources and generated media (AI clips with audio, drafts): never commit;
+# prepared outputs live in public/ and src/assets/
+images/
