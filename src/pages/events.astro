@@ -12,6 +12,7 @@ const events = await getCollection("events");
   {
     events.length === 0 && (
       <EmptyState
+        icon="calendar"
         label="0 events scheduled"
         message="Seminars, talks and workshops will be announced here, with a calendar you can subscribe to and an archive of slides and recordings."
       />

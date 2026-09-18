@@ -15,6 +15,7 @@
  *   exactly ink, so the frame has no edge to hide.
  */
 import { getImage } from "astro:assets";
+import Icon from "./Icon.astro";
 import posterSource from "../assets/hero/hourglass-poster.png";
 
 const poster = await getImage({ src: posterSource, format: "webp", width: 480 });
@@ -42,7 +43,7 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
           }
         </span>
       </h1>
-      <a class="hero__link label" href="/research/">Research themes →</a>
+      <a class="hero__link label link-arrow" href="/research/">Research themes<Icon name="arrow-right" size={16} /></a>
     </div>
 
     <div class="hero__visual" aria-hidden="true">
@@ -149,6 +150,7 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
     justify-self: start;
     display: inline-flex;
     align-items: center;
+    gap: var(--space-2xs);
     min-height: var(--target);
     color: var(--text-muted);
     text-decoration: none;

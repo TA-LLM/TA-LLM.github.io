@@ -12,6 +12,7 @@ const resources = await getCollection("resources");
   {
     resources.length === 0 && (
       <EmptyState
+        icon="dataset"
         label="0 resources"
         message="Datasets, benchmarks, models and code released by the project will be listed here, each with its licence, citation and repository."
         href="/research/"

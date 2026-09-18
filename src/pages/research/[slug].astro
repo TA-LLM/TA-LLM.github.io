@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import PageIntro from "../../components/PageIntro.astro";
+import ThemeGlyph from "../../components/ThemeGlyph.astro";
 import Todo from "../../components/Todo.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
@@ -20,7 +21,11 @@ const { Content } = await render(theme);
 ---
 
 <BaseLayout title={title} description={approved ? summary : undefined}>
-  <PageIntro eyebrow={`Theme ${number}`} title={title} lede={approved ? summary : undefined} />
+  <PageIntro eyebrow={`Theme ${number}`} title={title} lede={approved ? summary : undefined}>
+    <span slot="mark" class="theme-mark" data-theme-key={colour}>
+      <ThemeGlyph theme={colour} size={112} animated />
+    </span>
+  </PageIntro>
 
   <section class="container meta" aria-label="Supervision">
     <dl class="meta__list">
@@ -83,6 +88,12 @@ const { Content } = await render(theme);
   [data-theme-key="cl"] { --theme-ink: var(--theme-cl-ink); }
   [data-theme-key="topology"] { --theme-ink: var(--theme-topology-ink); }
   [data-theme-key="agentic"] { --theme-ink: var(--theme-agentic-ink); }
+
+  /* The glyph is this page's one accent, in the theme's text-safe colour. */
+  .theme-mark {
+    display: block;
+    color: var(--theme-ink);
+  }
 
   .body {
     display: grid;

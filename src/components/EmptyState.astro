@@ -3,19 +3,23 @@
  * Designed empty state for pages whose collection has no real entries yet.
  * States a fact, never an apology, and points somewhere useful.
  */
+import type { IconName } from "../icons/icons";
+import Icon from "./Icon.astro";
+
 interface Props {
+  icon?: IconName;
   label: string;
   message: string;
   href?: string;
   linkText?: string;
 }
-const { label, message, href, linkText } = Astro.props;
+const { icon, label, message, href, linkText } = Astro.props;
 ---
 
 <section class="empty container" aria-label={label}>
-  <p class="label muted">{label}</p>
+  <p class="label muted empty__label">{icon && <Icon name={icon} size={20} />}{label}</p>
   <p class="empty__message">{message}</p>
-  {href && linkText && <a class="empty__link label" href={href}>{linkText} →</a>}
+  {href && linkText && <a class="empty__link label link-arrow" href={href}>{linkText}<Icon name="arrow-right" size={16} /></a>}
 </section>
 
 <style>
@@ -24,6 +28,12 @@ const { label, message, href, linkText } = Astro.props;
     gap: var(--space-s);
     padding-block: var(--space-xl);
     border-top: var(--hairline) solid var(--rule);
+  }
+
+  .empty__label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
   }
 
   .empty__message {

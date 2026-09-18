@@ -1,0 +1,226 @@
+---
+/**
+ * The four theme glyphs: one concept each, drawn with the site's motifs
+ * (time-series lines, rings, dots, persistence bars) on a 48×48 grid. The
+ * stroke stays 1.5px at any size (non-scaling), matching the utility icons.
+ *
+ *   agentic   — a long-horizon plan arcing over short steps on a timeline
+ *   topology  — a ring of points around a hole, and its persistence barcode
+ *   cl        — three learned curves stacked: the old ones fade, none is erased
+ *   rlaif     — a drifting series, with feedback looping back through a judge
+ *
+ * Colour is `currentColor`: the caller decides when the glyph takes its theme
+ * colour (one accent per view). With `animated`, only the element that carries
+ * the concept moves, slowly; under reduced motion the glyph is static.
+ */
+interface Props {
+  theme: "agentic" | "topology" | "cl" | "rlaif";
+  size?: number;
+  animated?: boolean;
+  class?: string;
+}
+
+const { theme, size = 48, animated = false, class: className } = Astro.props;
+---
+
+<svg
+  class:list={["glyph", `glyph--${theme}`, { "glyph--animated": animated }, className]}
+  viewBox="0 0 48 48"
+  width={size}
+  height={size}
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  {
+    theme === "agentic" && (
+      <>
+        <path class="glyph__faint" d="M6 36h36" />
+        <path class="glyph__flow" d="M12 36C12 12 36 12 36 36" stroke-dasharray="2 3.5" />
+        <path d="M12 36a6 6 0 0 1 12 0M24 36a6 6 0 0 1 12 0" />
+        <circle class="glyph__step glyph__step--1" cx="12" cy="36" r="2.25" fill="currentColor" />
+        <circle class="glyph__step glyph__step--2" cx="24" cy="36" r="2.25" fill="currentColor" />
+        <circle class="glyph__step glyph__step--3" cx="36" cy="36" r="2.25" fill="currentColor" />
+      </>
+    )
+  }
+  {
+    theme === "topology" && (
+      <>
+        <g class="glyph__turn">
+          <circle class="glyph__faint" cx="24" cy="19" r="11" stroke-dasharray="1.5 3" />
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => (
+            <circle
+              cx={24 + 11 * Math.cos((a * Math.PI) / 180)}
+              cy={19 + 11 * Math.sin((a * Math.PI) / 180)}
+              r="1.6"
+              fill="currentColor"
+              stroke="none"
+            />
+          ))}
+        </g>
+        <path d="M9 38h30" />
+        <path class="glyph__blink" d="M9 43h11" />
+      </>
+    )
+  }
+  {
+    theme === "cl" && (
+      <>
+        <path class="glyph__old2" d="M6 34c6-6 12-6 18 0s12 6 18 0" />
+        <path class="glyph__old1" d="M6 25c6-6 12-6 18 0s12 6 18 0" />
+        <path class="glyph__draw" d="M6 16c6-6 12-6 18 0s12 6 18 0" />
+        <circle class="glyph__tip" cx="42" cy="16" r="2.25" fill="currentColor" stroke="none" />
+      </>
+    )
+  }
+  {
+    theme === "rlaif" && (
+      <>
+        <path d="M6 38l7-4 6 3 8-7 6 2 9-8" />
+        <path class="glyph__flow glyph__flow--back" d="M42 24C42 8 16 8 16 22" stroke-dasharray="2 3.5" />
+        <path d="M12.5 18.5 16 22l3.5-3.5" />
+        <path class="glyph__judge" d="M29 7.5l2.5 2.5-2.5 2.5-2.5-2.5z" fill="currentColor" />
+      </>
+    )
+  }
+</svg>
+
+<style>
+  .glyph {
+    flex: none;
+    overflow: visible;
+  }
+
+  .glyph :global(*) {
+    vector-effect: non-scaling-stroke;
+  }
+
+  .glyph__faint,
+  .glyph__old2 {
+    opacity: 0.35;
+  }
+
+  .glyph__old1 {
+    opacity: 0.6;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Dashes travel along the plan / the feedback loop. */
+    .glyph--animated .glyph__flow {
+      animation: glyph-flow 2.4s linear infinite;
+    }
+
+    .glyph--animated .glyph__flow--back {
+      animation-direction: reverse;
+    }
+
+    /* The agent's steps light up in turn. */
+    .glyph--animated .glyph__step {
+      animation: glyph-step 3.6s ease-in-out infinite;
+    }
+
+    .glyph--animated .glyph__step--2 {
+      animation-delay: 1.2s;
+    }
+
+    .glyph--animated .glyph__step--3 {
+      animation-delay: 2.4s;
+    }
+
+    /* The ring turns slowly; the short-lived feature is born and dies. */
+    .glyph--animated .glyph__turn {
+      transform-origin: 24px 19px;
+      animation: glyph-turn 24s linear infinite;
+    }
+
+    .glyph--animated .glyph__blink {
+      animation: glyph-blink 4s ease-in-out infinite;
+    }
+
+    /* The newest curve is learned again and again; the old ones stay. It is
+       revealed by a clip, not a dash: dash lengths do not survive the
+       non-scaling stroke. */
+    .glyph--animated .glyph__draw {
+      animation: glyph-draw 5s ease-in-out infinite;
+    }
+
+    .glyph--animated .glyph__tip {
+      animation: glyph-tip 5s ease-in-out infinite;
+    }
+
+    .glyph--animated .glyph__judge {
+      transform-origin: 29px 10px;
+      animation: glyph-judge 2.4s ease-in-out infinite;
+    }
+  }
+
+  @keyframes glyph-flow {
+    to {
+      stroke-dashoffset: -11;
+    }
+  }
+
+  @keyframes glyph-step {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    15%,
+    40% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes glyph-turn {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes glyph-blink {
+    0%,
+    100% {
+      opacity: 0.2;
+    }
+    40%,
+    70% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes glyph-draw {
+    0% {
+      clip-path: inset(-10% 100% -10% -10%);
+    }
+    45%,
+    100% {
+      clip-path: inset(-10% -10% -10% -10%);
+    }
+  }
+
+  @keyframes glyph-tip {
+    0%,
+    40% {
+      opacity: 0;
+    }
+    50%,
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes glyph-judge {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.35);
+    }
+  }
+</style>

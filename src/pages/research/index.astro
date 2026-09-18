@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import PageIntro from "../../components/PageIntro.astro";
+import ThemeGlyph from "../../components/ThemeGlyph.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const themes = (await getCollection("themes")).sort((a, b) => a.data.number.localeCompare(b.data.number));
@@ -14,7 +15,10 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
       {
         themes.map((theme) => (
           <li class="theme" data-theme-key={theme.data.colour}>
-            <span class="label theme__number">{theme.data.number}</span>
+            <span class="theme__mark">
+              <span class="label theme__number">{theme.data.number}</span>
+              <ThemeGlyph theme={theme.data.colour} size={40} />
+            </span>
             <a class="theme__title" href={`/research/${theme.id}/`}>
               {theme.data.title}
             </a>
@@ -47,7 +51,7 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
 
   @media (min-width: 48rem) {
     .theme {
-      grid-template-columns: 4rem minmax(0, 1fr) auto;
+      grid-template-columns: 6.5rem minmax(0, 1fr) auto;
       align-items: baseline;
       gap: var(--space-m);
     }
@@ -56,13 +60,26 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
   /* One accent per view (synthesis §1.3–1.4): the four theme colours are never
      shown together. Numbers stay neutral; only the row in focus takes its
      theme colour — focus-and-recede (taste.md §2.3). */
-  .theme__number {
+  .theme__mark {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-s);
+    align-self: center;
+  }
+
+  .theme__mark {
     color: var(--text-muted);
   }
 
-  .theme:hover .theme__number,
-  .theme:focus-within .theme__number {
+  .theme:hover .theme__mark,
+  .theme:focus-within .theme__mark {
     color: var(--theme-ink);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .theme__mark {
+      transition: color var(--dur-fast) var(--ease);
+    }
   }
 
   [data-theme-key="rlaif"] { --theme-ink: var(--theme-rlaif-ink); }

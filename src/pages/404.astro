@@ -1,5 +1,6 @@
 ---
 /** Minimal 404; the designed version (with search) arrives in Phase 5. */
+import Icon from "../components/Icon.astro";
 import PageIntro from "../components/PageIntro.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
@@ -11,9 +12,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     lede="The page may have moved. Publications and research themes are the best places to continue."
   >
     <ul role="list" class="links">
-      <li><a class="label" href="/publications/">Publications →</a></li>
-      <li><a class="label" href="/research/">Research themes →</a></li>
-      <li><a class="label" href="/">Home →</a></li>
+      <li><a class="label link-arrow" href="/publications/">Publications<Icon name="arrow-right" size={16} /></a></li>
+      <li><a class="label link-arrow" href="/research/">Research themes<Icon name="arrow-right" size={16} /></a></li>
+      <li><a class="label link-arrow" href="/">Home<Icon name="arrow-right" size={16} /></a></li>
     </ul>
   </PageIntro>
 </BaseLayout>

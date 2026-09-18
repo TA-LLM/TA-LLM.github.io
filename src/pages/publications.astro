@@ -12,6 +12,7 @@ const publications = await getCollection("publications");
   {
     publications.length === 0 && (
       <EmptyState
+        icon="paper"
         label="0 publications"
         message="The project started on 18 August 2026. Its first papers will appear here, grouped by year and filterable by theme."
         href="/research/"
