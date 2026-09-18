@@ -18,6 +18,7 @@ Source notes, referenced below by short name:
 | `[university]` | `reference-sites-university-labs.md` | BAIR, Stanford HAI |
 | `[institutes]` | `reference-sites-research-institutes.md` | Ai2, Mila, Vector |
 | `[networks]` | `reference-sites-networks-and-funded-projects.md` | ELLIS, Fondazione FAIR |
+| `[taste]` | `taste.md` | Personal moodboard — 26 screenshots, decisions D1–D13 |
 
 ---
 
@@ -59,11 +60,18 @@ property was measured.
    (ruled rows, `1px solid rgba(ink,.15)`, no border box), ELLIS reads better than FAIR
    precisely because FAIR floats cards on shadows. → themes 01–04, publications, people,
    events. `[batch1 §5.4]` `[university §6.5]` `[networks §7.9]`
+   **No shadows anywhere, and radius by role**: 0 inside ruled grids and rows, 8–12px on
+   standalone surfaces (mega-menu panel, paper blocks, hero frame). `[taste D2]`
 
 2. **Dark default, warm paper on blue-leaning ink.** 12/13 sites are light by default; the
    one dark site (ASL) is rigorously neutral greyscale. Paper `#F3EEE4` on ink `#0F1420`
    measures **15.91:1**. This is the single most distinctive choice in the system and
    nobody else occupies it. `[batch1 §5.19]` `[frontier §5.20]` `[identity §5.21]`
+   **Ink stays the default on data-dense pages too**, although the personal moodboard puts
+   every data-dense reference on light (`[taste §1.1]`); `/publications` gets an ink vs
+   paper A/B in the mockup before this is final. **The light theme is a real alternative**,
+   reachable from the theme toggle and designed and checked component by component —
+   never a derived fallback. `[taste D1]`
 
 3. **One accent per view, and the accent carries the concept.** Amber marks the "?" in the
    title, the active nav state, the section eyebrow, and — the idea worth keeping —
@@ -162,6 +170,10 @@ property was measured.
     `<text>` labels, alt text and theming — not in video. Both network sites hand-drew their
     maps rather than embedding a tile provider, which adds a privacy argument to the
     aesthetic one. `[batch1 §5.22]` `[identity §5.10]` `[networks §7.3]`
+    **The hero object is one luminous ring built from a real time series** — its radius
+    modulated by the series values, amber on ink. This is where the moodboard (3 of 5 hero
+    references are a single luminous round object) meets the "persistence rings" of the
+    concept. Not a generic decorative glow. Fallback: a field of flowing lines. `[taste D5]`
 
 22. **Hero headline animates once, with an `sr-only` duplicate.** Anthropic: opacity +
     `translateY(24px)`, 0.8s, `cubic-bezier(0.16, 1, 0.3, 1)`, ≈0.13s stagger, settles at
@@ -356,8 +368,12 @@ deployment-platform default. Both would place us in the visual centre of the fie
 measured, and 13/13 reference sites use a geometric or neo-grotesque sans for display —
 that convergence is exactly what our display serif is meant to escape.
 
-**Display serif: Fraunces** (OFL), preferred over Instrument Serif because its `opsz` axis
-makes the mobile cut-swap (§1.10) one variable adjustment rather than a second file.
+**Display face: still open.** `[taste D6]` Fraunces (OFL) remains the serif candidate,
+preferred over Instrument Serif because its `opsz` axis makes the mobile cut-swap (§1.10)
+one variable adjustment rather than a second file. But all five hero references in the
+personal moodboard use a sans display (`[taste §2.1]`), so the choice is made by a
+side-by-side test **at hero size in the mockup**: a light-weight Fraunces at high `opsz`
+against one sans candidate. The `SOFT`/`WONK` rule below applies if Fraunces is chosen.
 
 **Pin Fraunces' `SOFT` and `WONK` axes to sober values.** `SOFT` rounds the terminals and
 `WONK` swaps in the quirky single-storey alternates; left near their expressive defaults
@@ -397,9 +413,12 @@ self-hosted but 17 TrueType faces.
    static frame and return. Declare motion as **opt-in** with
    `@media (prefers-reduced-motion: no-preference)` (Anthropic's pattern) so anything left
    unguarded defaults to still. SVG concept animations expose a static first frame.
-2. **Canvas at device pixel ratio.** Size the backing store to
-   `rect.width * devicePixelRatio` and scale the 2D context. 4/4 reference canvases get
-   this wrong; it is one line.
+2. **A 2D canvas, at a capped device pixel ratio.** `[taste D7]` The hero canvas is 2D,
+   not WebGL. Size the backing store to `rect.width * min(devicePixelRatio, cap)` and scale
+   the 2D context — 4/4 reference canvases get the ratio wrong, and the cap (taken from the
+   one well-behaved canvas prompt in the moodboard) keeps a full-bleed canvas affordable on
+   3× phones. Pause the loop with `IntersectionObserver` when off-screen and on
+   `visibilitychange` when the tab is hidden.
 3. **Publications filters and pagination hold their state in the URL.**
    `/publications?theme=topology&year=2027` must be a real, linkable, statically-rendered
    URL — a supervisor should be able to paste "our RLAIF papers" into an email. Pager
@@ -424,6 +443,10 @@ self-hosted but 17 TrueType faces.
 7. **Semantics**: exactly one `<h1>` per page, descending heading levels, a `<main>`
    landmark and a skip link. Muted-text tokens computed to ≥4.5:1 and checked in CI, never
    sampled by opacity.
+8. **Stack: Astro components, CSS custom properties, small vanilla TypeScript.**
+   `[taste D12]` No React and no Tailwind. The component prompts saved in the moodboard
+   all target React + Tailwind + shadcn and none targets Astro: they are read as
+   behavioural specifications to rebuild, never as code to port.
 
 ---
 
@@ -455,6 +478,10 @@ Not covered by the reference analysis and not yet in `CLAUDE.md`, in priority or
 ## 8. Proposed changes to CLAUDE.md — for approval
 
 Not applied. Each is a small edit to an existing section, except where marked "new".
+
+> **Update 2026-09-18.** Decisions D1, D2, D5, D6 (still open), D7 and D12 from `taste.md`
+> have been written into `CLAUDE.md` directly; they partly overlap items 6, 8 and 9 below.
+> Everything in this list remains a proposal.
 
 ### Purpose and content
 

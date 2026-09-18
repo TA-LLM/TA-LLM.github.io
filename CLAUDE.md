@@ -34,6 +34,9 @@ Second batch, by category:
 
 ## Stack
 - Astro (static), content collections for `people`, `publications`, `events`, `news`, `themes`
+- Implementation: **Astro components + CSS custom properties + small vanilla TypeScript**.
+  No React, no Tailwind. Component prompts saved from React/shadcn registries are
+  behavioural specs to rebuild, never code to port (`research/notes/taste.md` D12).
 - Publications generated from `src/content/publications.bib`
 - Repo: org `TA-LLM`, repository `TA-LLM/TA-LLM.github.io`
 - Deploy: GitHub Pages. Currently on **legacy build type** (Jekyll from `main` root),
@@ -49,6 +52,10 @@ Second batch, by category:
 ## Design system
 - Concept: "Time, made visible" — flowing time series, persistence rings/barcodes, token streams.
 - Colors (define as CSS tokens on :root, dark default + light theme):
+  - **ink is the default everywhere**, data-dense pages included; `/publications` gets an
+    ink vs paper A/B in the mockup before this is final. The **light theme is a real
+    alternative** reachable from the theme toggle, designed and checked component by
+    component — never a derived fallback (`taste.md` D1).
   - ink `#0F1420` (bg), paper `#F3EEE4` (text / light bg), amber `#E6A23C` (brand accent, the "?")
   - theme colors: RLAIF amber `#E6A23C`, CL sage `#7FB3A0`, Topology violet `#8E7CC3`, Agentic ice `#6FA8DC`
   - light theme: the colours above are for fills, borders and graphics only — never for
@@ -56,10 +63,21 @@ Second batch, by category:
     variants: amber `#8A5A10` (5.11:1), sage `#356B58` (5.35:1), violet `#6A55A8`
     (5.22:1), ice `#2F6DA3` (4.73:1). Ratios measured against paper `#F3EEE4`.
   - dark theme: amber on ink is 8.4:1 and paper on ink 15.9:1, so no variants needed.
-- Type: display serif (Instrument Serif or Fraunces), text sans (Inter or Geist), mono (JetBrains Mono). Self-host fonts.
+- Type: display face **still open** — a serif (Instrument Serif or Fraunces) or a sans,
+  decided by a side-by-side test at hero size in the mockup (`taste.md` D6); text sans
+  (Inter or Geist), mono (JetBrains Mono). Self-host fonts.
 - Layout: restrained UI, strong hierarchy through size and spacing; one accent per view.
+  **No shadows anywhere** — separation comes from surface change (ink ↔ paper) and 1px
+  rules. Radius **0** inside ruled grids and rows, **8–12px** on standalone surfaces
+  (mega-menu panel, paper blocks, hero frame) (`taste.md` D2).
 - Motion: subtle, purposeful; always honor `prefers-reduced-motion`; no layout shift;
   hero animation on canvas, lazy-started, paused when off-screen.
+  - Hero object: **one luminous ring built from a real time series** — its radius
+    modulated by the series values — amber on ink. Not a generic decorative glow.
+    Fallback if the ring does not work: a field of flowing lines (`taste.md` D5).
+  - Hero canvas is **2D, not WebGL**. Reduced motion checked in JS at start **and on
+    change** (one static frame, no loop); device pixel ratio **capped**; loop paused by
+    `IntersectionObserver` and `visibilitychange` (`taste.md` D7).
 - Accessibility: WCAG AA contrast, keyboard navigation, alt text on every image.
 
 ## Decisions from the reference-site analysis
