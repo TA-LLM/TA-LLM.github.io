@@ -1,0 +1,75 @@
+---
+import PageIntro from "../components/PageIntro.astro";
+import Todo from "../components/Todo.astro";
+import { PROJECT } from "../config/site";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="About" description="About the TA-LLM project: funding, host institution, timeline.">
+  <PageIntro eyebrow="About" title="About the project">
+    <p><Todo what="project overview and 2026–2029 timeline — Phase 4" /></p>
+  </PageIntro>
+
+  <section id="funding" class="container funding" aria-labelledby="funding-title">
+    <h2 id="funding-title" class="funding__title">Funding</h2>
+    <dl class="funding__list">
+      <div><dt class="label muted">Funder</dt><dd>{PROJECT.funder}</dd></div>
+      <div><dt class="label muted">Programme</dt><dd>{PROJECT.programme}</dd></div>
+      <div><dt class="label muted">Project code</dt><dd class="mono">{PROJECT.code}</dd></div>
+      <div><dt class="label muted">CUP</dt><dd class="mono">{PROJECT.cup}</dd></div>
+      <div>
+        <dt class="label muted">Duration</dt>
+        <dd class="mono">
+          <time datetime={PROJECT.start}>18/08/2026</time> – <time datetime={PROJECT.end}>17/08/2029</time>
+        </dd>
+      </div>
+      <div><dt class="label muted">Host</dt><dd>{PROJECT.host}</dd></div>
+      <div><dt class="label muted">Principal investigator</dt><dd>Luca Cagliero</dd></div>
+    </dl>
+    <p><Todo what="mandatory attribution wording, logos and scholarship funding (DAUIN) to be verified with Politecnico" /></p>
+  </section>
+</BaseLayout>
+
+<style>
+  .funding {
+    display: grid;
+    gap: var(--space-m);
+    padding-top: var(--space-xl);
+  }
+
+  .funding__title {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+  }
+
+  .funding__list {
+    display: grid;
+    gap: var(--hairline);
+    margin: 0;
+    background: var(--rule);
+    border-block: var(--hairline) solid var(--rule);
+  }
+
+  .funding__list > div {
+    display: grid;
+    gap: var(--space-3xs);
+    padding-block: var(--space-s);
+    background: var(--surface);
+  }
+
+  @media (min-width: 48rem) {
+    .funding__list > div {
+      grid-template-columns: 14rem minmax(0, 1fr);
+      gap: var(--space-m);
+      align-items: baseline;
+    }
+  }
+
+  .funding__list dd {
+    margin: 0;
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+  }
+</style>

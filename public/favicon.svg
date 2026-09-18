@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Provisional mark (Phase 5 designs the full favicon set): an amber ring on ink. -->
+  <rect width="32" height="32" rx="6" fill="#0F1420"/>
+  <circle cx="16" cy="16" r="8.5" fill="none" stroke="#E6A23C" stroke-width="2.5"/>
+</svg>

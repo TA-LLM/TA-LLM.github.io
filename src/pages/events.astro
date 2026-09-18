@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import EmptyState from "../components/EmptyState.astro";
+import PageIntro from "../components/PageIntro.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const events = await getCollection("events");
+---
+
+<BaseLayout title="Events" description="Seminars, talks and workshops of the TA-LLM project.">
+  <PageIntro eyebrow="Events" title="Events" />
+  {
+    events.length === 0 && (
+      <EmptyState
+        label="0 events scheduled"
+        message="Seminars, talks and workshops will be announced here, with a calendar you can subscribe to and an archive of slides and recordings."
+      />
+    )
+  }
+</BaseLayout>

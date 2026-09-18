@@ -1,0 +1,22 @@
+---
+import { getCollection } from "astro:content";
+import EmptyState from "../components/EmptyState.astro";
+import PageIntro from "../components/PageIntro.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const resources = await getCollection("resources");
+---
+
+<BaseLayout title="Resources" description="Datasets, benchmarks, models and code released by TA-LLM.">
+  <PageIntro eyebrow="Resources" title="Released resources" />
+  {
+    resources.length === 0 && (
+      <EmptyState
+        label="0 resources"
+        message="Datasets, benchmarks, models and code released by the project will be listed here, each with its licence, citation and repository."
+        href="/research/"
+        linkText="Read about the research themes"
+      />
+    )
+  }
+</BaseLayout>

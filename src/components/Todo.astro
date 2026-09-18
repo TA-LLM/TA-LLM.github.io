@@ -1,0 +1,13 @@
+---
+/**
+ * Visible marker for information that does not exist yet. Allowed while the
+ * site is unlaunched (noindex); scripts/check-dist.mjs fails a launched build
+ * that still contains one.
+ */
+interface Props {
+  what: string;
+}
+const { what } = Astro.props;
+---
+
+<span class="todo">TODO: {what}</span>

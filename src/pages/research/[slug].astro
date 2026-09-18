@@ -1,0 +1,69 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import PageIntro from "../../components/PageIntro.astro";
+import Todo from "../../components/Todo.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const themes = await getCollection("themes");
+  return themes.map((theme) => ({ params: { slug: theme.id }, props: { theme } }));
+}
+
+interface Props {
+  theme: CollectionEntry<"themes">;
+}
+
+const { theme } = Astro.props;
+const { number, title, supervisor, coSupervisor, status } = theme.data;
+---
+
+<BaseLayout title={title}>
+  <PageIntro eyebrow={`Theme ${number}`} title={title} />
+
+  <section class="container meta" aria-label="Supervision">
+    <dl class="meta__list">
+      <div>
+        <dt class="label muted">Supervisor</dt>
+        <dd>{supervisor}</dd>
+      </div>
+      <div>
+        <dt class="label muted">Co-supervisor</dt>
+        <dd>{coSupervisor}</dd>
+      </div>
+      <div>
+        <dt class="label muted">PhD student</dt>
+        <dd><Todo what="name" /></dd>
+      </div>
+    </dl>
+    {status !== "approved" && <p><Todo what="theme description, pending approval of the rewritten text" /></p>}
+  </section>
+</BaseLayout>
+
+<style>
+  .meta {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .meta__list {
+    display: grid;
+    gap: var(--space-m);
+    margin: 0;
+    padding-top: var(--space-m);
+    border-top: var(--hairline) solid var(--rule);
+  }
+
+  @media (min-width: 48rem) {
+    .meta__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .meta__list dt {
+    margin-bottom: var(--space-3xs);
+  }
+
+  .meta__list dd {
+    margin: 0;
+  }
+</style>

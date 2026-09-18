@@ -1,0 +1,39 @@
+---
+/**
+ * Home. Phase 1 keeps only the page's <h1>; the hero (canvas ring built from
+ * the UCI Electricity series, D5) arrives in Phase 2, the other sections in
+ * Phase 3.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout>
+  <section class="home container">
+    <p class="label muted">TA-LLM · Research project, 2026–2029</p>
+    <h1 class="home__title">
+      Large Language Models: a matter of time<span class="home__q">?</span>
+    </h1>
+    <p class="label muted home__status">Site in preparation</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .home {
+    display: grid;
+    gap: var(--space-m);
+    padding-block: var(--space-3xl);
+  }
+
+  .home__title {
+    font-family: var(--font-display);
+    font-size: var(--step-5);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+    max-width: 16ch;
+  }
+
+  /* The one accent on the home page: the "?" of the project's question. */
+  .home__q {
+    color: var(--accent-text);
+  }
+</style>

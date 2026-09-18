@@ -1,0 +1,159 @@
+/*
+ * TA-LLM design tokens — the single source for colour, type, space, radius and
+ * motion. Components use the semantic roles, never raw hex.
+ *
+ * Colour values are plain hex on purpose: scripts/check-contrast.mjs parses this
+ * file and fails the build if any declared pair drops below WCAG AA.
+ *
+ * Dark (ink) is the default everywhere (taste.md D1). The light theme is a real
+ * alternative, reachable from the toggle — not a fallback.
+ */
+
+:root {
+  /* ---------------------------------------------------------- primitives */
+  --ink: #0F1420;
+  --paper: #F3EEE4;
+  --amber: #E6A23C;
+
+  /* Theme colours, as fills and graphics on ink. */
+  --sage: #7FB3A0;
+  --violet: #8E7CC3;
+  --ice: #6FA8DC;
+
+  /* Darkened variants: the only theme colours allowed as text or meaningful
+     lines on paper (the originals fail AA there, 1.89:1 to 3.12:1). */
+  --amber-deep: #8A5A10;
+  --sage-deep: #356B58;
+  --violet-deep: #6A55A8;
+  --ice-deep: #2F6DA3;
+
+  /* ------------------------------------------- semantic roles — ink theme */
+  --surface: var(--ink);
+  --surface-raised: #1A1F2A;      /* standalone panels: menu, paper-less cards */
+  --text: var(--paper);           /* 15.91:1 on ink */
+  --text-muted: #A3A29F;          /*  7.21:1 on ink */
+  --rule: #3D4047;                /*  1.77:1 — hairlines, 1px grid gaps */
+  --rule-strong: #737476;         /*  3.93:1 — control outlines (non-text ≥3:1) */
+  --accent: var(--amber);         /*  8.41:1 — the one accent per view */
+  --accent-text: var(--amber);    /* accent used as text */
+  --on-accent: var(--ink);        /* text on an amber fill, 8.41:1 */
+  --focus: var(--amber);
+  --thread-fill: var(--amber);    /* D10 project thread */
+  --thread-track: var(--rule);
+
+  /* Theme colours by role (taste.md D1 / synthesis §1.4): the fill is the
+     original colour; `-ink` is the variant safe for text and lines on the
+     current surface. */
+  --theme-rlaif: var(--amber);
+  --theme-cl: var(--sage);
+  --theme-topology: var(--violet);
+  --theme-agentic: var(--ice);
+  --theme-rlaif-ink: var(--amber);
+  --theme-cl-ink: var(--sage);
+  --theme-topology-ink: var(--violet);
+  --theme-agentic-ink: var(--ice);
+
+  color-scheme: dark;
+
+  /* ----------------------------------------------------------- typography */
+  /* Display and text faces are decided in Phase 2 (D6, 16px test); until then
+     they fall back to system families. Mono is final. */
+  --font-display: ui-serif, Georgia, "Times New Roman", serif;
+  --font-text: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-jetbrains-mono, ui-monospace, monospace);
+
+  /* Fluid scale, linear between 390px and 1440px viewports. Each step keeps a
+     rem component, so browser text zoom still works. */
+  --step--1: clamp(0.8125rem, 0.7893rem + 0.09524vw, 0.875rem);  /* 13 → 14 */
+  --step-0: clamp(1rem, 0.9536rem + 0.1905vw, 1.125rem);         /* 16 → 18 */
+  --step-1: clamp(1.125rem, 1.032rem + 0.381vw, 1.375rem);       /* 18 → 22 */
+  --step-2: clamp(1.312rem, 1.104rem + 0.8571vw, 1.875rem);      /* 21 → 30 */
+  --step-3: clamp(1.625rem, 1.254rem + 1.524vw, 2.625rem);       /* 26 → 42 */
+  --step-4: clamp(2rem, 1.35rem + 2.667vw, 3.75rem);             /* 32 → 60 */
+  --step-5: clamp(2.5rem, 1.386rem + 4.571vw, 5.5rem);           /* 40 → 88 */
+
+  /* Mono label layer (synthesis §1.12): 12px, tracked, uppercase. */
+  --label-size: 0.75rem;
+  --label-tracking: 0.08em;
+
+  --leading-display: 1.05;
+  --leading-heading: 1.15;
+  --leading-body: 1.6;
+
+  /* Negative tracking in em, so it follows the fluid scale (synthesis §1.11). */
+  --tracking-display: -0.02em;
+  --tracking-heading: -0.01em;
+
+  --measure: 68ch;
+
+  /* ---------------------------------------------------------------- space */
+  /* ×1.5 at 1440px, compressed at 390px (synthesis §1.8). The 1px grid gap is
+     a hairline, not a spacing step: it stays exactly 1px at every width. */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-s: 1rem;
+  --space-m: clamp(1.25rem, 1.157rem + 0.381vw, 1.5rem);
+  --space-l: clamp(1.75rem, 1.564rem + 0.7619vw, 2.25rem);
+  --space-xl: clamp(2.5rem, 2.175rem + 1.333vw, 3.375rem);
+  --space-2xl: clamp(3.5rem, 2.92rem + 2.381vw, 5.062rem);
+  --space-3xl: clamp(5rem, 4.025rem + 4vw, 7.625rem);
+
+  --gutter: clamp(1.25rem, 0.6rem + 2.667vw, 3rem);
+  --container: 80rem;
+  --hairline: 1px;
+
+  /* --------------------------------------------------------------- radius */
+  /* taste.md D2: 0 inside ruled grids and rows, 8–12px on standalone surfaces.
+     There are deliberately no shadow tokens: separation comes from surface
+     change and 1px rules. */
+  --radius-grid: 0;
+  --radius-surface: 10px;
+
+  /* --------------------------------------------------------------- motion */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 150ms;
+  --dur-base: 240ms;
+  --dur-exit: 160ms;              /* exits run faster than entrances */
+  --dur-slow: 800ms;              /* hero word reveal (synthesis §1.22) */
+  --stagger-step: 130ms;          /* the single stagger primitive */
+
+  /* -------------------------------------------------------------- layers */
+  --z-header: 100;
+  --z-overlay: 1000;
+  --z-skip: 1100;
+
+  /* ------------------------------------------------------------- chrome */
+  --header-h: 3.5rem;             /* 56px mobile sticky bar */
+  --thread-h: 2px;
+  --target: 2.75rem;              /* 44px touch target */
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --header-h: 4rem;
+  }
+}
+
+/* ------------------------------------------------------------ light theme */
+:root[data-theme="light"] {
+  --surface: var(--paper);
+  --surface-raised: #EAE5DC;
+  --text: var(--ink);             /* 15.91:1 on paper */
+  --text-muted: #53555B;          /*  6.44:1 on paper */
+  --rule: #C1BEB9;                /*  1.60:1 */
+  --rule-strong: #7C7D7E;         /*  3.57:1 */
+  --accent: var(--amber);         /* fills only: 1.89:1 on paper */
+  --accent-text: var(--amber-deep); /* 5.11:1 */
+  --on-accent: var(--ink);
+  --focus: var(--amber-deep);
+  --thread-fill: var(--amber-deep); /* non-text graphic, needs ≥3:1 */
+  --thread-track: var(--rule);
+
+  --theme-rlaif-ink: var(--amber-deep);
+  --theme-cl-ink: var(--sage-deep);
+  --theme-topology-ink: var(--violet-deep);
+  --theme-agentic-ink: var(--ice-deep);
+
+  color-scheme: light;
+}

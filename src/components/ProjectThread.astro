@@ -1,0 +1,49 @@
+---
+/**
+ * D10 — the project thread: a hairline under the navigation bar, on every page,
+ * filled from the project start (18/08/2026) up to today over the 2026–2029
+ * span. The build-time value is the no-JavaScript default; a small script moves
+ * it to the visitor's today. Static: it never animates.
+ */
+import { progressLabel, projectProgress } from "../lib/timeline";
+
+const now = Date.now();
+const progress = projectProgress(now);
+---
+
+<div
+  class="thread"
+  role="img"
+  aria-label={progressLabel(now)}
+  data-project-thread
+  style={`--progress: ${progress.toFixed(4)}`}
+>
+  <span class="thread__fill"></span>
+</div>
+
+<script>
+  import { progressLabel, projectProgress } from "../lib/timeline";
+
+  const now = Date.now();
+  for (const thread of document.querySelectorAll<HTMLElement>("[data-project-thread]")) {
+    thread.style.setProperty("--progress", projectProgress(now).toFixed(4));
+    thread.setAttribute("aria-label", progressLabel(now));
+  }
+</script>
+
+<style>
+  .thread {
+    position: relative;
+    height: var(--thread-h);
+    background: var(--thread-track);
+    overflow: hidden;
+  }
+
+  .thread__fill {
+    position: absolute;
+    inset: 0;
+    background: var(--thread-fill);
+    transform-origin: left center;
+    transform: scaleX(var(--progress));
+  }
+</style>

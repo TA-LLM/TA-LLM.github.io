@@ -1,0 +1,46 @@
+---
+/**
+ * Designed empty state for pages whose collection has no real entries yet.
+ * States a fact, never an apology, and points somewhere useful.
+ */
+interface Props {
+  label: string;
+  message: string;
+  href?: string;
+  linkText?: string;
+}
+const { label, message, href, linkText } = Astro.props;
+---
+
+<section class="empty container" aria-label={label}>
+  <p class="label muted">{label}</p>
+  <p class="empty__message">{message}</p>
+  {href && linkText && <a class="empty__link label" href={href}>{linkText} →</a>}
+</section>
+
+<style>
+  .empty {
+    display: grid;
+    gap: var(--space-s);
+    padding-block: var(--space-xl);
+    border-top: var(--hairline) solid var(--rule);
+  }
+
+  .empty__message {
+    max-width: var(--measure);
+    font-size: var(--step-1);
+  }
+
+  .empty__link {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target);
+    color: var(--accent-text);
+    text-decoration: none;
+  }
+
+  .empty__link:hover {
+    text-decoration: underline;
+  }
+</style>

@@ -1,0 +1,22 @@
+---
+import { getCollection } from "astro:content";
+import EmptyState from "../components/EmptyState.astro";
+import PageIntro from "../components/PageIntro.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const publications = await getCollection("publications");
+---
+
+<BaseLayout title="Publications" description="Publications of the TA-LLM research project.">
+  <PageIntro eyebrow="Publications" title="Publications" />
+  {
+    publications.length === 0 && (
+      <EmptyState
+        label="0 publications"
+        message="The project started on 18 August 2026. Its first papers will appear here, grouped by year and filterable by theme."
+        href="/research/"
+        linkText="Read about the research themes"
+      />
+    )
+  }
+</BaseLayout>

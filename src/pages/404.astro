@@ -1,0 +1,36 @@
+---
+/** Minimal 404; the designed version (with search) arrives in Phase 5. */
+import PageIntro from "../components/PageIntro.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Page not found">
+  <PageIntro
+    eyebrow="404"
+    title="Page not found"
+    lede="The page may have moved. Publications and research themes are the best places to continue."
+  >
+    <ul role="list" class="links">
+      <li><a class="label" href="/publications/">Publications →</a></li>
+      <li><a class="label" href="/research/">Research themes →</a></li>
+      <li><a class="label" href="/">Home →</a></li>
+    </ul>
+  </PageIntro>
+</BaseLayout>
+
+<style>
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    margin-top: var(--space-l);
+  }
+
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target);
+    color: var(--accent-text);
+    text-decoration: none;
+  }
+</style>

@@ -1,0 +1,86 @@
+---
+import { getCollection } from "astro:content";
+import PageIntro from "../../components/PageIntro.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const themes = (await getCollection("themes")).sort((a, b) => a.data.number.localeCompare(b.data.number));
+---
+
+<BaseLayout title="Research" description="The four starting research themes of the TA-LLM project.">
+  <PageIntro eyebrow="Research" title="Four starting themes" />
+
+  <section class="container" aria-label="Research themes">
+    <ul role="list" class="themes">
+      {
+        themes.map((theme) => (
+          <li class="theme" data-theme-key={theme.data.colour}>
+            <span class="label theme__number">{theme.data.number}</span>
+            <a class="theme__title" href={`/research/${theme.id}/`}>
+              {theme.data.title}
+            </a>
+            <span class="theme__people muted">
+              {theme.data.supervisor} · {theme.data.coSupervisor}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  /* 1px-gap ruled list (synthesis §1.1): rows butt together, the surface
+     shows through as the hairline. */
+  .themes {
+    display: grid;
+    gap: var(--hairline);
+    background: var(--rule);
+    border-block: var(--hairline) solid var(--rule);
+  }
+
+  .theme {
+    display: grid;
+    gap: var(--space-2xs);
+    padding-block: var(--space-m);
+    background: var(--surface);
+  }
+
+  @media (min-width: 48rem) {
+    .theme {
+      grid-template-columns: 4rem minmax(0, 1fr) auto;
+      align-items: baseline;
+      gap: var(--space-m);
+    }
+  }
+
+  /* One accent per view (synthesis §1.3–1.4): the four theme colours are never
+     shown together. Numbers stay neutral; only the row in focus takes its
+     theme colour — focus-and-recede (taste.md §2.3). */
+  .theme__number {
+    color: var(--text-muted);
+  }
+
+  .theme:hover .theme__number,
+  .theme:focus-within .theme__number {
+    color: var(--theme-ink);
+  }
+
+  [data-theme-key="rlaif"] { --theme-ink: var(--theme-rlaif-ink); }
+  [data-theme-key="cl"] { --theme-ink: var(--theme-cl-ink); }
+  [data-theme-key="topology"] { --theme-ink: var(--theme-topology-ink); }
+  [data-theme-key="agentic"] { --theme-ink: var(--theme-agentic-ink); }
+
+  .theme__title {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    text-decoration: none;
+  }
+
+  .theme__title:hover {
+    text-decoration: underline;
+  }
+
+  .theme__people {
+    font-size: var(--step--1);
+  }
+</style>

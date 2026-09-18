@@ -1,0 +1,125 @@
+---
+/**
+ * Site footer: navigation, contacts by audience, the mono funding line
+ * (synthesis §4) and the legal line. Funder logos wait for the official
+ * PoliTo/MUR artwork, and the attribution wording is to be verified with
+ * Politecnico, so the line is marked as such.
+ */
+import { NAV, PROJECT } from "../config/site";
+import Todo from "./Todo.astro";
+
+/* Short facts are unbreakable; the long funder name may wrap (at 390px it is
+   wider than the column). The separator is glued to the preceding item with a
+   no-break space, so a line can never start with "·". */
+const fundingItems = [
+  { text: `Funded by the ${PROJECT.funder}`, keep: false },
+  { text: PROJECT.programme, keep: true },
+  { text: `Project ${PROJECT.code}`, keep: true },
+  { text: `CUP ${PROJECT.cup}`, keep: true },
+];
+---
+
+<footer class="site-footer">
+  <div class="row">
+    <div class="container footer__grid">
+      <nav aria-label="Footer">
+        <p class="label muted footer__heading">Site</p>
+        <ul role="list" class="footer__list">
+          {
+            NAV.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div>
+        <p class="label muted footer__heading">Contact</p>
+        <p><Todo what="public contact addresses (researchers, companies, press)" /></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="container footer__stack">
+      <p class="funding-line">
+        {
+          fundingItems.map((item) => (
+            <>
+              <span class={item.keep ? "nowrap" : undefined}>{item.text}</span>
+              <span aria-hidden="true">{" · "}</span>
+            </>
+          ))
+        }
+        <span class="nowrap">
+          <time datetime={PROJECT.start}>18/08/2026</time> – <time datetime={PROJECT.end}>17/08/2029</time>
+        </span>
+      </p>
+      <p><Todo what="attribution wording and funder logos to be verified with Politecnico" /></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="container footer__stack">
+      <p class="label muted">TA-LLM · DAUIN, Politecnico di Torino</p>
+      <p><Todo what="privacy notice and accessibility statement" /></p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-3xl);
+    font-size: var(--step--1);
+  }
+
+  /* Full-bleed hairlines, all the same length. */
+  .row {
+    border-top: var(--hairline) solid var(--rule);
+  }
+
+  .footer__grid {
+    display: grid;
+    gap: var(--space-l);
+    padding-block: var(--space-xl);
+  }
+
+  @media (min-width: 48rem) {
+    .footer__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .footer__heading {
+    margin-bottom: var(--space-xs);
+  }
+
+  .footer__list {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .footer__list a {
+    display: inline-block;
+    padding-block: var(--space-3xs);
+    text-decoration: none;
+  }
+
+  .footer__list a:hover {
+    text-decoration: underline;
+  }
+
+  .footer__stack {
+    display: grid;
+    gap: var(--space-xs);
+    padding-block: var(--space-m);
+  }
+
+  .funding-line {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+</style>

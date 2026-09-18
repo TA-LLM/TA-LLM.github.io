@@ -1,0 +1,45 @@
+---
+import { Font } from "astro:assets";
+import { LAUNCHED, SITE } from "../config/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = SITE.description } = Astro.props;
+const fullTitle = title ? `${title} — ${SITE.name}` : SITE.title;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{!LAUNCHED && <meta name="robots" content="noindex, nofollow" />}
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+<!-- Both metas describe the active theme; the script below and the toggle keep
+     them in sync, so browser chrome and native controls follow the theme. -->
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#0F1420" />
+
+<!-- Runs before first paint: ink unless the visitor chose light. Every storage
+     access is guarded, so blocked storage leaves the page in ink, silently. -->
+<script is:inline>
+  (function () {
+    var theme = "dark";
+    try {
+      var saved = window.localStorage.getItem("ta-llm-theme");
+      if (saved === "light" || saved === "dark") theme = saved;
+    } catch (e) {}
+    document.documentElement.dataset.theme = theme;
+    var scheme = document.querySelector('meta[name="color-scheme"]');
+    var colour = document.querySelector('meta[name="theme-color"]');
+    if (scheme) scheme.setAttribute("content", theme);
+    if (colour) colour.setAttribute("content", theme === "light" ? "#F3EEE4" : "#0F1420");
+  })();
+</script>
+
+<Font cssVariable="--font-jetbrains-mono" preload />

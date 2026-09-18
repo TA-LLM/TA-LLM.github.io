@@ -1,0 +1,43 @@
+---
+/** Page opening: mono eyebrow, the page's single <h1>, optional lede. */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lede?: string;
+}
+const { eyebrow, title, lede } = Astro.props;
+---
+
+<header class="intro container">
+  {eyebrow && <p class="label muted intro__eyebrow">{eyebrow}</p>}
+  <h1 class="intro__title">{title}</h1>
+  {lede && <p class="intro__lede">{lede}</p>}
+  {Astro.slots.has("default") && <div class="intro__extra"><slot /></div>}
+</header>
+
+<style>
+  .intro {
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .intro__eyebrow {
+    margin-bottom: var(--space-s);
+  }
+
+  .intro__title {
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+    max-width: 20ch;
+  }
+
+  .intro__lede {
+    margin-top: var(--space-m);
+    max-width: var(--measure);
+    font-size: var(--step-1);
+    color: var(--text-muted);
+  }
+
+  .intro__extra {
+    margin-top: var(--space-m);
+  }
+</style>

@@ -1,0 +1,65 @@
+---
+import EmptyState from "../components/EmptyState.astro";
+import PageIntro from "../components/PageIntro.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getNews } from "../lib/entries";
+
+const items = await getNews();
+const formatter = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
+---
+
+<BaseLayout title="News" description="Announcements from the TA-LLM project.">
+  <PageIntro eyebrow="News" title="News" />
+  {
+    items.length === 0 ? (
+      <EmptyState
+        label="0 announcements"
+        message="Accepted papers, releases, awards, new members and collaborations will be announced here."
+      />
+    ) : (
+      <section class="container" aria-label="Announcements">
+        <p class="label muted count">
+          {items.length} {items.length === 1 ? "item" : "items"}
+        </p>
+        <ul role="list" class="news">
+          {items.map((item) => (
+            <li class="news__item">
+              <p class="label muted">
+                <time datetime={item.date.toISOString().slice(0, 10)}>{formatter.format(item.date)}</time>
+                {" · "}
+                {item.type === "blog" ? "Explainer" : "Announcement"}
+              </p>
+              <h2 class="news__title">{item.title}</h2>
+              <p class="muted">{item.summary}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .count {
+    margin-bottom: var(--space-s);
+  }
+
+  .news {
+    display: grid;
+    gap: var(--hairline);
+    background: var(--rule);
+    border-block: var(--hairline) solid var(--rule);
+  }
+
+  .news__item {
+    display: grid;
+    gap: var(--space-2xs);
+    padding-block: var(--space-m);
+    background: var(--surface);
+  }
+
+  .news__title {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+  }
+</style>
