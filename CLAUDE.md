@@ -18,7 +18,11 @@ Website of the research project **TA-LLM — Large Language Models: a matter of 
 - `research/moodboard/` — screenshots of reference sites
 - `research/notes/` — design and content analyses
 Files in `sources/private/` are drafts: NEVER copy them into the public site verbatim
-and never publish them. Rewrite content and ask before publishing theme details.
+and never publish them. Rewrite content and ask before publishing.
+**Exception (user decision, 2026-09-18):** the four theme descriptions are published
+with the **exact text** of `research-themes/*.pdf` (opening paragraph, Context,
+Challenges, Research objectives, Tentative work plan, Bibliography) in
+`src/content/themes/`. The PDFs themselves, contacts, skills and venues stay private.
 
 ## Reference sites (visual benchmark)
 Closest to us, already analysed in detail — see Decisions below:

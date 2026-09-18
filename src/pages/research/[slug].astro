@@ -1,5 +1,5 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content";
 import PageIntro from "../../components/PageIntro.astro";
 import Todo from "../../components/Todo.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -14,11 +14,13 @@ interface Props {
 }
 
 const { theme } = Astro.props;
-const { number, title, supervisor, coSupervisor, status } = theme.data;
+const { number, title, supervisor, coSupervisor, status, summary, colour } = theme.data;
+const approved = status === "approved";
+const { Content } = await render(theme);
 ---
 
-<BaseLayout title={title}>
-  <PageIntro eyebrow={`Theme ${number}`} title={title} />
+<BaseLayout title={title} description={approved ? summary : undefined}>
+  <PageIntro eyebrow={`Theme ${number}`} title={title} lede={approved ? summary : undefined} />
 
   <section class="container meta" aria-label="Supervision">
     <dl class="meta__list">
@@ -35,8 +37,16 @@ const { number, title, supervisor, coSupervisor, status } = theme.data;
         <dd><Todo what="name" /></dd>
       </div>
     </dl>
-    {status !== "approved" && <p><Todo what="theme description, pending approval of the rewritten text" /></p>}
+    {!approved && <p><Todo what="theme description, pending approval" /></p>}
   </section>
+
+  {
+    approved && (
+      <article class="container body" data-theme-key={colour}>
+        <Content />
+      </article>
+    )
+  }
 </BaseLayout>
 
 <style>
@@ -65,5 +75,61 @@ const { number, title, supervisor, coSupervisor, status } = theme.data;
 
   .meta__list dd {
     margin: 0;
+  }
+
+  /* The theme text: one reading column, sections separated by space and a
+     hairline. Headings take the theme's text-safe colour, the one accent. */
+  [data-theme-key="rlaif"] { --theme-ink: var(--theme-rlaif-ink); }
+  [data-theme-key="cl"] { --theme-ink: var(--theme-cl-ink); }
+  [data-theme-key="topology"] { --theme-ink: var(--theme-topology-ink); }
+  [data-theme-key="agentic"] { --theme-ink: var(--theme-agentic-ink); }
+
+  .body {
+    display: grid;
+    gap: var(--space-s);
+    padding-block: var(--space-xl) var(--space-2xl);
+  }
+
+  .body > :global(*) {
+    max-width: var(--measure);
+  }
+
+  .body :global(h2) {
+    margin-top: var(--space-l);
+    padding-top: var(--space-s);
+    border-top: var(--hairline) solid var(--rule);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--theme-ink);
+  }
+
+  .body :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .body :global(ul),
+  .body :global(ol) {
+    display: grid;
+    gap: var(--space-2xs);
+    margin: 0;
+    padding-left: 1.25em;
+  }
+
+  .body :global(li::marker) {
+    color: var(--text-muted);
+  }
+
+  /* Bibliography: the last list, set smaller, numbered like the [n] citations. */
+  .body :global(ol) {
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+
+  .body :global(ol a) {
+    color: var(--text);
+    overflow-wrap: anywhere;
   }
 </style>

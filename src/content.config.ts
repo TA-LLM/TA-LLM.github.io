@@ -6,8 +6,10 @@ import { loadPublications } from "./lib/publications";
 const themeKey = z.enum(["rlaif", "cl", "topology", "agentic"]);
 
 /**
- * The four starting research themes (non-binding). Only already-public fields
- * are filled in; descriptions stay unpublished until approved (`status`).
+ * The four starting research themes (non-binding). The descriptions are the
+ * exact text of the theme documents (sources/private/research-themes/),
+ * published verbatim at the user's request (2026-09-18): `summary` is the
+ * opening paragraph, the Markdown body holds the sections that follow.
  */
 const themes = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/themes" }),
@@ -20,6 +22,8 @@ const themes = defineCollection({
     coSupervisor: z.string(),
     /** One-line question shown in the Research menu. TODO until approved. */
     question: z.string().optional(),
+    /** Opening paragraph of the theme document, shown as the page lede. */
+    summary: z.string().optional(),
     /** `draft` descriptions are never rendered; `approved` ones are. */
     status: z.enum(["draft", "approved"]).default("draft"),
   }),
