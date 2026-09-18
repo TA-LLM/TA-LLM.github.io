@@ -100,8 +100,10 @@ Second batch, by category:
 - Icons (added 2026-09-18 at the user's request, superseding the `taste.md` §2.2 note
   "no icon set is needed"): **utility icons** in `src/icons/icons.ts` via `Icon.astro` —
   20×20 grid, 1.5px stroke, round caps, `currentColor`, always neutral; **four theme
-  glyphs** in `ThemeGlyph.astro` — 48×48, non-scaling 1.5px stroke, built from the site's
-  motifs, the only coloured marks (theme colour on focus in lists, as the page accent on
+  glyphs** in `ThemeGlyph.astro` — 48×48, non-scaling 1.5px stroke, each drawn from the
+  idea at the centre of its theme text (chosen by the user from three candidates each:
+  agent loop + tool, filtration ring + barcode, task curves that stay high, preference
+  checks along a drifting series), the only coloured marks (theme colour on focus in lists, as the page accent on
   theme pages, where they animate only under `prefers-reduced-motion: no-preference`).
   Links ending in an arrow use `.link-arrow` + the `arrow-right` icon, not a "→" glyph.
 - Accessibility: WCAG AA contrast, keyboard navigation, alt text on every image.
