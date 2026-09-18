@@ -1,10 +1,11 @@
 ---
-number: "03"
+number: "02"
 title: Topology-Aware Temporal Reasoning
 shortTitle: Topology-Aware Reasoning
 colour: topology
 supervisor: Luca Cagliero
 coSupervisor: Francesco Vaccarino
+phdStudent: Enrico Maria Ferrari
 status: approved
 summary: >-
   Large Language Models (LLMs) excel at complex reasoning and solving generative tasks on text and multimodal
@@ -22,13 +23,13 @@ Temporal Reasoning (TR) requires a combination of various skills including mathe
 
 Latent representations of text and multimodal data often struggle to capture temporal or time-evolving patterns. To effectively address temporal learning tasks, such as the detection of distribution shifts, innovative representations of text and multimodal content are necessary. Large Language Models outcomes can learn complex phenomena, but still exhibit limitations due to LLM non-determinism, drifts in models' parameters, hallucination, and bias. The problem of assessing the robustness of Large Language Models in time-evolving settings is still open.
 
-Specializing Multimodal Large Language Models is known to be particularly costly due to the combined need for extensive computational resources and large training datasets. Parameter-Efficient Fine-Tuning strategies aim to alleviate the cost of model fine-tuning, but their suitability to time-evolving scenarios remains questionable. The study of innotivate, general-purpose solutions tailored to long contexts and time-variant scenarios is of primary interest for the research community.
+Specializing Multimodal Large Language Models is known to be particularly costly due to the combined need for extensive computational resources and large training datasets. Parameter-Efficient Fine-Tuning strategies aim to alleviate the cost of model fine-tuning, but their suitability to time-evolving scenarios remains questionable. The study of innovative, general-purpose solutions tailored to long contexts and time-variant scenarios is of primary interest for the research community.
 
 ## Research objectives
 
 - Benchmark textual and multimodal Large Language Models on temporal reasoning tasks.
 - Design, implement, and test new approaches based on topological analysis of latent space in time-evolving scenarios.
-- Adopt stochastic models to learn temporal dynamics, analyze distribution drifts, and intepret/validate the LLM performance.
+- Adopt stochastic models to learn temporal dynamics, analyze distribution drifts, and interpret/validate the LLM performance.
 - Define strategies to assess LLM robustness in dynamic settings;
 - Propose and test topology-aware strategies for Parameter-Efficient Fine-Tuning of textual and multimodal LLMs.
 

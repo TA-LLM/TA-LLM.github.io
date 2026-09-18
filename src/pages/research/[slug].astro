@@ -14,7 +14,7 @@ interface Props {
 }
 
 const { theme } = Astro.props;
-const { number, title, supervisor, coSupervisor, status, summary, colour } = theme.data;
+const { number, title, supervisor, coSupervisor, phdStudent, status, summary, colour } = theme.data;
 const approved = status === "approved";
 const { Content } = await render(theme);
 ---
@@ -34,7 +34,7 @@ const { Content } = await render(theme);
       </div>
       <div>
         <dt class="label muted">PhD student</dt>
-        <dd><Todo what="name" /></dd>
+        <dd>{phdStudent ?? <Todo what="name" />}</dd>
       </div>
     </dl>
     {!approved && <p><Todo what="theme description, pending approval" /></p>}

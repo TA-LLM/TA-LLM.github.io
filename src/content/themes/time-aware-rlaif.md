@@ -1,10 +1,11 @@
 ---
-number: "01"
+number: "04"
 title: Time-Aware Reinforcement Learning from AI Feedback
 shortTitle: Time-Aware RLAIF
 colour: rlaif
 supervisor: Luca Cagliero
 coSupervisor: Paolo Garza
+phdStudent: Davide Benotto
 status: approved
 summary: >-
   Reinforcement Learning from AI Feedback (RLAIF) has been developed to mitigate the substantial expenses

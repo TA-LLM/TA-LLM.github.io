@@ -1,10 +1,11 @@
 ---
-number: "02"
+number: "03"
 title: Continual Learning for Generative Models
 shortTitle: Continual Learning
 colour: cl
 supervisor: Luca Cagliero
 coSupervisor: Elena Baralis
+phdStudent: Michele Pantaleo
 status: approved
 summary: >-
   Training Multimodal Large Language Models (MLLMs) is inherently dynamic as data distributions, languages and

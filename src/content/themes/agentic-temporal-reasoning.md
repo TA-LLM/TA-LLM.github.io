@@ -1,10 +1,11 @@
 ---
-number: "04"
+number: "01"
 title: Agentic AI for Advanced Temporal Reasoning
 shortTitle: Agentic Temporal Reasoning
 colour: agentic
 supervisor: Luca Cagliero
 coSupervisor: Silvia Chiusano
+phdStudent: Giorgio Bongiovanni
 status: approved
 summary: >-
   Addressing Temporal Reasoning using Large Language Models (LLMs) requires understanding not only the general

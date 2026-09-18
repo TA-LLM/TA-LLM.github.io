@@ -8,8 +8,10 @@ const themeKey = z.enum(["rlaif", "cl", "topology", "agentic"]);
 /**
  * The four starting research themes (non-binding). The descriptions are the
  * exact text of the theme documents (sources/private/research-themes/),
- * published verbatim at the user's request (2026-09-18): `summary` is the
- * opening paragraph, the Markdown body holds the sections that follow.
+ * published verbatim at the user's request (2026-09-18), two typos fixed:
+ * `summary` is the opening paragraph, the Markdown body holds the sections
+ * that follow. Numbers follow the site order set on 2026-09-18 (Agentic 01 →
+ * RLAIF 04), not the order of the original call.
  */
 const themes = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/themes" }),
@@ -20,6 +22,7 @@ const themes = defineCollection({
     colour: themeKey,
     supervisor: z.string(),
     coSupervisor: z.string(),
+    phdStudent: z.string().optional(),
     /** One-line question shown in the Research menu. TODO until approved. */
     question: z.string().optional(),
     /** Opening paragraph of the theme document, shown as the page lede. */

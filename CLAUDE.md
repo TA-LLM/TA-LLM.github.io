@@ -6,11 +6,12 @@ Website of the research project **TA-LLM — Large Language Models: a matter of 
 - Funding: MUR, Fondo Italiano per la Scienza (FIS 2), project code FIS-01152, CUP E53C25001820001
 - Duration: 18/08/2026 – 17/08/2029
 - Goals: (1) LLMs + time series, (2) temporal misalignment in multimodal data, (3) time-aware LLM approaches with drift detection.
-- Four starting research themes (non-binding), each with a PhD student, supervisor and co-supervisor:
-  1. Time-Aware RLAIF (co-supervisor: P. Garza)
-  2. Continual Learning for Generative Models (co-supervisor: E. Baralis)
-  3. Topology-Aware Temporal Reasoning (co-supervisor: F. Vaccarino)
-  4. Agentic AI for Advanced Temporal Reasoning (co-supervisor: S. Chiusano)
+- Four starting research themes (non-binding), each with a PhD student, supervisor and co-supervisor.
+  Site order and numbering (set 2026-09-18, the reverse of the original call):
+  1. Agentic AI for Advanced Temporal Reasoning (co-supervisor: S. Chiusano; PhD: Giorgio Bongiovanni)
+  2. Topology-Aware Temporal Reasoning (co-supervisor: F. Vaccarino; PhD: Enrico Maria Ferrari)
+  3. Continual Learning for Generative Models (co-supervisor: E. Baralis; PhD: Michele Pantaleo)
+  4. Time-Aware RLAIF (co-supervisor: P. Garza; PhD: Davide Benotto)
 
 ## Sources (read before writing content)
 - `sources/private/general_project_info.txt` — official abstract and project data
@@ -20,7 +21,7 @@ Website of the research project **TA-LLM — Large Language Models: a matter of 
 Files in `sources/private/` are drafts: NEVER copy them into the public site verbatim
 and never publish them. Rewrite content and ask before publishing.
 **Exception (user decision, 2026-09-18):** the four theme descriptions are published
-with the **exact text** of `research-themes/*.pdf` (opening paragraph, Context,
+with the **exact text** of `research-themes/*.pdf` (two typos fixed: innovative, interpret) (opening paragraph, Context,
 Challenges, Research objectives, Tentative work plan, Bibliography) in
 `src/content/themes/`. The PDFs themselves, contacts, skills and venues stay private.
 
