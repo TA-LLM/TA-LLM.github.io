@@ -14,3 +14,5 @@ Thumbs.db
 # third-party reference screenshots: keep local, never publish
 research/moodboard/*
 !research/moodboard/.gitkeep
+# raw third-party datasets: downloaded by scripts/prepare-hero-data.mjs, never committed
+data/raw/
