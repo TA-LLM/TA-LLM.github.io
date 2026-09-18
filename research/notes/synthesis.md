@@ -368,7 +368,15 @@ deployment-platform default. Both would place us in the visual centre of the fie
 measured, and 13/13 reference sites use a geometric or neo-grotesque sans for display —
 that convergence is exactly what our display serif is meant to escape.
 
-**Display face: still open.** `[taste D6]` Fraunces (OFL) remains the serif candidate,
+**Display face: decided — Gelasio 400** (update 2026-09-18, `[taste D6]`). The hero test
+put Fraunces (300–500, `opsz` auto and fixed low), one sans, Gelasio, Source Serif 4 and
+Merriweather beside the provisional system serif, which on Windows is Georgia. The user
+chose Georgia's qualities — solid bracketed serifs, low contrast, large x-height, an
+authoritative rather than editorial register — at 400 in both themes. Gelasio is its
+self-hostable, metric-compatible OFL counterpart. The paragraphs below record the
+earlier reasoning; the Fraunces axis rule no longer applies.
+
+*Earlier text:* Fraunces (OFL) remains the serif candidate,
 preferred over Instrument Serif because its `opsz` axis makes the mobile cut-swap (§1.10)
 one variable adjustment rather than a second file. But all five hero references in the
 personal moodboard use a sans display (`[taste §2.1]`), so the choice is made by a

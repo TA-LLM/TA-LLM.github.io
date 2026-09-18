@@ -1,12 +1,11 @@
 ---
 /**
- * DEV-ONLY typography test (Phase 2): D6 display face and the text sans.
+ * DEV-ONLY typography test (Phase 2): the text sans, at 16px, beside the site's
+ * mono label, a heading in the display face and mono metadata.
+ * D6 is settled (display = Gelasio 400, Georgia's metrics; see CLAUDE.md).
  * getStaticPaths returns nothing in production, so this page is never built;
  * scripts/check-dist.mjs also fails the build if a /dev/ page or a candidate
  * font file reaches dist/.
- *
- * Query `?sans=archivo|public|source|plex|instrument` swaps the face used for
- * the sans hypothesis of D6 (default: Archivo).
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
@@ -14,7 +13,6 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
    the production build (and ship the files) even though this page is never
    generated. The dev server serves node_modules as-is. */
 const FONT_CSS = [
-  "fraunces/full.css",
   "public-sans/index.css",
   "source-sans-3/index.css",
   "ibm-plex-sans/standard.css",
@@ -35,11 +33,6 @@ const SANS = {
 } as const;
 type SansKey = keyof typeof SANS;
 
-const requested = Astro.url.searchParams.get("sans") ?? "archivo";
-const d6Sans: SansKey = requested in SANS ? (requested as SansKey) : "archivo";
-
-const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
-
 /* ~120 words, identical in every specimen. Written for this test; facts only. */
 const paragraph =
   "Language models learn from a snapshot of the world, but the world does not hold still. Sensor streams keep arriving, the meaning of words shifts, and a fact that held last spring may be wrong by autumn. TA-LLM studies how large language models can read numeric time series, reason about order and duration, cope with sources that fall out of step, and notice when their own answers start to drift. The work is organised in four themes, from feedback that adapts as models change to agents that plan over long horizons. The project runs from August 2026 to August 2029 at the Department of Control and Computer Engineering of Politecnico di Torino, funded by the Italian Ministry of University and Research.";
@@ -51,32 +44,13 @@ const wordCount = paragraph.split(/\s+/).length;
   <div class="container test">
     <header class="test__intro">
       <p class="label muted">Dev only · not built in production</p>
-      <h1 class="test__h1">Typography test — D6 and the text sans</h1>
+      <h1 class="test__h1">Typography test — the text sans</h1>
     </header>
-
-    <!-- D6 ------------------------------------------------------------ -->
-    <section class="d6" aria-labelledby="d6-title">
-      <h2 id="d6-title" class="label muted">D6 · Hero headline at its real size (--hero-title-size, 40 → 88px)</h2>
-
-      <div class="d6__option">
-        <p class="label d6__label">A · Serif — Fraunces 300 · opsz auto · SOFT 0 · WONK 0</p>
-        <p class="hero-h1 hero-h1--serif" role="presentation">
-          {words.map((w, i) => (<>{w}{i < words.length - 1 ? " " : ""}</>))}<span class="q">?</span>
-        </p>
-      </div>
-
-      <div class="d6__option">
-        <p class="label d6__label">B · Sans — {SANS[d6Sans].name} 300{d6Sans === "archivo" ? " · wdth 112" : ""}</p>
-        <p class="hero-h1 hero-h1--sans" role="presentation" style={`--d6-sans: ${SANS[d6Sans].family}`}>
-          {words.map((w, i) => (<>{w}{i < words.length - 1 ? " " : ""}</>))}<span class="q">?</span>
-        </p>
-      </div>
-    </section>
 
     <!-- Text sans -------------------------------------------------------- -->
     <section class="sans" aria-labelledby="sans-title">
       <h2 id="sans-title" class="label muted">
-        Text sans at 16px · the same {wordCount}-word text · with a mono label, a Fraunces title and mono metadata
+        Text sans at 16px · the same {wordCount}-word text · with a mono label, a display-face title and mono metadata
       </h2>
       <div class="sans__grid">
         {
@@ -110,56 +84,6 @@ const wordCount = paragraph.split(/\s+/).length;
     margin-top: var(--space-xs);
     font-family: var(--font-mono);
     font-size: var(--step-1);
-  }
-
-  /* D6 -------------------------------------------------------------- */
-  .d6 {
-    display: grid;
-    gap: var(--space-xl);
-  }
-
-  .d6__option {
-    display: grid;
-    gap: var(--space-s);
-    padding-top: var(--space-m);
-    border-top: var(--hairline) solid var(--rule);
-  }
-
-  @media (min-width: 64rem) {
-    /* Same column as the hero text (about half the container). */
-    .d6__option {
-      max-width: 52%;
-    }
-  }
-
-  .d6__label {
-    color: var(--text-muted);
-  }
-
-  .hero-h1 {
-    font-size: var(--hero-title-size);
-    line-height: var(--leading-display);
-    letter-spacing: var(--tracking-display);
-    max-width: 14ch;
-    text-wrap: balance;
-  }
-
-  .hero-h1--serif {
-    font-family: "Fraunces Variable", serif;
-    font-weight: 300;
-    font-optical-sizing: auto;
-    font-variation-settings: "SOFT" 0, "WONK" 0;
-  }
-
-  .hero-h1--sans {
-    font-family: var(--d6-sans), sans-serif;
-    font-weight: 300;
-    font-variation-settings: "wdth" 112;
-    letter-spacing: -0.025em;
-  }
-
-  .q {
-    color: var(--accent-text);
   }
 
   /* Text sans --------------------------------------------------------- */
@@ -211,10 +135,7 @@ const wordCount = paragraph.split(/\s+/).length;
   }
 
   .specimen__title {
-    font-family: "Fraunces Variable", serif;
-    font-weight: 400;
-    font-optical-sizing: auto;
-    font-variation-settings: "SOFT" 0, "WONK" 0;
+    font-family: var(--font-display);
     font-size: var(--step-2);
   }
 

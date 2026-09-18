@@ -63,10 +63,13 @@ Second batch, by category:
     variants: amber `#8A5A10` (5.11:1), sage `#356B58` (5.35:1), violet `#6A55A8`
     (5.22:1), ice `#2F6DA3` (4.73:1). Ratios measured against paper `#F3EEE4`.
   - dark theme: amber on ink is 8.4:1 and paper on ink 15.9:1, so no variants needed.
-- Type: display face **still open** — a serif or a sans, decided by a side-by-side test
-  at hero size in the mockup (`taste.md` D6). If the serif wins it is **Fraunces**,
-  preferred over Instrument Serif for its `opsz` axis, with its `SOFT` and `WONK` axes
-  pinned to sober values. Text sans **still open** among five OFL candidates — Public Sans,
+- Type: display face **decided (D6, 2026-09-18): Gelasio 400** — an OFL serif
+  metric-compatible with Georgia, chosen for Georgia's qualities: solid bracketed serifs,
+  low stroke contrast (2.3–2.7:1), generous x-height (0.48 em); authoritative, not
+  editorial. **Weight 400 in both themes**, no heavier cut for light. Georgia is the
+  unadjusted fallback (same metrics, no shift). Fraunces was tested and rejected: at
+  `opsz` auto its display cut reaches 13:1 contrast, and its `g`/`a` stay too
+  characterful even at low `opsz`. Text sans **still open** among five OFL candidates — Public Sans,
   Source Sans 3, IBM Plex Sans, Instrument Sans, Archivo — decided by comparing them at
   16px in the same mockup pass. Mono: JetBrains Mono.
 - Fonts: self-hosted, **at most five faces** (display regular, sans regular, sans medium,

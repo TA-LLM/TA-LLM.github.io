@@ -56,9 +56,9 @@
   color-scheme: dark;
 
   /* ----------------------------------------------------------- typography */
-  /* Display and text faces are decided in Phase 2 (D6, 16px test); until then
-     they fall back to system families. Mono is final. */
-  --font-display: ui-serif, Georgia, "Times New Roman", serif;
+  /* Display is final (D6): Gelasio 400, Georgia's metrics. The text sans is
+     decided by the 16px test; until then it falls back to system families. */
+  --font-display: var(--font-gelasio, Georgia, serif);
   --font-text: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: var(--font-jetbrains-mono, ui-monospace, monospace);
 

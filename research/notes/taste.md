@@ -390,7 +390,7 @@ What this means in practice:
 | **D3** | Carousels | **No carousels anywhere on the site, People included.** Static grids with focus-and-recede instead: one element in focus, the others recede. Carousels hide content, and on mobile they are almost always worse than a list | — |
 | **D4** | Photography | **No stock photography, and no commissioned photo series for the theme headers.** The only photographs on the site are the real portraits in People, plus real photos of events where they exist. Theme headers use the animated concept SVGs, not photographs | — |
 | **D5** | What the hero shows | **One luminous ring built from a real time series** — its radius modulated by the series values, not a generic decorative glow. Fallback: a field of flowing lines | `CLAUDE.md` · synthesis §1.21 |
-| **D6** | Display face | **Still open.** Settled by a side-by-side test at hero size in the mockup, in the same pass as the 16px comparison of the five text-sans candidates | `CLAUDE.md` · synthesis §5 |
+| **D6** | Display face | **Serif: Gelasio 400** (OFL, metric-compatible with Georgia), 400 in both themes. Decided 2026-09-18 after the side-by-side test at hero size: the user preferred Georgia's solid, low-contrast, large-x-height serif to Fraunces and to the sans; Gelasio makes it self-hostable | `CLAUDE.md` · synthesis §5 |
 | **D7** | 2D canvas or WebGL | **2D canvas.** Reduced motion checked in JS at start and on change, device pixel ratio capped, loop paused off-screen and on hidden tabs | `CLAUDE.md` · synthesis §6.2 |
 | **D8** | Pointer-reactive background | **No** | — |
 | **D9** | Publications: rows or table | **Rows grouped by year**, with the details of `filter_ui_2`: printed result count, mono identifiers, sort by year, monochrome with one accent for the exception, a *last updated* line | — |
@@ -405,7 +405,8 @@ Where the outcome goes beyond or differs from the recommendation in §4.2:
 - **D4** allows real photos of events alongside the People portraits.
 - **D5** adds the constraint that the ring must be driven by real data, and names a
   fallback.
-- **D6** stays open instead of settling on Fraunces up front.
+- **D6** was left open instead of settling on Fraunces up front; the test chose a
+  Georgia-like serif (Gelasio), not Fraunces.
 - **D10** puts the filling bar on the home page and the project timeline on `/about`,
   instead of the bar on the `/publications` year rail. *Still to place in the mockup:
   where on the home page the bar sits.*
