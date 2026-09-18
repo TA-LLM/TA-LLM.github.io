@@ -315,7 +315,7 @@ present; these are the ones that need a different design rather than a narrower 
 - **Funder plinth**: logos 2-up at 56px height; the mono line wraps to 3 lines and stays at
   13px — it does not shrink below legibility.
 - **Section rhythm**: steps down through the fluid spacing scale, with no media query.
-- **Hard check**: `scrollWidth === innerWidth` at 390 on every page (§6).
+- **Hard check**: `scrollWidth === clientWidth` at 390 on every page (§6).
 
 ---
 
@@ -434,7 +434,7 @@ self-hosted but 17 TrueType faces.
    ship **one** origin. Ai2 runs a whole institute site on two. This makes the no-tracking
    rule true by construction rather than by policy, and removes the entire consent
    apparatus.
-5. **`scrollWidth === innerWidth` asserted at 390px** on every page, as part of the
+5. **`scrollWidth === clientWidth` asserted at 390px** on every page, as part of the
    screenshot step in the working rules. Anthropic ships 396px on a 390px viewport.
 6. **Certificate on apex *and* `www` before announcing the domain.** `future-ai-research.it`
    fails on both over HTTPS with `ERR_CERT_COMMON_NAME_INVALID`; only `http://` resolves,
@@ -544,7 +544,7 @@ Not applied. Each is a small edit to an existing section, except where marked "n
 
 ### Working rules
 
-16. **Working rules** — add the `scrollWidth === innerWidth` assertion at 390px to the
+16. **Working rules** — add the `scrollWidth === clientWidth` assertion at 390px to the
     post-change screenshot step, and the apex + `www` certificate check after the `CNAME`
     switch.
 17. **Reference sites** — point to `research/notes/synthesis.md` as the entry point, with

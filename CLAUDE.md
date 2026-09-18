@@ -113,6 +113,11 @@ News · Join us (students / researchers / industry) · About.
 - Work in small, reviewable steps; propose a plan before structural changes.
 - After any visual change: run the dev server and use the Playwright MCP to take
   desktop (1440px) and mobile (390px) screenshots, then self-review against this file.
+  On every page assert no horizontal overflow with
+  `document.documentElement.scrollWidth === document.documentElement.clientWidth`.
+  Do **not** compare with `innerWidth`: on desktop browsers it includes the classic
+  scrollbar (15px in Chrome on Windows), so it fails even when nothing overflows. Under
+  mobile emulation (`isMobile`, overlay scrollbars) `scrollWidth === innerWidth` also holds.
 - Save reference screenshots to `research/moodboard/<site>/`.
 - Use the Astro Docs MCP for Astro documentation, and Context7 for other libraries,
   instead of guessing APIs.
