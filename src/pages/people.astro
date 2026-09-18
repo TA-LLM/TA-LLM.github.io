@@ -1,11 +1,131 @@
 ---
+/**
+ * People (taste.md §2.4). Researchers first, the PI leading, then the PhD
+ * students in theme order. A faint grid lies behind the page, as in the
+ * `people` reference; the cards sit on it as one ruled table (1px rules, no
+ * shadows), each lighting up on its own.
+ */
+import { getCollection, getEntries } from "astro:content";
+import Icon from "../components/Icon.astro";
 import PageIntro from "../components/PageIntro.astro";
-import Todo from "../components/Todo.astro";
+import PersonCard from "../components/PersonCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const people = await getCollection("people");
+const byOrder = (a: (typeof people)[number], b: (typeof people)[number]) => a.data.order - b.data.order;
+const researchers = people.filter((p) => p.data.role !== "phd").sort(byOrder);
+const students = people.filter((p) => p.data.role === "phd").sort(byOrder);
+
+const withThemes = async (list: typeof people) =>
+  Promise.all(
+    list.map(async (person) => ({
+      person,
+      themes: (await getEntries(person.data.themes)).sort((a, b) => a.data.number.localeCompare(b.data.number)),
+    })),
+  );
+
+const groups = [
+  { id: "researchers", title: "Researchers", members: await withThemes(researchers) },
+  { id: "phd-students", title: "PhD students", members: await withThemes(students) },
+];
 ---
 
-<BaseLayout title="People" description="The people of the TA-LLM research project.">
-  <PageIntro eyebrow="People" title="People">
-    <p><Todo what="team page — Phase 4; PhD student names still missing" /></p>
-  </PageIntro>
+<BaseLayout title="People" description="The researchers and PhD students of the TA-LLM project at Politecnico di Torino.">
+  <div class="team">
+    <PageIntro
+      eyebrow="People"
+      title="The team"
+      lede="Five faculty members of Politecnico di Torino lead the project. Four PhD students each take on one of its research themes."
+    >
+      <a class="label link-arrow team__join" href="/collaborate/">Work with us<Icon name="arrow-right" size={16} /></a>
+    </PageIntro>
+
+    {
+      groups.map((group) => (
+        <section class="container group" aria-labelledby={group.id}>
+          <h2 id={group.id} class="label group__title" data-reveal>
+            {group.title}
+            <span class="muted">{String(group.members.length).padStart(2, "0")}</span>
+          </h2>
+          <ul role="list" class:list={["group__grid", `group__grid--${group.id}`]}>
+            {group.members.map(({ person, themes }) => (
+              <li>
+                <PersonCard person={person} themes={themes} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
 </BaseLayout>
+
+<style>
+  /* The faint grid of the reference: rules at a low opacity, fading out
+     towards the bottom so it frames the opening, not the whole page. */
+  .team {
+    position: relative;
+    isolation: isolate;
+    padding-bottom: var(--space-2xl);
+  }
+
+  .team::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 70rem;
+    z-index: -1;
+    background-image:
+      linear-gradient(to right, var(--rule) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: 0.35;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 100%);
+  }
+
+  .team__join {
+    color: var(--accent-text);
+    text-decoration: none;
+  }
+
+  .group {
+    display: grid;
+    gap: var(--space-s);
+    margin-top: var(--space-xl);
+  }
+
+  .group__title {
+    display: flex;
+    gap: var(--space-2xs);
+  }
+
+  /* A ruled table: the grid draws its top and left rules, every card its
+     right and bottom ones, so an unfinished last row leaves no filled gaps. */
+  .group__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    border-top: var(--hairline) solid var(--rule);
+    border-left: var(--hairline) solid var(--rule);
+  }
+
+  .group__grid > li {
+    display: grid;
+  }
+
+  /* Phones: two per row, so nine people stay one short scroll. */
+  @media (max-width: 39.99rem) {
+    .group__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .group__grid--researchers {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .group__grid--phd-students {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>

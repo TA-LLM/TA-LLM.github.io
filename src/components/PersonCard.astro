@@ -1,0 +1,243 @@
+---
+/**
+ * One person on /people (taste.md §2.4, from the `people` reference): a round
+ * portrait echoing the ring motif, name, position, and the themes they work
+ * on. Focus-and-recede: on hover, or when one of its links has focus, a
+ * lighter half-disc rises behind the person and the portrait's ring draws in
+ * amber. Surface change only — no shadow, no scaling of the card.
+ *
+ * Portraits must be real (D4). Until one exists, the ring holds the person's
+ * initials in the display face: a designed state, not a placeholder image.
+ */
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  person: CollectionEntry<"people">;
+  themes: CollectionEntry<"themes">[];
+}
+
+const { person, themes } = Astro.props;
+const { name, position, role, portrait } = person.data;
+const initials = name
+  .split(/\s+/)
+  .filter((part, i, all) => i === 0 || i === all.length - 1)
+  .map((part) => part[0])
+  .join("");
+---
+
+<article class="person" data-reveal>
+  <span class="person__spot" aria-hidden="true"></span>
+
+  <div class="person__portrait">
+    {portrait ? <img src={portrait} alt={`Portrait of ${name}`} width="144" height="144" loading="lazy" /> : <span class="person__initials" aria-hidden="true">{initials}</span>}
+    <svg class="person__ring" viewBox="0 0 100 100" aria-hidden="true">
+      <circle cx="50" cy="50" r="49" pathLength="1"></circle>
+    </svg>
+  </div>
+
+  <h3 class="person__name">{name}</h3>
+  <p class="person__position">{position}</p>
+  {role === "pi" && <p class="label person__role">Principal investigator</p>}
+
+  {
+    themes.length > 0 && (
+      <ul role="list" class="person__themes" aria-label={`Research themes of ${name}`}>
+        {themes.map((theme) => (
+          <li data-theme-key={theme.data.colour}>
+            <a class="label" href={`/research/${theme.id}/`} aria-label={`Theme ${theme.data.number}: ${theme.data.title}`}>
+              {theme.data.number}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</article>
+
+<style>
+  .person {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: var(--space-3xs);
+    padding: var(--space-l) var(--space-s) var(--space-m);
+    text-align: center;
+    background: var(--surface);
+    border-right: var(--hairline) solid var(--rule);
+    border-bottom: var(--hairline) solid var(--rule);
+    overflow: clip;
+    isolation: isolate;
+  }
+
+  /* The spotlight: a large disc whose top arc passes behind the portrait,
+     parked below the card until the person comes into focus. */
+  .person__spot {
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    top: 42%;
+    width: 130%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--surface-raised);
+    transform: translate(-50%, 70%);
+    opacity: 0;
+  }
+
+  .person:is(:hover, :focus-within) .person__spot {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+
+  .person__portrait {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 9rem;
+    aspect-ratio: 1;
+    margin-bottom: var(--space-s);
+    border-radius: 50%;
+    border: var(--hairline) solid var(--rule-strong);
+    background: var(--surface);
+  }
+
+  .person__portrait img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .person__initials {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    letter-spacing: 0.02em;
+    color: var(--text-muted);
+  }
+
+  /* The ring drawn over the hairline border, from the top, clockwise. */
+  .person__ring {
+    position: absolute;
+    inset: -1px;
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+    transform: rotate(-90deg);
+    overflow: visible;
+  }
+
+  /* Scaling stroke on purpose: dash lengths (pathLength) do not survive a
+     non-scaling one. 1.05 units of the 100-unit ring ≈ 1.5px at 9rem. */
+  .person__ring circle {
+    fill: none;
+    stroke: var(--accent-text);
+    stroke-width: 1.05;
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+    opacity: 0; /* hides the sliver a zero-length dash leaves at the start */
+  }
+
+  .person:is(:hover, :focus-within) .person__ring circle {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  .person:is(:hover, :focus-within) .person__initials {
+    color: var(--text);
+  }
+
+  /* The amber ring replaces the hairline, so the two never read as double. */
+  .person:is(:hover, :focus-within) .person__portrait {
+    border-color: transparent;
+  }
+
+  .person__name {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+
+  .person__position {
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+
+  .person__role {
+    margin-top: var(--space-3xs);
+    color: var(--accent-text);
+    white-space: normal;
+    text-wrap: balance;
+  }
+
+  .person__themes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 var(--space-3xs);
+    margin-top: var(--space-s);
+  }
+
+  /* Theme numbers stay neutral; the one in focus takes its colour. */
+  .person__themes a {
+    display: inline-grid;
+    place-items: center;
+    min-width: var(--target);
+    min-height: var(--target);
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .person__themes a:is(:hover, :focus-visible) {
+    color: var(--theme-ink);
+  }
+
+  @media (max-width: 39.99rem) {
+    .person {
+      padding: var(--space-m) var(--space-3xs) var(--space-s);
+    }
+
+    .person__portrait {
+      width: 6.5rem;
+    }
+
+    .person__initials {
+      font-size: var(--step-2);
+    }
+
+    .person__name {
+      font-size: var(--step-0);
+    }
+
+    /* Four themes sit two by two rather than three and one. */
+    .person__themes {
+      max-width: calc(2 * var(--target) + var(--space-3xs));
+    }
+  }
+
+  [data-theme-key="rlaif"] { --theme-ink: var(--theme-rlaif-ink); }
+  [data-theme-key="cl"] { --theme-ink: var(--theme-cl-ink); }
+  [data-theme-key="topology"] { --theme-ink: var(--theme-topology-ink); }
+  [data-theme-key="agentic"] { --theme-ink: var(--theme-agentic-ink); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .person__spot {
+      transition:
+        transform 700ms var(--ease),
+        opacity 400ms var(--ease);
+    }
+
+    .person__ring circle {
+      transition:
+        stroke-dashoffset 900ms var(--ease),
+        opacity var(--dur-base) var(--ease);
+    }
+
+    .person__initials,
+    .person__themes a {
+      transition: color var(--dur-base) var(--ease);
+    }
+
+    .person__portrait {
+      transition: border-color 600ms var(--ease);
+    }
+  }
+</style>

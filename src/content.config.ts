@@ -37,7 +37,11 @@ const people = defineCollection({
   schema: z.object({
     name: z.string(),
     role: z.enum(["pi", "co-supervisor", "phd", "researcher", "collaborator"]),
+    /** Academic position, as stated by the project (e.g. "Associate Professor"). */
+    position: z.string(),
     affiliation: z.string(),
+    /** Order within the person's group on /people. */
+    order: z.number().int(),
     themes: z.array(reference("themes")).default([]),
     orcid: z.string().optional(),
     scholar: z.url().optional(),
