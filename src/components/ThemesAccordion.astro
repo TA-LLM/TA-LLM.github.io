@@ -1,0 +1,311 @@
+---
+/**
+ * Home: the four research themes as a horizontal accordion (chosen
+ * 2026-09-18 from a live comparison; after the `cards_4` reference).
+ *
+ * - Desktop: one theme open and wide, in its colour, its glyph playing; the
+ *   others are narrow grey rails with number, glyph and short title upright.
+ *   Hover or keyboard focus opens a theme; it stays open when the pointer
+ *   leaves. On touch, a first tap on a closed theme opens it, a second one
+ *   follows the link. The open content is laid out at a fixed width, so it is
+ *   revealed as the column widens, never re-set.
+ * - Phone and tablet portrait: a ruled list, every theme open, all neutral;
+ *   the one touched or focused takes its colour (one accent per view).
+ * - Each link is named by its theme ("Theme 01: …"); the visible detail is
+ *   hidden from assistive technology, since the theme page carries it all.
+ * - Without JavaScript the first theme is open and every link works.
+ */
+import { getCollection } from "astro:content";
+import Icon from "./Icon.astro";
+import ThemeGlyph from "./ThemeGlyph.astro";
+
+const themes = (await getCollection("themes")).sort((a, b) => a.data.number.localeCompare(b.data.number));
+const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
+---
+
+<section class="themes container" aria-labelledby="home-themes-title">
+  <div class="themes__head">
+    <p class="label muted" data-reveal>Research</p>
+    <h2 id="home-themes-title" class="themes__title" data-reveal="mask">Four starting themes</h2>
+    <a class="label link-arrow themes__all" href="/research/" data-reveal>All research<Icon name="arrow-right" size={16} /></a>
+  </div>
+
+  <ul role="list" class="acc" data-accordion data-reveal>
+    {
+      themes.map((t, i) => (
+        <li class="acc__item" data-theme-key={t.data.colour} data-glyph-host data-active={i === 0 ? "" : undefined}>
+          <a class="acc__link" href={`/research/${t.id}/`}>
+            <span class="visually-hidden">
+              Theme {t.data.number}: {t.data.title}
+            </span>
+
+            <span class="acc__rail" aria-hidden="true">
+              <span class="label acc__number">{t.data.number}</span>
+              <ThemeGlyph theme={t.data.colour} size={40} />
+              <span class="label acc__vertical">{t.data.shortTitle}</span>
+            </span>
+
+            <span class="acc__open" aria-hidden="true">
+              <span class="label acc__eyebrow">Theme {t.data.number}</span>
+              <span class="acc__glyph">
+                <ThemeGlyph theme={t.data.colour} size={88} hover />
+              </span>
+              <span class="acc__name">{t.data.title}</span>
+              <span class="acc__lede">{firstSentence(t.data.summary)}</span>
+              <span class="acc__people">
+                {t.data.supervisor} · {t.data.coSupervisor} · {t.data.phdStudent}
+              </span>
+              <span class="label acc__cta link-arrow">
+                Read the theme<Icon name="arrow-right" size={16} />
+              </span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<script>
+  const wide = window.matchMedia("(min-width: 64rem)");
+
+  for (const list of document.querySelectorAll<HTMLElement>("[data-accordion]")) {
+    const items = [...list.querySelectorAll<HTMLElement>(".acc__item")];
+    const open = (item: HTMLElement) => items.forEach((i) => i.toggleAttribute("data-active", i === item));
+    let lastPointer = "mouse";
+
+    for (const item of items) {
+      item.addEventListener("pointerdown", (event) => (lastPointer = event.pointerType));
+      item.addEventListener("pointerenter", (event) => {
+        if (event.pointerType === "mouse") open(item);
+      });
+      item.addEventListener("focusin", () => open(item));
+      item.addEventListener("click", (event) => {
+        // On touch, a closed theme opens first; the next tap follows the link.
+        if (wide.matches && lastPointer !== "mouse" && !item.hasAttribute("data-active")) {
+          event.preventDefault();
+          open(item);
+        }
+      });
+    }
+  }
+</script>
+
+<style>
+  .themes {
+    display: grid;
+    gap: var(--space-l);
+    padding-block: var(--space-2xl);
+  }
+
+  /* Grid items may not shrink below their content by default, and the open
+     panel is laid out wider than its column on purpose. */
+  .themes > * {
+    min-width: 0;
+  }
+
+  .themes__head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: var(--space-2xs) var(--space-m);
+  }
+
+  .themes__head > .label:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .themes__title {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+  }
+
+  .themes__all {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .themes__all:hover {
+    color: var(--text);
+  }
+
+  [data-theme-key="rlaif"] { --theme-ink: var(--theme-rlaif-ink); }
+  [data-theme-key="cl"] { --theme-ink: var(--theme-cl-ink); }
+  [data-theme-key="topology"] { --theme-ink: var(--theme-topology-ink); }
+  [data-theme-key="agentic"] { --theme-ink: var(--theme-agentic-ink); }
+
+  /* A ruled table: the list draws its top and left rules, each theme its
+     right and bottom ones (no rule-coloured ground to show through). */
+  .acc {
+    display: grid;
+    border-top: var(--hairline) solid var(--rule);
+    border-left: var(--hairline) solid var(--rule);
+  }
+
+  .acc__item {
+    border-right: var(--hairline) solid var(--rule);
+    border-bottom: var(--hairline) solid var(--rule);
+  }
+
+  .acc__link {
+    display: grid;
+    height: 100%;
+    text-decoration: none;
+    color: var(--text-muted);
+  }
+
+  .acc__rail {
+    display: none;
+  }
+
+  /* ------------------------------------------- phone and tablet: a list */
+  .acc__open {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-xs);
+    padding: var(--space-m);
+  }
+
+  .acc__glyph {
+    color: var(--text-muted);
+  }
+
+  .acc__glyph :global(.glyph) {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .acc__name {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    color: var(--text);
+  }
+
+  .acc__lede {
+    max-width: var(--measure);
+    color: var(--text-muted);
+  }
+
+  .acc__people {
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+
+  .acc__cta {
+    color: var(--text-muted);
+  }
+
+  .acc__link:is(:hover, :focus-visible) :is(.acc__eyebrow, .acc__glyph, .acc__cta) {
+    color: var(--theme-ink);
+  }
+
+  /* ------------------------------------------------ desktop: accordion */
+  @media (min-width: 64rem) {
+    .acc {
+      display: flex;
+      height: 36rem;
+    }
+
+    .acc__item {
+      flex: 1 1 0;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .acc__item[data-active] {
+      flex-grow: 4.5;
+    }
+
+    .acc__link {
+      position: relative;
+    }
+
+    .acc__rail {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      justify-items: center;
+      gap: var(--space-m);
+      padding-block: var(--space-l);
+    }
+
+    .acc__vertical {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      align-self: end;
+      color: var(--text);
+    }
+
+    .acc__item:not([data-active]) .acc__link:hover .acc__rail {
+      color: var(--theme-ink);
+    }
+
+    .acc__item[data-active] .acc__rail {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .acc__open {
+      width: 38rem;
+      align-content: end;
+      gap: var(--space-s);
+      padding: var(--space-l);
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .acc__item[data-active] .acc__open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* The open theme is the view's one accent. */
+    .acc__item[data-active] :is(.acc__eyebrow, .acc__glyph, .acc__cta) {
+      color: var(--theme-ink);
+    }
+
+    .acc__glyph {
+      margin-bottom: auto;
+    }
+
+    .acc__glyph :global(.glyph) {
+      width: 5.5rem;
+      height: 5.5rem;
+    }
+
+    .acc__name {
+      max-width: 20ch;
+      font-size: var(--step-3);
+    }
+
+    .acc__lede {
+      max-width: 46ch;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .acc__item {
+      transition: flex-grow 800ms var(--ease);
+    }
+
+    .acc__rail {
+      transition:
+        opacity 300ms var(--ease),
+        visibility 300ms,
+        color var(--dur-base) var(--ease);
+    }
+
+    .acc__open {
+      transition:
+        opacity 500ms var(--ease) 250ms,
+        visibility 500ms 250ms;
+    }
+
+    .acc__eyebrow,
+    .acc__glyph,
+    .acc__cta {
+      transition: color var(--dur-base) var(--ease);
+    }
+  }
+</style>
