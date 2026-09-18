@@ -24,10 +24,15 @@ export function onReducedMotionChange(listener: (reduced: boolean) => void): () 
   return () => query.removeEventListener("change", handler);
 }
 
-/** Reads a millisecond token (e.g. `--stagger-step`) from the root. */
+/**
+ * Reads a time token (e.g. `--stagger-step`) from the root, in milliseconds.
+ * Accepts both units: the CSS minifier rewrites `130ms` as `.13s` in production.
+ */
 export function readMsToken(name: string, fallback: number): number {
   const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  const value = Number.parseFloat(raw);
+  const match = raw.match(/^(-?\d*\.?\d+)(ms|s)$/);
+  if (!match) return fallback;
+  const value = Number.parseFloat(match[1]) * (match[2] === "s" ? 1000 : 1);
   return Number.isFinite(value) ? value : fallback;
 }
 
