@@ -13,6 +13,7 @@
   /* ---------------------------------------------------------- primitives */
   --ink: #0F1420;
   --paper: #F3EEE4;
+  --paper-muted: #A3A29F;         /* muted paper, for text on ink only */
   --amber: #E6A23C;
 
   /* Theme colours, as fills and graphics on ink. */
@@ -31,7 +32,7 @@
   --surface: var(--ink);
   --surface-raised: #1A1F2A;      /* standalone panels: menu, paper-less cards */
   --text: var(--paper);           /* 15.91:1 on ink */
-  --text-muted: #A3A29F;          /*  7.21:1 on ink */
+  --text-muted: var(--paper-muted); /* 7.21:1 on ink */
   --rule: #3D4047;                /*  1.77:1 — hairlines, 1px grid gaps */
   --rule-strong: #737476;         /*  3.93:1 — control outlines (non-text ≥3:1) */
   --accent: var(--amber);         /*  8.41:1 — the one accent per view */

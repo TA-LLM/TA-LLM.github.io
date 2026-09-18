@@ -389,7 +389,7 @@ What this means in practice:
 | **D2** | Radius and shadows | **No shadows anywhere.** Radius 0 inside ruled grids and rows, 8–12px on standalone surfaces (mega-menu panel, paper blocks, hero frame) | `CLAUDE.md` · synthesis §1.1 |
 | **D3** | Carousels | **No carousels anywhere on the site, People included.** Static grids with focus-and-recede instead: one element in focus, the others recede. Carousels hide content, and on mobile they are almost always worse than a list | — |
 | **D4** | Photography | **No stock photography, and no commissioned photo series for the theme headers.** The only photographs on the site are the real portraits in People, plus real photos of events where they exist. Theme headers use the animated concept SVGs, not photographs | — |
-| **D5** | What the hero shows | **One luminous ring built from a real time series** — its radius modulated by the series values, not a generic decorative glow. Fallback: a field of flowing lines | `CLAUDE.md` · synthesis §1.21 |
+| **D5** | What the hero shows | **Revised 2026-09-18: a looping hourglass video in the right column**, AI-generated, blended into the ink (lighten over ink), paused on its first frame under reduced motion. Replaces the original decision (one luminous ring built from a real time series); the ring, its UCI data and credits were removed | `CLAUDE.md` · synthesis §1.21 |
 | **D6** | Display face | **Serif: Gelasio 400** (OFL, metric-compatible with Georgia), 400 in both themes. Decided 2026-09-18 after the side-by-side test at hero size: the user preferred Georgia's solid, low-contrast, large-x-height serif to Fraunces and to the sans; Gelasio makes it self-hostable | `CLAUDE.md` · synthesis §5 |
 | **D7** | 2D canvas or WebGL | **2D canvas.** Reduced motion checked in JS at start and on change, device pixel ratio capped, loop paused off-screen and on hidden tabs | `CLAUDE.md` · synthesis §6.2 |
 | **D8** | Pointer-reactive background | **No** | — |
@@ -403,8 +403,10 @@ Where the outcome goes beyond or differs from the recommendation in §4.2:
 
 - **D1** adds that the light theme is a first-class alternative, not a fallback.
 - **D4** allows real photos of events alongside the People portraits.
-- **D5** adds the constraint that the ring must be driven by real data, and names a
-  fallback.
+- **D5** first added the constraint that the ring must be driven by real data; on
+  2026-09-18 the user replaced the ring with a generated hourglass video. It is the one
+  image on the site outside D4's rule (portraits and event photos
+  only), accepted as illustration, not as a photograph of the project.
 - **D6** was left open instead of settling on Fraunces up front; the test chose a
   Georgia-like serif (Gelasio), not Fraunces.
 - **D10** puts the filling bar on the home page and the project timeline on `/about`,

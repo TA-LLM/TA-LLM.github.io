@@ -6,21 +6,20 @@
  * - The headline reveals once, word by word, on the site's single stagger
  *   (index × --stagger-step); the full sentence is also in a visually hidden
  *   span, so assistive technology reads it whole.
- * - The ring is drawn from real data (src/data/electricity-ring.ts) and the
- *   caption states what is being shown, with the source.
+ * - The right column is a looping video of an hourglass (AI-generated, 5 s,
+ *   seamless; encoded by scripts/prepare-hero-video.mjs), decorative and hidden from assistive technology. It plays only
+ *   while on-screen in a visible tab and never under reduced motion, where the
+ *   poster (its first frame) stands still in its place.
+ * - The hero stays an ink surface in both themes. The video's background is
+ *   darker than ink; `mix-blend-mode: lighten` over an ink ground lifts it to
+ *   exactly ink, so the frame has no edge to hide.
  */
-import { RING } from "../data/electricity-ring";
+import { getImage } from "astro:assets";
+import posterSource from "../assets/hero/hourglass-poster.png";
+
+const poster = await getImage({ src: posterSource, format: "webp", width: 480 });
 
 const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
-const format = (iso: string, withYear = false) =>
-  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    ...(withYear ? { year: "numeric" } : {}),
-    timeZone: "UTC",
-  });
-const period = `${format(RING.first)}–${format(RING.last, true)}`;
-const ringLabel = `${RING.days.length} rings, one per day, showing the electricity demand of ${RING.clients} clients in Portugal from ${period}. The amber ring is ${format(RING.last, true)}, the last day in the dataset.`;
 ---
 
 <section class="hero" aria-labelledby="hero-title">
@@ -46,28 +45,67 @@ const ringLabel = `${RING.days.length} rings, one per day, showing the electrici
       <a class="hero__link label" href="/research/">Research themes →</a>
     </div>
 
-    <figure class="hero__figure">
-      <canvas class="hero__canvas" role="img" aria-label={ringLabel} data-hero-ring></canvas>
-      <figcaption class="hero__credit">
-        Each ring is one day of electricity demand across {RING.clients} clients in Portugal, {period}.
-        Amber: {format(RING.last, true)}, the last day in the data. UCI, Trindade (2015), CC BY 4.0{" · "}
-        <a href="/about/#hero-data">Source</a>
-      </figcaption>
-    </figure>
+    <div class="hero__visual" aria-hidden="true">
+      <video
+        class="hero__video"
+        poster={poster.src}
+        width="480"
+        height="720"
+        muted
+        loop
+        playsinline
+        disablepictureinpicture
+        preload="none"
+        data-hero-video
+      >
+        <source src="/hero/hourglass.webm" type='video/webm; codecs="av01.0.04M.08"' />
+        <source src="/hero/hourglass.mp4" type="video/mp4" />
+      </video>
+    </div>
   </div>
 </section>
 
 <script>
-  import { RING } from "../data/electricity-ring";
-  import { mountHeroRing } from "../scripts/hero-ring";
+  import { onReducedMotionChange, prefersReducedMotion, whenVisible } from "../scripts/motion";
 
-  const canvas = document.querySelector<HTMLCanvasElement>("[data-hero-ring]");
-  if (canvas) mountHeroRing(canvas, RING);
+  const video = document.querySelector<HTMLVideoElement>("[data-hero-video]");
+  if (video) {
+    let visible = false;
+    let reduced = prefersReducedMotion();
+    const update = () => {
+      if (visible && !reduced) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+        if (reduced) video.currentTime = 0;
+      }
+    };
+    whenVisible(video, (isVisible) => {
+      visible = isVisible;
+      update();
+    });
+    onReducedMotionChange((isReduced) => {
+      reduced = isReduced;
+      update();
+    });
+  }
 </script>
 
 <style>
+  /* An ink surface in both themes: the roles are re-pointed to their ink
+     values locally, so the photo and the text never change ground. */
   .hero {
+    --surface: var(--ink);
+    --text: var(--paper);
+    --text-muted: var(--paper-muted);
+    --accent-text: var(--amber);
+    --thread-fill: var(--amber);
+    --focus: var(--amber);
+    color-scheme: dark;
+
     padding-block: var(--space-xl) var(--space-2xl);
+    background: var(--surface);
+    color: var(--text);
   }
 
   .hero__grid {
@@ -102,8 +140,7 @@ const ringLabel = `${RING.days.length} rings, one per day, showing the electrici
     display: inline-block;
   }
 
-  /* One accent on this view carries the concept: the question mark and the
-     "now" ring are the same amber. */
+  /* One accent on this view: the question mark shares the amber of the sand. */
   .hero__q {
     color: var(--accent-text);
   }
@@ -121,29 +158,37 @@ const ringLabel = `${RING.days.length} rings, one per day, showing the electrici
     color: var(--text);
   }
 
-  .hero__figure {
-    margin: 0;
+  /* The video is a 2:3 column around the glass, set on an ink ground a little
+     taller than itself, so the glass never touches an edge. Lighten lifts the video's darker background
+     to exactly ink; the edge fades only catch the glow around the glass. */
+  .hero__visual {
+    --visual-height: min(78dvh, 44rem);
+
     display: grid;
-    gap: var(--space-s);
+    align-content: center;
+    justify-self: center;
+    width: min(100%, calc(var(--visual-height) * 480 / 820));
+    aspect-ratio: 480 / 820;
+    background: var(--ink);
+    mask-image:
+      linear-gradient(to right, transparent, #000 12%, #000 88%, transparent),
+      linear-gradient(to bottom, transparent, #000 6%, #000 94%, transparent);
+    mask-composite: intersect;
   }
 
-  .hero__canvas {
+  /* Stacked layout: the glass follows the headline, it does not fill the screen. */
+  @media (max-width: 63.99rem) {
+    .hero__visual {
+      --visual-height: min(60dvh, 30rem);
+    }
+  }
+
+  .hero__video {
+    display: block;
     width: 100%;
-    aspect-ratio: 1;
-    --ring-trace: var(--text);
-    --ring-now: var(--thread-fill);
-  }
-
-  .hero__credit {
-    max-width: 44ch;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    line-height: 1.5;
-    color: var(--text-muted);
-  }
-
-  .hero__credit a {
-    color: var(--text);
+    height: auto;
+    aspect-ratio: 2 / 3;
+    mix-blend-mode: lighten;
   }
 
   @media (prefers-reduced-motion: no-preference) {

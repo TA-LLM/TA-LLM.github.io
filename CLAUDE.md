@@ -82,12 +82,16 @@ Second batch, by category:
   (mega-menu panel, paper blocks, hero frame) (`taste.md` D2).
 - Motion: subtle, purposeful; always honor `prefers-reduced-motion`; no layout shift;
   hero animation on canvas, lazy-started, paused when off-screen.
-  - Hero object: **one luminous ring built from a real time series** — its radius
-    modulated by the series values — amber on ink. Not a generic decorative glow.
-    Fallback if the ring does not work: a field of flowing lines (`taste.md` D5).
-  - Hero canvas is **2D, not WebGL**. Reduced motion checked in JS at start **and on
-    change** (one static frame, no loop); device pixel ratio **capped**; loop paused by
-    `IntersectionObserver` and `visibilitychange` (`taste.md` D7).
+  - Hero object (**D5 revised 2026-09-18**, replaces the data ring): **a looping
+    video of an hourglass in the right column** (AI-generated with ElevenLabs, 5 s,
+    seamless, muted, no audio track), cropped to 2:3, poster = its first frame. It sits
+    on an ink ground with `mix-blend-mode: lighten`, which lifts its darker background
+    to exactly ink: never a visible rectangle. The hero is an ink surface in both
+    themes. The ring, its UCI data and credits were removed (`taste.md` D5).
+  - Hero motion: plays only when on-screen in a visible tab (`IntersectionObserver` +
+    `visibilitychange`); reduced motion checked in JS at start **and on change** —
+    paused on the poster frame. Any future hero canvas stays **2D, not WebGL**, with
+    DPR capped (`taste.md` D7).
 - Accessibility: WCAG AA contrast, keyboard navigation, alt text on every image.
 
 ## Decisions from the reference-site analysis
