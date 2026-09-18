@@ -37,6 +37,21 @@ for (const page of pages) {
   if (LAUNCHED && html.includes('class="todo"')) problems.push(`TODO marker left in launched page ${page}`);
 }
 
+// Dev-only routes and their assets must never ship. An asset counts as used
+// only if it is reachable from a page: referenced in an HTML file, or in a CSS
+// file that an HTML file links. Orphan CSS and fonts fail the build.
+if (files.some((f) => /[\\/]dev[\\/]/.test(f.slice(DIST.length)))) problems.push("a /dev/ page reached dist/");
+const html = pages.map((f) => readFileSync(f, "utf8")).join("\n");
+const baseName = (f) => f.split(/[\\/]/).pop();
+const linkedCss = files.filter((f) => f.endsWith(".css") && html.includes(baseName(f)));
+for (const css of files.filter((f) => f.endsWith(".css"))) {
+  if (!linkedCss.includes(css)) problems.push(`orphan stylesheet shipped: ${baseName(css)}`);
+}
+const reachable = html + linkedCss.map((f) => readFileSync(f, "utf8")).join("\n");
+for (const font of files.filter((f) => /\.(woff2?|ttf|otf)$/.test(f))) {
+  if (!reachable.includes(baseName(font))) problems.push(`unreachable font file shipped: ${baseName(font)}`);
+}
+
 const robots = readFileSync(join(DIST, "robots.txt"), "utf8");
 if (!LAUNCHED && !/Disallow:\s*\/\s*$/m.test(robots)) problems.push("robots.txt does not disallow crawling");
 
