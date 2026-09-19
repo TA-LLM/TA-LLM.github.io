@@ -12,6 +12,7 @@ Website of the research project **TA-LLM — Large Language Models: a matter of 
   2. Topology-Aware Temporal Reasoning (co-supervisor: F. Vaccarino; PhD: Enrico Maria Ferrari)
   3. Continual Learning for Generative Models (co-supervisor: E. Baralis; PhD: Michele Pantaleo)
   4. Time-Aware RLAIF (co-supervisor: P. Garza; PhD: Davide Benotto)
+- Postdoctoral researcher: Lorenzo Vaiani (added 2026-09-19; no theme assigned yet).
 
 ## Sources (read before writing content)
 - `sources/private/general_project_info.txt` — official abstract and project data

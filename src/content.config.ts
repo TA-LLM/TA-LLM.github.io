@@ -36,7 +36,7 @@ const people = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/people" }),
   schema: z.object({
     name: z.string(),
-    role: z.enum(["pi", "co-supervisor", "phd", "researcher", "collaborator"]),
+    role: z.enum(["pi", "co-supervisor", "postdoc", "phd", "researcher", "collaborator"]),
     /** Academic position, as stated by the project (e.g. "Associate Professor"). */
     position: z.string(),
     affiliation: z.string(),

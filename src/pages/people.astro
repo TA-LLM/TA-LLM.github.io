@@ -1,7 +1,7 @@
 ---
 /**
- * People (taste.md §2.4). Researchers first, the PI leading, then the PhD
- * students in theme order. The cards form one ruled table (1px rules, no
+ * People (taste.md §2.4). Researchers first, the PI leading, then the
+ * postdoctoral researchers, then the PhD students in theme order. The cards form one ruled table (1px rules, no
  * shadows), each lighting up on its own. (The faint grid of the `people`
  * reference behind the page was removed at the user's request, 2026-09-19.)
  */
@@ -14,7 +14,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 const people = await getCollection("people");
 const byOrder = (a: (typeof people)[number], b: (typeof people)[number]) => a.data.order - b.data.order;
-const researchers = people.filter((p) => p.data.role !== "phd").sort(byOrder);
+const researchers = people.filter((p) => !["phd", "postdoc"].includes(p.data.role)).sort(byOrder);
+const postdocs = people.filter((p) => p.data.role === "postdoc").sort(byOrder);
 const students = people.filter((p) => p.data.role === "phd").sort(byOrder);
 
 const withThemes = async (list: typeof people) =>
@@ -27,19 +28,20 @@ const withThemes = async (list: typeof people) =>
 
 const groups = [
   { id: "researchers", title: "Researchers", members: await withThemes(researchers) },
+  { id: "postdocs", title: "Postdoctoral researchers", members: await withThemes(postdocs) },
   { id: "phd-students", title: "PhD students", members: await withThemes(students) },
 ];
 ---
 
-<BaseLayout title="People" description="The researchers and PhD students of the TA-LLM project at Politecnico di Torino.">
+<BaseLayout title="People" description="The researchers, postdoc and PhD students of the TA-LLM project at Politecnico di Torino.">
   <div class="team">
     <PageIntro
       eyebrow="People"
       title="The team"
-      lede="Five faculty members of Politecnico di Torino lead the project. Four PhD students each take on one of its research themes."
+      lede="Five faculty members of Politecnico di Torino lead the project, with a postdoctoral researcher. Four PhD students each take on one of its research themes."
     >
       <ul role="list" class="tags team__tags" aria-label="The team in brief">
-        <li><Tag variant="solid">5 faculty · 4 PhD students</Tag></li>
+        <li><Tag variant="solid">5 faculty · 1 postdoc · 4 PhD students</Tag></li>
         <li><Tag>DAUIN · Politecnico di Torino</Tag></li>
         <li><Tag dot>Open to collaboration</Tag></li>
       </ul>
@@ -53,7 +55,11 @@ const groups = [
             {group.title}
             <span class="muted">{String(group.members.length).padStart(2, "0")}</span>
           </h2>
-          <ul role="list" class:list={["group__grid", `group__grid--${group.id}`]}>
+          <ul
+            role="list"
+            class:list={["group__grid", `group__grid--${group.id}`]}
+            style={`--count: ${group.members.length}`}
+          >
             {group.members.map(({ person, themes }) => (
               <li>
                 <PersonCard person={person} themes={themes} />
@@ -111,7 +117,26 @@ const groups = [
     }
   }
 
+  /* A small group (the postdocs) keeps the researchers' card width, and the
+     table is only as wide as its cards, so its rules never run on past the
+     last one. */
+  .group__grid--postdocs {
+    grid-template-columns: repeat(var(--count), minmax(0, 1fr));
+    width: calc(100% / 3 * min(var(--count), 3));
+  }
+
+  @media (max-width: 39.99rem) {
+    .group__grid--postdocs {
+      grid-template-columns: repeat(min(var(--count), 2), minmax(0, 1fr));
+      width: calc(100% / 2 * min(var(--count), 2));
+    }
+  }
+
   @media (min-width: 72rem) {
+    .group__grid--postdocs {
+      width: calc(100% / 5 * min(var(--count), 5));
+    }
+
     .group__grid--researchers {
       grid-template-columns: repeat(5, minmax(0, 1fr));
     }
