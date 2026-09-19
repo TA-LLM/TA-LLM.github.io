@@ -11,6 +11,10 @@
  * - Phones: a full-width opening image fading into the page at its foot; the
  *   content rises a little over it.
  * - The veil is the page's own surface, so the page never shows a seam.
+ * - `fit`: `cover` fills the page's width (a landscape slice of the
+ *   picture); `height` sets the picture at the screen's height on the right,
+ *   so a portrait picture shows almost whole (its left edge fading into the
+ *   page), at a light `zoom` (1 = whole height).
  * - `position` / `mobilePosition` frame the subject (object-position);
  *   `origin` is where its slow movement centres (media-motion.ts).
  * - Decorative: hidden from assistive technology; hidden in forced colours.
@@ -31,15 +35,18 @@ interface Props {
   /** How far the veil reaches: `wide` for pages of text, `narrow` for a
       short page whose subject sits near the middle of the picture. */
   veil?: "wide" | "narrow";
+  fit?: "cover" | "height";
+  zoom?: number;
 }
 
-const { image, position = "50% 50%", mobilePosition = "50% 50%", origin = "50% 50%", motion, veil = "wide" } = Astro.props;
+const { image, position = "50% 50%", mobilePosition = "50% 50%", origin = "50% 50%", motion, veil = "wide", fit = "cover", zoom = 1 } = Astro.props;
+const ratio = (image.width / image.height).toFixed(4);
 ---
 
 <div
-  class:list={["scene", `scene--${veil}`]}
+  class:list={["scene", `scene--${veil}`, `scene--fit-${fit}`]}
   aria-hidden="true"
-  style={`--scene-position: ${position}; --scene-position-mobile: ${mobilePosition}; --scene-origin: ${origin}`}
+  style={`--scene-position: ${position}; --scene-position-mobile: ${mobilePosition}; --scene-origin: ${origin}; --scene-ratio: ${ratio}; --scene-zoom: ${zoom}`}
 >
   <figure class="scene__frame" data-media-motion={motion}>
     <Picture
@@ -171,6 +178,26 @@ const { image, position = "50% 50%", mobilePosition = "50% 50%", origin = "50% 5
 
     .scene__frame::after {
       background: var(--veil), var(--veil-foot);
+    }
+
+    /* Fit to height: the picture stands at the screen's height on the
+       right, as wide as its proportions allow (times a light zoom, which
+       trims only its top and foot); the veil is solid up to it and fades
+       across its left part, so it has no edge. */
+    .scene--fit-height {
+      --art-w: calc((100dvh - var(--header-h) - var(--thread-h)) * var(--scene-ratio) * var(--scene-zoom));
+      --veil: linear-gradient(
+        to right,
+        var(--surface) calc(100% - var(--art-w)),
+        color-mix(in srgb, var(--surface) 65%, transparent) calc(100% - var(--art-w) * 0.9),
+        color-mix(in srgb, var(--surface) 20%, transparent) calc(100% - var(--art-w) * 0.78),
+        transparent calc(100% - var(--art-w) * 0.66)
+      );
+    }
+
+    .scene--fit-height .scene__frame :global(picture) {
+      margin-left: auto;
+      width: min(100%, var(--art-w));
     }
 
     /* A short page still shows the whole picture: at least a screen tall. */

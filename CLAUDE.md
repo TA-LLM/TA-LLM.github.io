@@ -164,6 +164,9 @@ Second batch, by category:
   content rises over). The text may overlap the picture slightly. Page blocks go in a
   `.scene-content` wrapper. `veil="narrow"` (short page, subject mid-picture) applies only to
   dark pictures on ink; the light theme keeps the wide veil.
+  `fit="height"` (Collaborate, 2026-09-19: "zoom much less, show it almost whole"): on desktop
+  the portrait picture stands at the screen's height on the right (zoom 1.1), its left edge
+  fading into the page, instead of filling the width.
   Home hero: the video has no loop of its own on top (it already moves): it comes into
   focus like the others (`focus`), its poster fades out once it plays, and leaving the
   hero it recedes with the scroll (CSS `animation-timeline: scroll()`, longhands only —
