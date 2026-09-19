@@ -16,8 +16,8 @@
  *   top and right, so no edge of the image is ever visible.
  * - Decorative: hidden from assistive technology, no alt text needed.
  * - `motion` (trial, 2026-09-19): the image comes into focus once as it
- *   enters (blur and opacity, 1.6 s), then breathes: a 40 s slow drift in
- *   scale and position, back and forth, so the picture feels alive without
+ *   enters (fade 2.2 s, sharpening 3.6 s), then breathes: an 18 s drift in
+ *   scale (10%) and position, back and forth, so the picture feels alive without
  *   ever being noticed as an animation. Only transforms, filter and
  *   opacity; paused off-screen and on hidden tabs; none of it under reduced
  *   motion, where the image simply shows.
@@ -138,20 +138,23 @@ const { image, intensity = 0.85, motion = false } = Astro.props;
        hidden state exists only under html.motion (Head.astro). */
     :global(html.motion) .backdrop--motion:not(.is-in) {
       opacity: 0;
-      filter: blur(14px);
+      filter: blur(28px);
     }
 
+    /* Slow enough to be seen: the picture fades in, then sharpens. Gentle,
+       symmetric curves here, not the site's fast-out --ease, which would
+       spend most of the change in the first few hundred milliseconds. */
     .backdrop--motion {
       transition:
-        opacity 1400ms var(--ease),
-        filter 1800ms var(--ease);
+        opacity 2400ms cubic-bezier(0.4, 0, 0.2, 1) 150ms,
+        filter 4000ms cubic-bezier(0.45, 0, 0.25, 1) 150ms;
     }
 
     /* The drift: on the image itself, so its blending is untouched. The
        mask clips the scaled image to the frame. */
     .backdrop--motion :global(img) {
       transform-origin: 70% 40%;
-      animation: backdrop-drift 40s ease-in-out infinite alternate;
+      animation: backdrop-drift 18s ease-in-out infinite alternate;
       animation-play-state: paused;
     }
 
@@ -165,7 +168,7 @@ const { image, intensity = 0.85, motion = false } = Astro.props;
       transform: scale(1) translate3d(0, 0, 0);
     }
     to {
-      transform: scale(1.06) translate3d(-1.5%, 1%, 0);
+      transform: scale(1.1) translate3d(-3%, 1.5%, 0);
     }
   }
 </style>
