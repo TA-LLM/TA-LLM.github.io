@@ -1,9 +1,11 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
+import Badge from "../../components/Badge.astro";
 import PageIntro from "../../components/PageIntro.astro";
 import ThemeGlyph from "../../components/ThemeGlyph.astro";
 import Todo from "../../components/Todo.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { personAnchor } from "../../lib/people";
 
 export async function getStaticPaths() {
   const themes = await getCollection("themes");
@@ -33,20 +35,11 @@ const { Content } = await render(theme);
   </PageIntro>
 
   <section class="container meta" aria-label="Supervision">
-    <dl class="meta__list" data-reveal-children>
-      <div>
-        <dt class="label muted">Supervisor</dt>
-        <dd>{supervisor}</dd>
-      </div>
-      <div>
-        <dt class="label muted">Co-supervisor</dt>
-        <dd>{coSupervisor}</dd>
-      </div>
-      <div>
-        <dt class="label muted">PhD student</dt>
-        <dd>{phdStudent ?? <Todo what="name" />}</dd>
-      </div>
-    </dl>
+    <ul role="list" class="meta__list" data-reveal-children>
+      <li><Badge name={supervisor} role="Supervisor" href={personAnchor(supervisor)} /></li>
+      <li><Badge name={coSupervisor} role="Co-supervisor" href={personAnchor(coSupervisor)} /></li>
+      <li>{phdStudent ? <Badge name={phdStudent} role="PhD student" href={personAnchor(phdStudent)} /> : <Todo what="PhD student name" />}</li>
+    </ul>
     {!approved && <p><Todo what="theme description, pending approval" /></p>}
   </section>
 
@@ -66,25 +59,11 @@ const { Content } = await render(theme);
   }
 
   .meta__list {
-    display: grid;
-    gap: var(--space-m);
-    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
     padding-top: var(--space-m);
     border-top: var(--hairline) solid var(--rule);
-  }
-
-  @media (min-width: 48rem) {
-    .meta__list {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-
-  .meta__list dt {
-    margin-bottom: var(--space-3xs);
-  }
-
-  .meta__list dd {
-    margin: 0;
   }
 
   /* The theme text: one reading column, sections separated by space and a

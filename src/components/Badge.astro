@@ -1,0 +1,136 @@
+---
+/**
+ * A person badge, after the `badges` reference (a pill with the label on the
+ * left and smoke on the right): name, then role in mono, on a solid surface;
+ * a smoke texture in the site's own colours (--badge-smoke: ink to amber on
+ * ink, paper to deep amber on paper) fills the right end and feathers into
+ * the pill.
+ *
+ * - The text never sits over the smoke, so its contrast is the surface's.
+ * - The smoke is one SVG turbulence texture, drawn once, not a live shader:
+ *   pages carry several badges. It drifts slowly only while the badge — or an
+ *   ancestor marked [data-glyph-host] — is hovered, focused or active, and
+ *   never under reduced motion.
+ * - With `href` it is a link (e.g. to the person on /people); without, a
+ *   plain label, for use inside another link.
+ * - Assistive technology reads "Role: Name".
+ * - `label` sets a single short tag (e.g. "Principal investigator") in the
+ *   mono label style, for narrow places where a name would be truncated.
+ */
+interface Props {
+  name: string;
+  role?: string;
+  href?: string;
+  label?: boolean;
+  class?: string;
+}
+
+const { name, role, href, label = false, class: className } = Astro.props;
+const Tag = href ? "a" : "span";
+---
+
+<Tag class:list={["badge", { "badge--link": href, "badge--label": label }, className]} href={href}>
+  <span class="badge__copy">
+    {role && <span class="visually-hidden">{role}: </span>}
+    <span class:list={["badge__name", { label }]}>{name}</span>
+    {role && <span class="label badge__role" aria-hidden="true">{role}</span>}
+  </span>
+  <span class="badge__smoke" aria-hidden="true"></span>
+</Tag>
+
+<style>
+  .badge {
+    display: inline-flex;
+    align-items: stretch;
+    min-height: var(--target);
+    max-width: 100%;
+    border: var(--hairline) solid var(--rule-strong);
+    border-radius: 999px;
+    background: var(--surface-raised);
+    color: var(--text);
+    text-decoration: none;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .badge__copy {
+    display: grid;
+    align-content: center;
+    gap: 0.1rem;
+    min-width: 0;
+    padding: 0.35rem 0 0.35rem 1.1rem;
+    text-align: left;
+  }
+
+  .badge__name {
+    font-size: var(--step--1);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* A short tag may wrap onto two lines rather than be truncated, beside a
+     shorter plume of smoke. */
+  .badge--label .badge__name {
+    font-size: 0.6875rem;
+    white-space: normal;
+    text-wrap: balance;
+  }
+
+  .badge--label .badge__copy {
+    padding-right: 0.25rem;
+  }
+
+  .badge--label .badge__smoke {
+    width: 2.75rem;
+    margin-left: 0;
+  }
+
+  .badge__role {
+    font-size: 0.625rem;
+    line-height: 1.2;
+    color: var(--text-muted);
+  }
+
+  /* The smoke: a fixed segment at the right end, feathered on its left edge
+     into the pill's surface. */
+  .badge__smoke {
+    flex: none;
+    width: 4.25rem;
+    margin-left: 0.5rem;
+    background-image: var(--badge-smoke);
+    background-size: 320px 96px;
+    background-position: 0 50%;
+    mask-image: linear-gradient(to right, transparent, #000 70%);
+  }
+
+  .badge--link:hover .badge__name {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .badge--link:focus-visible {
+    outline-offset: 2px;
+  }
+
+  @media (forced-colors: active) {
+    .badge__smoke {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .badge:is(:hover, :focus-visible) .badge__smoke,
+    :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .badge__smoke {
+      animation: badge-smoke 9s linear infinite alternate;
+    }
+  }
+
+  @keyframes badge-smoke {
+    to {
+      background-position: -250px 50%;
+    }
+  }
+</style>

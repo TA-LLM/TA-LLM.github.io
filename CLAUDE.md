@@ -116,6 +116,13 @@ Second batch, by category:
   checks along a drifting series), the only coloured marks (theme colour on focus in lists, as the page accent on
   theme pages, where they animate only under `prefers-reduced-motion: no-preference`).
   Links ending in an arrow use `.link-arrow` + the `arrow-right` icon, not a "→" glyph.
+- Badges (2026-09-19, from `research/moodboard/_taste/badges`): `Badge.astro` — a pill
+  (the one fully rounded shape on the site) with name + mono role on a solid surface and a
+  smoke texture at the right end (`--badge-smoke`: seamless SVG turbulence, gradient-mapped
+  ink → ink-blue → deep amber → amber; paper → deep amber in light). Not a live shader;
+  it drifts only on hover/focus/active and never under reduced motion; text never sits on
+  the smoke. Used for supervisors, co-supervisors and PhD students (research list, theme
+  pages linking to `/people/#id`, home accordion) and the PI tag (`label` variant).
 - Accessibility: WCAG AA contrast, keyboard navigation, alt text on every image.
 
 ## Decisions from the reference-site analysis

@@ -16,6 +16,7 @@
  * - Without JavaScript the first theme is open and every link works.
  */
 import { getCollection } from "astro:content";
+import Badge from "./Badge.astro";
 import Icon from "./Icon.astro";
 import ThemeGlyph from "./ThemeGlyph.astro";
 
@@ -53,7 +54,9 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
               <span class="acc__name">{t.data.title}</span>
               <span class="acc__lede">{firstSentence(t.data.summary)}</span>
               <span class="acc__people">
-                {t.data.supervisor} · {t.data.coSupervisor} · {t.data.phdStudent}
+                <Badge name={t.data.supervisor} role="Supervisor" />
+                <Badge name={t.data.coSupervisor} role="Co-supervisor" />
+                {t.data.phdStudent && <Badge name={t.data.phdStudent} role="PhD student" />}
               </span>
               <span class="label acc__cta link-arrow">
                 Read the theme<Icon name="arrow-right" size={16} />
@@ -187,8 +190,9 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
   }
 
   .acc__people {
-    font-size: var(--step--1);
-    color: var(--text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
   }
 
   .acc__cta {
@@ -203,7 +207,8 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
   @media (min-width: 64rem) {
     .acc {
       display: flex;
-      height: 36rem;
+      height: 38rem;
+      container-type: inline-size;
     }
 
     .acc__item {
@@ -246,8 +251,11 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
       visibility: hidden;
     }
 
+    /* Exactly the open column's width (4.5 of 7.5 shares of the list), so
+       the content fits at any desktop width and still never reflows while
+       the column is widening. */
     .acc__open {
-      width: 38rem;
+      width: calc(100cqw * 4.5 / 7.5 - 2px);
       align-content: end;
       gap: var(--space-s);
       padding: var(--space-l);
@@ -275,7 +283,7 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
     }
 
     .acc__name {
-      max-width: 20ch;
+      max-width: 26ch;
       font-size: var(--step-3);
     }
 

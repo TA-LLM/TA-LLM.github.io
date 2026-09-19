@@ -1,8 +1,10 @@
 ---
 import { getCollection } from "astro:content";
+import Badge from "../../components/Badge.astro";
 import PageIntro from "../../components/PageIntro.astro";
 import ThemeGlyph from "../../components/ThemeGlyph.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { personAnchor } from "../../lib/people";
 
 const themes = (await getCollection("themes")).sort((a, b) => a.data.number.localeCompare(b.data.number));
 ---
@@ -28,8 +30,9 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
             >
               {theme.data.title}
             </a>
-            <span class="theme__people muted">
-              {theme.data.supervisor} · {theme.data.coSupervisor}
+            <span class="theme__people">
+              <Badge name={theme.data.supervisor} role="Supervisor" href={personAnchor(theme.data.supervisor)} />
+              <Badge name={theme.data.coSupervisor} role="Co-supervisor" href={personAnchor(theme.data.coSupervisor)} />
             </span>
           </li>
         ))
@@ -143,6 +146,8 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
   }
 
   .theme__people {
-    font-size: var(--step--1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
   }
 </style>
