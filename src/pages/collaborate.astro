@@ -7,9 +7,10 @@
  * each with a short status label with a dot, a title, two lines and one link.
  *
  * - The image (AI-generated, graded into the palette by
- *   scripts/prepare-backdrops.mjs) is a framed standalone surface (radius
- *   within D2's 8–12px), sticky beside the content on desktop and a short
- *   banner above it on phones. It is an ink surface in both themes.
+ *   scripts/prepare-backdrops.mjs) has no frame: its edges are faded on all
+ *   four sides and it is blended into the page like the backdrops (lighten
+ *   over ink; inverted and multiplied over paper), so it has no visible
+ *   edge. Sticky beside the content on desktop, a short banner on phones.
  * - Applications go to an external PoliTo form (CLAUDE.md): no personal data
  *   is ever collected by this site. Its address, and the public contact
  *   addresses, are still to come, so those links are marked.
@@ -107,14 +108,19 @@ const audiences = [
     padding-block: var(--space-l) var(--space-2xl);
   }
 
-  /* The image panel: an ink surface in both themes, so the graded image
-     keeps its ground. */
+  /* No frame: faded on all four sides. The right fade is long and starts
+     early, so the lit sky dies out before the building's wall in the
+     picture, whose straight edge would otherwise read as a frame. */
   .split__visual {
     margin: 0;
-    overflow: hidden;
-    border-radius: var(--radius-surface);
-    background: var(--ink);
     aspect-ratio: 16 / 9;
+    /* The mask isolates this element, so the image blends against this
+       ground, not the page: it must be the page's own surface. */
+    background: var(--surface);
+    mask-image:
+      linear-gradient(to right, transparent, #000 14%, #000 52%, transparent 88%),
+      linear-gradient(to bottom, transparent, #000 14%, #000 82%, transparent);
+    mask-composite: intersect;
   }
 
   .split__visual :global(picture),
@@ -129,6 +135,20 @@ const audiences = [
   .split__visual :global(img) {
     object-fit: cover;
     object-position: 60% 72%;
+    mix-blend-mode: lighten;
+  }
+
+  /* Light theme: the negative, hue kept, multiplied into the paper (as in
+     Backdrop.astro), so its dark ground becomes paper too. */
+  :global(:root[data-theme="light"]) .split__visual :global(img) {
+    filter: invert(1) hue-rotate(180deg) saturate(0.6) brightness(1.12) contrast(1.2);
+    mix-blend-mode: multiply;
+  }
+
+  @media (forced-colors: active) {
+    .split__visual {
+      display: none;
+    }
   }
 
   .split__content {
