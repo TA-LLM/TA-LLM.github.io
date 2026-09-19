@@ -97,17 +97,17 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
     video.addEventListener("playing", () => video.closest("[data-hero-visual]")?.classList.add("is-playing"), {
       once: true,
     });
-    // The "?" beats in time with the sand: two soft beats per loop of the
-    // video, driven by the video's own clock (so it stays locked to the
-    // footage), and still whenever the video is paused or motion is reduced.
+    // The "?" catches the light: once per loop of the sand, a pale-gold
+    // sheen passes slowly across the amber glyph, like light over gilding,
+    // then it rests. Driven by the video's own clock, so it stays locked to
+    // the footage; still whenever the video is paused or motion is reduced.
     const q = document.querySelector<HTMLElement>("[data-hero-q]");
-    if (q && typeof q.animate === "function") {
-      const glow = "0 0 0.35em rgb(230 162 60 / 0.75), 0 0 0.9em rgb(230 162 60 / 0.35)";
-      let beat: Animation | undefined;
+    if (q && typeof q.animate === "function" && CSS.supports("background-clip", "text")) {
+      let sheen: Animation | undefined;
       let period = 0;
       const sync = () => {
-        if (!beat || !period) return;
-        beat.currentTime = ((video.currentTime * 1000) % period);
+        if (!sheen || !period) return;
+        sheen.currentTime = (video.currentTime * 1000) % period;
       };
       const tick = () => {
         sync();
@@ -115,22 +115,25 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
       };
       video.addEventListener("playing", () => {
         if (reduced || !video.duration) return;
-        period = (video.duration * 1000) / 2;
-        beat ??= q.animate(
-          [
-            { transform: "scale(1)", textShadow: "none", offset: 0 },
-            { transform: "scale(1.08)", textShadow: glow, offset: 0.16 },
-            { transform: "scale(1)", textShadow: "none", offset: 0.62 },
-            { transform: "scale(1)", textShadow: "none", offset: 1 },
-          ],
-          { duration: period, iterations: Infinity, easing: "ease-in-out" },
-        );
-        beat.pause();
+        period = video.duration * 1000;
+        if (!sheen) {
+          q.classList.add("is-lit");
+          sheen = q.animate(
+            [
+              { backgroundPosition: "100% 0", offset: 0, easing: "cubic-bezier(0.45, 0, 0.25, 1)" },
+              { backgroundPosition: "0% 0", offset: 0.42 },
+              { backgroundPosition: "0% 0", offset: 1 },
+            ],
+            { duration: period, iterations: Infinity },
+          );
+          sheen.pause();
+        }
         requestAnimationFrame(tick);
       });
       const stop = () => {
-        beat?.cancel();
-        beat = undefined;
+        sheen?.cancel();
+        sheen = undefined;
+        q.classList.remove("is-lit");
       };
       video.addEventListener("pause", () => sync());
       onReducedMotionChange((isReduced) => {
@@ -205,7 +208,36 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
   .hero__q {
     display: inline-block;
     color: var(--accent-text);
-    transform-origin: 50% 85%;
+  }
+
+  /* The sheen (script above): the glyph is painted by a wide amber gradient
+     with one pale-gold band, clipped to its letterform; moving the gradient
+     carries the band across. Only set once motion starts, so the static "?"
+     stays a plain amber glyph (and forced colours keep their own). */
+  .hero__q.is-lit {
+    background-image: linear-gradient(
+      105deg,
+      var(--amber) 0%,
+      var(--amber) 45.5%,
+      #f6d79a 48%,
+      #fff4e0 50%,
+      #f6d79a 52%,
+      var(--amber) 54.5%,
+      var(--amber) 100%
+    );
+    /* The band is about a third of the glyph's width. */
+    background-size: 400% 100%;
+    background-position: 0% 0;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  @media (forced-colors: active) {
+    .hero__q.is-lit {
+      background: none;
+      -webkit-text-fill-color: currentColor;
+    }
   }
 
   .hero__link {

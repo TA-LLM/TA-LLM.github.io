@@ -1,9 +1,9 @@
 ---
 /**
  * People (taste.md §2.4). Researchers first, the PI leading, then the PhD
- * students in theme order. A faint grid lies behind the page, as in the
- * `people` reference; the cards sit on it as one ruled table (1px rules, no
- * shadows), each lighting up on its own.
+ * students in theme order. The cards form one ruled table (1px rules, no
+ * shadows), each lighting up on its own. (The faint grid of the `people`
+ * reference behind the page was removed at the user's request, 2026-09-19.)
  */
 import { getCollection, getEntries } from "astro:content";
 import Icon from "../components/Icon.astro";
@@ -67,26 +67,8 @@ const groups = [
 </BaseLayout>
 
 <style>
-  /* The faint grid of the reference: rules at a low opacity, fading out
-     towards the bottom so it frames the opening, not the whole page. */
   .team {
-    position: relative;
-    isolation: isolate;
     padding-bottom: var(--space-2xl);
-  }
-
-  .team::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto;
-    height: 70rem;
-    z-index: -1;
-    background-image:
-      linear-gradient(to right, var(--rule) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
-    background-size: 32px 32px;
-    opacity: 0.35;
-    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 100%);
   }
 
   .team__tags {
