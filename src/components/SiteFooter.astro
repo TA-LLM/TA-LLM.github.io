@@ -156,4 +156,12 @@ const fundingItems = [
     font-size: 0.8125rem;
     color: var(--text-muted);
   }
+
+  /* The narrowest phones: the programme's name is wider than the column,
+     so even the unbreakable facts may wrap rather than overflow. */
+  @media (max-width: 22.5rem) {
+    .funding-line .nowrap {
+      white-space: normal;
+    }
+  }
 </style>

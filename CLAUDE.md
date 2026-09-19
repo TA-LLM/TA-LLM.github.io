@@ -186,6 +186,9 @@ Second batch, by category:
   PoliTo logo) and MINDS (group), as one-colour masks of their own artwork
   (`--institution-mark`: paper on ink, ink on paper). Same size = same area, centred on
   one line; one row on phones. In the footer (every page) and in /about Funding.
+  Exception (user, 2026-09-19): the DAUIN–PoliTo lockup is boosted ×1.5 (×1.15 on phones),
+  its fine type was unreadable at equal area. Every row sizes itself from its own width
+  (container query) so it never wraps, from 320px up.
 - Accessibility: WCAG AA contrast, keyboard navigation, alt text on every image.
 
 ## Decisions from the reference-site analysis

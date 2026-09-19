@@ -10,6 +10,10 @@
  * - Same size means same visual weight, not same height: every logo covers
  *   the same area (size² ), so height = size / √(width/height). A square mark
  *   and a wide lockup then look equally present. All are centred on one line.
+ * - `boost` enlarges one logo past that rule where its lettering would be
+ *   too small to read: the DAUIN-PoliTo lockup (4.5:1, fine type), x1.5 on
+ *   desktop, x1.15 on phones so the row still fits one line (user request,
+ *   2026-09-19).
  */
 import mindsLogo from "../assets/logos/minds.webp";
 import murLogo from "../assets/logos/mur.webp";
@@ -29,13 +33,15 @@ const LOGOS = [
     image: dauinLogo,
     name: "Department of Control and Computer Engineering (DAUIN), Politecnico di Torino",
     href: "https://www.dauin.polito.it/",
+    boost: 1.5,
   },
   { image: mindsLogo, name: "MINDS — Machine Intelligence and Data Science Group" },
 ];
 
 const items = LOGOS.map((logo) => {
   const ratio = logo.image.width / logo.image.height;
-  return { ...logo, ratio, shrink: 1 / Math.sqrt(ratio) };
+  const boost = ("boost" in logo && logo.boost) || 1;
+  return { ...logo, ratio, shrink: (1 / Math.sqrt(ratio)) * boost, boosted: boost !== 1 };
 });
 ---
 
@@ -43,13 +49,13 @@ const items = LOGOS.map((logo) => {
   role="list"
   class:list={["logos", className]}
   aria-label="Funder, host and research group"
-  style={`--logo-size: ${size}rem`}
+  style={`--logo-base: ${size}rem`}
 >
   {
-    items.map(({ image, name, href, ratio, shrink }) => {
+    items.map(({ image, name, href, ratio, shrink, boosted }) => {
       const mark = (
         <span
-          class="logos__mark"
+          class:list={["logos__mark", { "logos__mark--boost": boosted }]}
           role="img"
           aria-label={name}
           style={`--logo: url(${image.src}); --ratio: ${ratio.toFixed(4)}; --shrink: ${shrink.toFixed(4)}`}
@@ -66,6 +72,14 @@ const items = LOGOS.map((logo) => {
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-m) var(--space-xl);
+    container-type: inline-size;
+  }
+
+  /* The requested size, unless the row is too narrow to hold the three
+     logos on one line (together about 5.6 sizes wide, the lockup boosted):
+     then they shrink together. */
+  .logos > li {
+    --logo-size: min(var(--logo-base), (100cqi - 2 * var(--space-xl)) / 5.6);
   }
 
   .logos > li {
@@ -90,9 +104,19 @@ const items = LOGOS.map((logo) => {
      line, spread across it; still one visual weight. */
   @media (max-width: 39.99rem) {
     .logos {
-      --logo-size: 3.9rem !important;
       gap: var(--space-s);
       justify-content: space-between;
+    }
+
+    /* Sized from the row's own width (the three logos together are about
+       4.8 sizes wide), so the row never wraps on the narrowest phones. */
+    .logos > li {
+      --logo-size: min(3.9rem, (100cqi - 2 * var(--space-s)) / 4.8);
+    }
+
+    /* The boosted lockup: x1.15 here instead of x1.5, so the row fits. */
+    .logos__mark--boost {
+      height: calc(var(--logo-size) * var(--shrink) / 1.5 * 1.15);
     }
   }
 
