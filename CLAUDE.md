@@ -146,6 +146,11 @@ Second batch, by category:
   on the `<img>` only; on-screen and visible tab only; nothing under reduced motion. Reframe
   an image by cropping the asset (prep script), never by a CSS zoom: a scaled image inside
   a masked, blended frame leaks 1px past the mask at fractional edges in Chrome.
+  **Collaborate** (user decision, 2026-09-19) is the exception to the grading: its
+  AI-generated picture is used in its **original colours**, unblended, in both themes,
+  filling the page (desktop: sticky behind the content, text on the left over a veil of
+  `--surface` that clears towards the figure; phones: a full-width opening image the
+  content rises over). The text may overlap the picture slightly.
   Home hero: the video has no loop of its own on top (it already moves): it comes into
   focus like the others (`focus`), its poster fades out once it plays, and leaving the
   hero it recedes with the scroll (CSS `animation-timeline: scroll()`, longhands only —

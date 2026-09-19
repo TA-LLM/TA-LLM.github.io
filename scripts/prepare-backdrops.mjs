@@ -34,14 +34,10 @@ const BACKDROPS = {
   research: { file: "research.jpg", crop: { left: 0.45, top: 0.3, width: 0.55, height: 0.4757 }, grade: true },
   publications: { file: "publications.jpg", crop: { left: 0, top: 0.162, width: 1, height: 0.375 }, grade: true },
   events: { file: "events.jpg", crop: { left: 0, top: 0.21875, width: 1, height: 0.5625 }, grade: true, invert: true },
-  // Collaborate: a framed panel, not a dissolved backdrop (AI-generated, Krea 2).
-  // Cropped around the figure on the ledge (the subject), ~1.35x closer.
-  collaborate: {
-    file: "collaborate.png",
-    crop: { left: 0.2227, top: 0.354, width: 0.741, height: 0.5574 },
-    grade: true,
-    gamma: 2.1,
-  },
+  // Collaborate: the whole page's picture (AI-generated, Krea 2), used as it
+  // is — the original colours and framing, no crop, no grade (user decision,
+  // 2026-09-19). Only re-encoded.
+  collaborate: { file: "collaborate.png" },
 };
 
 /** Luminance stops (0–1) → sRGB colour: ink, a warm shadow, deep amber,

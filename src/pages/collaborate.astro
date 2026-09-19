@@ -6,11 +6,12 @@
  * audiences of taste.md §2.3 (cards_5 grammar): researchers and companies,
  * each with a short status label with a dot, a title, two lines and one link.
  *
- * - The image (AI-generated, graded into the palette by
- *   scripts/prepare-backdrops.mjs) has no frame: its edges are faded on all
- *   four sides and it is blended into the page like the backdrops (lighten
- *   over ink; inverted and multiplied over paper), so it has no visible
- *   edge. Sticky beside the content on desktop, a short banner on phones.
+ * - The image (AI-generated) fills the whole page in its original colours,
+ *   in both themes (user decision, 2026-09-19): no grade, no blend. On
+ *   desktop it stays in place behind the page while the content scrolls
+ *   over it on the left, on a veil of the page's surface that clears towards
+ *   the figure on the ledge; the text may overlap the picture slightly. On
+ *   phones it is a full-width opening image the content rises over.
  * - Applications go to an external PoliTo form (CLAUDE.md): no personal data
  *   is ever collected by this site. Its address, and the public contact
  *   addresses, are still to come, so those links are marked.
@@ -41,18 +42,21 @@ const audiences = [
 ---
 
 <BaseLayout title="Collaborate" description="Collaborate with TA-LLM: researchers and companies.">
-  <div class="split container">
-    <figure class="split__visual" aria-hidden="true" data-media-motion="drift">
+  <div class="scene" aria-hidden="true">
+    <figure class="scene__frame" data-media-motion="drift">
       <Picture
         src={collaborateImage}
         alt=""
         formats={["avif"]}
         fallbackFormat="webp"
         widths={[480, 768]}
-        sizes="(min-width: 64rem) 40vw, 100vw"
+        sizes="100vw"
         loading="eager"
       />
     </figure>
+  </div>
+
+  <div class="split container">
 
     <div class="split__content">
       <header class="intro">
@@ -105,59 +109,62 @@ const audiences = [
 </BaseLayout>
 
 <style>
-  .split {
-    display: grid;
-    gap: var(--space-l);
-    padding-block: var(--space-l) var(--space-2xl);
+  /* ------------------------------------------------- the picture
+     Phones: a full-width opening image, fading into the page at its foot;
+     the content rises a little over it. */
+  .scene {
+    position: relative;
+    z-index: -1;
+    height: min(78dvh, 44rem);
+    margin-bottom: calc(-1 * var(--space-3xl, 6rem));
   }
 
-  /* No frame: faded on all four sides. The right fade is long and starts
-     early, so the lit sky dies out before the building's wall in the
-     picture, whose straight edge would otherwise read as a frame. */
-  .split__visual {
+  .scene__frame {
+    position: relative;
+    height: 100%;
     margin: 0;
-    aspect-ratio: 16 / 9;
-    /* The mask isolates this element, so the image blends against this
-       ground, not the page: it must be the page's own surface. */
-    background: var(--surface);
-    mask-image:
-      linear-gradient(to right, transparent, #000 12%, #000 58%, transparent 90%),
-      linear-gradient(to bottom, transparent, #000 12%, #000 86%, transparent);
-    mask-composite: intersect;
-    mask-repeat: no-repeat;
-    mask-size: 100% 100%;
+    overflow: hidden;
   }
 
-  .split__visual :global(picture),
-  .split__visual :global(img) {
+  .scene__frame :global(picture),
+  .scene__frame :global(img) {
     display: block;
     width: 100%;
     height: 100%;
   }
 
-  /* As a banner, the crop keeps the figure on the ledge and the horizon;
-     the full panel on desktop shows the whole picture. */
-  /* The figure on the ledge is the subject: the asset itself is cropped
-     closer around it (scripts/prepare-backdrops.mjs) — a CSS zoom inside
-     this masked, blended frame leaks pixels at its edges in Chrome. */
-  .split__visual :global(img) {
-    object-fit: cover;
-    object-position: 55% 62%;
-    transform-origin: 55% 62%;
-    mix-blend-mode: lighten;
+  /* The picture is clipped a few pixels short of the frame's foot, inside
+     the veil's solid band: clipped at the frame's own fractional edge, the
+     drifting image's last row showed past the veil as a 1px line. */
+  .scene__frame :global(picture) {
+    height: calc(100% - 4px);
+    overflow: hidden;
   }
 
-  /* Light theme: the negative, hue kept, multiplied into the paper (as in
-     Backdrop.astro), so its dark ground becomes paper too. */
-  :global(:root[data-theme="light"]) .split__visual :global(img) {
-    filter: invert(1) hue-rotate(180deg) saturate(0.6) brightness(1.12) contrast(1.2);
-    mix-blend-mode: multiply;
+  .scene__frame :global(img) {
+    object-fit: cover;
+    object-position: 60% 72%;
+    transform-origin: 66% 74%;
+  }
+
+  /* The veil: the page's own surface, so the page never shows a seam. */
+  .scene__frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 45%, color-mix(in srgb, var(--surface) 70%, transparent) 72%, var(--surface) 90%);
   }
 
   @media (forced-colors: active) {
-    .split__visual {
+    .scene {
       display: none;
     }
+  }
+
+  .split {
+    display: grid;
+    gap: var(--space-l);
+    padding-block: var(--space-l) var(--space-2xl);
   }
 
   .split__content {
@@ -239,30 +246,46 @@ const audiences = [
     max-width: var(--measure);
   }
 
-  /* Desktop: the split of the reference — image left, sticky and as tall as
-     the viewport allows, content right. */
+  /* Desktop: the picture fills the page and stays in place (sticky inside
+     a layer as tall as <main>, so it ends with the page, never behind the
+     footer); the content runs down the left over a veil of the surface that
+     clears towards the figure on the right. */
   @media (min-width: 64rem) {
-    .split {
-      grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
-      gap: var(--space-2xl);
-      align-items: start;
-      padding-top: var(--space-xl);
+    .scene {
+      position: absolute;
+      inset: 0;
+      height: auto;
+      margin: 0;
     }
 
-    .split__visual :global(img) {
-      object-position: 50% 50%;
-    }
-
-    .split__visual {
+    .scene__frame {
       position: sticky;
-      /* Sticks exactly where it starts, and fits the viewport below it. */
-      top: calc(var(--header-h) + var(--thread-h) + var(--space-xl));
-      aspect-ratio: auto;
-      height: min(calc(100dvh - var(--header-h) - var(--thread-h) - var(--space-xl) - var(--space-l)), 52rem);
+      top: calc(var(--header-h) + var(--thread-h));
+      height: calc(100dvh - var(--header-h) - var(--thread-h));
+    }
+
+    /* A short fade at the foot, so the picture never ends on an edge where
+       the page meets the footer. The whole width of the picture shows; the slice keeps the sunset and
+       the figure on the ledge in view. */
+    .scene__frame :global(img) {
+      object-position: 50% 80%;
+    }
+
+    .scene__frame::after {
+      background:
+        linear-gradient(to right, var(--surface) 0%, var(--surface) 30%, color-mix(in srgb, var(--surface) 82%, transparent) 44%, color-mix(in srgb, var(--surface) 35%, transparent) 54%, transparent 64%),
+        linear-gradient(to bottom, color-mix(in srgb, var(--surface) 25%, transparent), transparent 18%, transparent 82%, var(--surface) 98%);
+    }
+
+    .split {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      padding-top: var(--space-2xl);
+      padding-bottom: 40dvh;
     }
 
     .split__content {
-      padding-top: var(--space-l);
+      grid-column: 1;
+      max-width: 38rem;
     }
   }
 </style>
