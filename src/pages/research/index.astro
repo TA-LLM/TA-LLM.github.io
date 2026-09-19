@@ -1,5 +1,7 @@
 ---
 import { getCollection } from "astro:content";
+import researchBackdrop from "../../assets/backdrops/research.webp";
+import Backdrop from "../../components/Backdrop.astro";
 import Badge from "../../components/Badge.astro";
 import PageIntro from "../../components/PageIntro.astro";
 import ThemeGlyph from "../../components/ThemeGlyph.astro";
@@ -10,9 +12,10 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
 ---
 
 <BaseLayout title="Research" description="The four starting research themes of the TA-LLM project.">
+  <Backdrop image={researchBackdrop} />
   <PageIntro eyebrow="Research" title="Four starting themes" />
 
-  <section class="container" aria-label="Research themes">
+  <section class="container themes-section" aria-label="Research themes">
     <ul role="list" class="themes">
       {
         themes.map((theme) => (
@@ -42,13 +45,12 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
 </BaseLayout>
 
 <style>
-  /* 1px-gap ruled list (synthesis §1.1): rows butt together, the surface
-     shows through as the hairline. */
+  /* A ruled list drawn with borders, not a 1px gap over a rule-coloured
+     ground: the rows stay transparent, so the page backdrop fades behind
+     them instead of being cut off at the list's top edge. */
   .themes {
     display: grid;
-    gap: var(--hairline);
-    background: var(--rule);
-    border-block: var(--hairline) solid var(--rule);
+    border-top: var(--hairline) solid var(--rule);
   }
 
   .theme {
@@ -56,7 +58,12 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
     display: grid;
     gap: var(--space-2xs);
     padding-block: var(--space-m);
-    background: var(--surface);
+    border-bottom: var(--hairline) solid var(--rule);
+  }
+
+  /* Room under the heading for the backdrop's illustration. */
+  .themes-section {
+    padding-top: var(--space-l);
   }
 
   /* Focus-and-recede: the row in focus draws a rule in its theme colour, its

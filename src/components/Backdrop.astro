@@ -1,0 +1,99 @@
+---
+/**
+ * A page backdrop: an illustration (AI-generated, or a free-licence photo
+ * graded into the palette — taste.md D4 exception) in
+ * the top-right corner of the page, behind the opening, dissolved into the
+ * surface so it never reads as a pasted rectangle.
+ *
+ * - Ink theme: the image is blended with `lighten` over an ink ground, so
+ *   every pixel darker than ink becomes exactly ink — the image's own
+ *   background disappears, only its light remains.
+ * - Light theme: the image is inverted (hue kept), cleaned up, and blended
+ *   with `multiply` over paper — its dark ground becomes paper, its light
+ *   turns into ink and sepia.
+ * - Masks fade it out on every side: longest towards the left (where the
+ *   page title sits) and the bottom (where the content begins), short at the
+ *   top and right, so no edge of the image is ever visible.
+ * - Decorative: hidden from assistive technology, no alt text needed.
+ *
+ * The page's <main> is the positioning context (base.css).
+ */
+import type { ImageMetadata } from "astro";
+import { Picture } from "astro:assets";
+
+interface Props {
+  image: ImageMetadata;
+}
+
+const { image } = Astro.props;
+---
+
+<div class="backdrop" aria-hidden="true">
+  <Picture
+    src={image}
+    alt=""
+    formats={["avif"]}
+    fallbackFormat="webp"
+    widths={[800, 1200, 1600]}
+    sizes="(min-width: 64rem) 62vw, 140vw"
+    loading="eager"
+    fetchpriority="low"
+  />
+</div>
+
+<style>
+  .backdrop {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: -1;
+    width: min(62vw, 72rem);
+    aspect-ratio: 16 / 9;
+    background: var(--surface);
+    pointer-events: none;
+    /* Faded on all four sides: left (towards the title) the longest, then
+       the bottom (towards the content), and a short fade at the top and the
+       right, so an image that runs to its edges still shows none. */
+    mask-image:
+      linear-gradient(to right, transparent 12%, #000 62%, #000 92%, transparent),
+      linear-gradient(to bottom, transparent, #000 16%, #000 34%, transparent 74%);
+    mask-composite: intersect;
+    opacity: 0.85;
+  }
+
+  .backdrop :global(picture),
+  .backdrop :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .backdrop :global(img) {
+    object-fit: cover;
+    mix-blend-mode: lighten;
+  }
+
+  /* Inverted with the hue kept, then desaturated and pushed brighter and
+     more contrasted: the image's navy ground would otherwise invert to a cool
+     grey haze; this way it reaches white and vanishes under multiply. */
+  :global(:root[data-theme="light"]) .backdrop :global(img) {
+    filter: invert(1) hue-rotate(180deg) saturate(0.6) brightness(1.12) contrast(1.2);
+    mix-blend-mode: multiply;
+  }
+
+  /* Phones: the illustration is shifted right, partly off-screen, and
+     dimmed, so the wrapping title never sits on its brightest part. */
+  @media (max-width: 63.99rem) {
+    .backdrop {
+      width: 150vw;
+      right: -55vw;
+      opacity: 0.35;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .backdrop {
+      display: none;
+    }
+  }
+</style>

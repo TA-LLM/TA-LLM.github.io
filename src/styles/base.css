@@ -29,8 +29,13 @@ body {
   font-synthesis-weight: none;
 }
 
+/* <main> is the positioning context for page backdrops (Backdrop.astro),
+   and isolates them so they sit behind the content, above the body. */
 main {
   flex: 1 0 auto;
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
 }
 
 img,

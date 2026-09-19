@@ -403,6 +403,10 @@ Where the outcome goes beyond or differs from the recommendation in §4.2:
 
 - **D1** adds that the light theme is a first-class alternative, not a fallback.
 - **D4** allows real photos of events alongside the People portraits.
+- **D4**, 2026-09-19: at the user's request, page backdrops on Research, Publications and
+  Resources may use AI-generated images or free-licence photos (Pexels, licence checked
+  at the source), always graded into the palette and dissolved into the surface — as
+  illustration, never as a photograph of the project. People stays real portraits only.
 - **D5** first added the constraint that the ring must be driven by real data; on
   2026-09-18 the user replaced the ring with a generated hourglass video. It is the one
   image on the site outside D4's rule (portraits and event photos

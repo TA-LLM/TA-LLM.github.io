@@ -123,6 +123,13 @@ Second batch, by category:
   it drifts only on hover/focus/active and never under reduced motion; text never sits on
   the smoke. Used for supervisors, co-supervisors and PhD students (research list, theme
   pages linking to `/people/#id`, home accordion) and the PI tag (`label` variant).
+- Page backdrops (2026-09-19, `Backdrop.astro` + `scripts/prepare-backdrops.mjs`): one
+  illustration per page, top-right behind the opening, only on Research, Publications and
+  Resources. Sources: AI-generated images or free-licence photos (Pexels, licence checked
+  at the source), cropped and gradient-mapped into the palette (ink → deep amber → amber →
+  pale gold). Blended with `lighten` over ink (inverted + `multiply` over paper), masked
+  on all four sides, never under text: no edge may ever be visible. Lists over a backdrop
+  use transparent rows ruled with borders, not a 1px gap over a rule-coloured ground.
 - Accessibility: WCAG AA contrast, keyboard navigation, alt text on every image.
 
 ## Decisions from the reference-site analysis
