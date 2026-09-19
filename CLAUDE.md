@@ -136,6 +136,10 @@ Second batch, by category:
   Research `flow` (along the trails), Publications `push` (lean in to the letter), Events
   `turn` (the clock spiral, one turn per 4 min), Collaborate `drift` (clouds). Transforms
   on the `<img>` only; on-screen and visible tab only; nothing under reduced motion.
+  Home hero: the video has no loop of its own on top (it already moves): it comes into
+  focus like the others (`focus`), its poster fades out once it plays, and leaving the
+  hero it recedes with the scroll (CSS `animation-timeline: scroll()`, longhands only —
+  the `animation` shorthand resets the timeline; the poster never takes the dimming).
 - Institution logos (2026-09-19, `InstitutionLogos.astro` + `scripts/prepare-logos.mjs`):
   MUR (funder), DAUIN–PoliTo lockup (host; it includes the PoliTo seal, so no separate
   PoliTo logo) and MINDS (group), as one-colour masks of their own artwork

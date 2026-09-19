@@ -6,6 +6,10 @@
  * - The headline reveals once, word by word, on the site's single stagger
  *   (index × --stagger-step); the full sentence is also in a visually hidden
  *   span, so assistive technology reads it whole.
+ * - Motion: the glass comes into focus on entrance (base.css media motion,
+ *   "focus": no loop of its own, the video already moves); the poster
+ *   fades out once the video plays; leaving the hero, the glass recedes with
+ *   the scroll (CSS scroll-driven, where supported). None under reduced motion.
  * - The right column is a looping video of an hourglass (AI-generated, 5 s,
  *   seamless; encoded by scripts/prepare-hero-video.mjs), decorative and hidden from assistive technology. It plays only
  *   while on-screen in a visible tab and never under reduced motion, where the
@@ -46,7 +50,8 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
       <a class="hero__link label link-arrow" href="/research/">Research themes<Icon name="arrow-right" size={16} /></a>
     </div>
 
-    <div class="hero__visual" aria-hidden="true" data-reveal data-reveal-delay="700">
+    <div class="hero__visual" aria-hidden="true" data-media-motion="focus" data-hero-visual>
+      <img class="hero__poster" src={poster.src} alt="" width="480" height="720" decoding="async" />
       <video
         class="hero__video"
         poster={poster.src}
@@ -81,6 +86,11 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
         if (reduced) video.currentTime = 0;
       }
     };
+    // The poster sits over the video until the first frame plays, then fades
+    // out, so the hand-over from still to moving never shows a jump.
+    video.addEventListener("playing", () => video.closest("[data-hero-visual]")?.classList.add("is-playing"), {
+      once: true,
+    });
     whenVisible(video, (isVisible) => {
       visible = isVisible;
       update();
@@ -185,12 +195,73 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
     }
   }
 
-  .hero__video {
+  /* Poster and video share one grid cell; the poster is the first frame. */
+  .hero__video,
+  .hero__poster {
+    grid-area: 1 / 1;
     display: block;
     width: 100%;
     height: auto;
     aspect-ratio: 2 / 3;
     mix-blend-mode: lighten;
+  }
+
+  .hero__poster {
+    pointer-events: none;
+  }
+
+  .hero__visual.is-playing .hero__poster {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__poster {
+      transition: opacity 600ms var(--ease);
+    }
+
+    /* The glass comes into focus like every page image (base.css, media
+       motion), after the headline has begun to rise. */
+    .hero__visual[data-media-motion] {
+      transition-delay: 500ms;
+    }
+  }
+
+  /* Leaving the hero, the glass recedes: it sinks slower than the page, grows
+     a little smaller and dims, over the first 90% of a screen of scroll.
+     Scroll-driven, CSS only; browsers without it keep the glass still. */
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      /* Longhands on purpose: the `animation` shorthand resets the
+         timeline, and minified together the two are dropped. */
+      .hero__video,
+      .hero__poster {
+        animation-name: hero-recede;
+        animation-duration: auto;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: scroll(root);
+        animation-range: 0 90vh;
+      }
+
+      /* The poster moves with the video but never takes the dimming: an
+         animated opacity would override its fade-out and show both frames. */
+      .hero__poster {
+        animation-name: hero-recede-move;
+      }
+    }
+  }
+
+  @keyframes hero-recede {
+    to {
+      transform: translateY(9%) scale(0.93);
+      opacity: 0.35;
+    }
+  }
+
+  @keyframes hero-recede-move {
+    to {
+      transform: translateY(9%) scale(0.93);
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
