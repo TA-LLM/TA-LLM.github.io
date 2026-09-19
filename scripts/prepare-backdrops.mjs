@@ -1,8 +1,10 @@
 /**
  * Prepares the page backdrops (taste.md D4 exception) from the raw files in
- * images/ (git-ignored). Sources: research.jpg is a Pexels photo (light
- * trails), used under the Pexels licence — free use, modification allowed,
- * credit optional (checked at pexels.com/license, 2026-09-19).
+ * images/ (git-ignored). Sources, all Pexels photos used under the Pexels
+ * licence — free use, modification allowed, credit optional (checked at
+ * pexels.com/license, 2026-09-19): research.jpg (light trails),
+ * publications.jpg (letter and magnifying glass), events.jpg (Droste clock
+ * spiral; inverted so its dark marks glow).
  *
  * Run: node scripts/prepare-backdrops.mjs
  *
@@ -23,12 +25,14 @@ const OUT = fileURLToPath(new URL("../src/assets/backdrops/", import.meta.url));
 
 /**
  * name → source in images/, optional crop {left, top, width, height} as
- * fractions of the source, optional `grade` (gradient map into the palette).
+ * fractions of the source, optional `grade` (gradient map into the palette),
+ * optional `invert` (map the negative: for light sources, whose dark marks
+ * should become the glowing lines on ink).
  */
 const BACKDROPS = {
   research: { file: "research.jpg", crop: { left: 0.45, top: 0.3, width: 0.55, height: 0.4757 }, grade: true },
-  publications: { file: "publications-bg.png" },
-  resources: { file: "resources-bg.png" },
+  publications: { file: "publications.jpg", crop: { left: 0, top: 0.162, width: 1, height: 0.375 }, grade: true },
+  events: { file: "events.jpg", crop: { left: 0, top: 0.21875, width: 1, height: 0.5625 }, grade: true, invert: true },
 };
 
 /** Luminance stops (0–1) → sRGB colour: ink, a warm shadow, deep amber,
@@ -56,7 +60,7 @@ function mapLuminance(l) {
 
 mkdirSync(OUT, { recursive: true });
 
-for (const [name, { file, crop, grade }] of Object.entries(BACKDROPS)) {
+for (const [name, { file, crop, grade, invert }] of Object.entries(BACKDROPS)) {
   const input = `${RAW}${file}`;
   if (!existsSync(input)) {
     console.log(`skip ${name}: images/${file} not found`);
@@ -79,8 +83,8 @@ for (const [name, { file, crop, grade }] of Object.entries(BACKDROPS)) {
     const { data, info } = await image.removeAlpha().raw().toBuffer({ resolveWithObject: true });
     const out = Buffer.alloc(data.length);
     for (let i = 0; i < data.length; i += 3) {
-      const l = (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255;
-      const [r, g, b] = mapLuminance(l);
+      const lum = (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255;
+      const [r, g, b] = mapLuminance(invert ? 1 - lum : lum);
       out[i] = r;
       out[i + 1] = g;
       out[i + 2] = b;

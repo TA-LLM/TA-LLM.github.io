@@ -23,12 +23,14 @@ import { Picture } from "astro:assets";
 
 interface Props {
   image: ImageMetadata;
+  /** Strength on ink, 0–1: lower for sources with large bright areas. */
+  intensity?: number;
 }
 
-const { image } = Astro.props;
+const { image, intensity = 0.85 } = Astro.props;
 ---
 
-<div class="backdrop" aria-hidden="true">
+<div class="backdrop" aria-hidden="true" style={`--backdrop-intensity: ${intensity}`}>
   <Picture
     src={image}
     alt=""
@@ -58,7 +60,7 @@ const { image } = Astro.props;
       linear-gradient(to right, transparent 12%, #000 62%, #000 92%, transparent),
       linear-gradient(to bottom, transparent, #000 16%, #000 34%, transparent 74%);
     mask-composite: intersect;
-    opacity: 0.85;
+    opacity: var(--backdrop-intensity);
   }
 
   .backdrop :global(picture),
@@ -87,7 +89,7 @@ const { image } = Astro.props;
     .backdrop {
       width: 150vw;
       right: -55vw;
-      opacity: 0.35;
+      opacity: calc(var(--backdrop-intensity) * 0.4);
     }
   }
 

@@ -1,5 +1,7 @@
 ---
 import { getCollection } from "astro:content";
+import eventsBackdrop from "../assets/backdrops/events.webp";
+import Backdrop from "../components/Backdrop.astro";
 import EmptyState from "../components/EmptyState.astro";
 import PageIntro from "../components/PageIntro.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -8,6 +10,7 @@ const events = await getCollection("events");
 ---
 
 <BaseLayout title="Events" description="Seminars, talks and workshops of the TA-LLM project.">
+  <Backdrop image={eventsBackdrop} intensity={0.65} />
   <PageIntro eyebrow="Events" title="Events" />
   {
     events.length === 0 && (

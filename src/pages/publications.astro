@@ -1,5 +1,7 @@
 ---
 import { getCollection } from "astro:content";
+import publicationsBackdrop from "../assets/backdrops/publications.webp";
+import Backdrop from "../components/Backdrop.astro";
 import EmptyState from "../components/EmptyState.astro";
 import PageIntro from "../components/PageIntro.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -8,6 +10,7 @@ const publications = await getCollection("publications");
 ---
 
 <BaseLayout title="Publications" description="Publications of the TA-LLM research project.">
+  <Backdrop image={publicationsBackdrop} />
   <PageIntro eyebrow="Publications" title="Publications" />
   {
     publications.length === 0 && (

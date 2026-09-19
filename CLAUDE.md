@@ -124,8 +124,8 @@ Second batch, by category:
   the smoke. Used for supervisors, co-supervisors and PhD students (research list, theme
   pages linking to `/people/#id`, home accordion) and the PI tag (`label` variant).
 - Page backdrops (2026-09-19, `Backdrop.astro` + `scripts/prepare-backdrops.mjs`): one
-  illustration per page, top-right behind the opening, only on Research, Publications and
-  Resources. Sources: AI-generated images or free-licence photos (Pexels, licence checked
+  illustration per page, top-right behind the opening, on Research, Publications and
+  Events (Resources still to come). Sources: AI-generated images or free-licence photos (Pexels, licence checked
   at the source), cropped and gradient-mapped into the palette (ink → deep amber → amber →
   pale gold). Blended with `lighten` over ink (inverted + `multiply` over paper), masked
   on all four sides, never under text: no edge may ever be visible. Lists over a backdrop
