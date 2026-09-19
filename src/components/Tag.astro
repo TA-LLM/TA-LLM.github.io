@@ -10,19 +10,26 @@
  *   (6.3:1 or better; tokens --tag-soft-*, checked by check-contrast.mjs).
  * - `dot`: a small amber dot for something open or live; it breathes slowly
  *   and never under reduced motion.
+ * - `icon`: a small neutral pictogram before the text (Icon.astro), for a tag
+ *   whose kind is quicker seen than read (funder, dates, place, people).
  * - Plain text, not a control: tags sit in a `<ul class="tags">` or inline.
  */
+import type { IconName } from "../icons/icons";
+import Icon from "./Icon.astro";
+
 interface Props {
   variant?: "solid" | "soft";
+  icon?: IconName;
   dot?: boolean;
   class?: string;
 }
 
-const { variant = "soft", dot = false, class: className } = Astro.props;
+const { variant = "soft", dot = false, icon, class: className } = Astro.props;
 ---
 
 <span class:list={["tag", `tag--${variant}`, className]}>
   {dot && <span class="tag__dot" aria-hidden="true" />}
+  {icon && <Icon name={icon} size={14} class="tag__icon" />}
   <slot />
 </span>
 
@@ -41,7 +48,14 @@ const { variant = "soft", dot = false, class: className } = Astro.props;
     line-height: 1.3;
     letter-spacing: var(--label-tracking);
     text-transform: uppercase;
-    white-space: nowrap;
+    /* One line where it fits; a long tag on a phone wraps inside its pill
+       rather than running off the screen. */
+    max-width: 100%;
+    text-wrap: balance;
+  }
+
+  .tag :global(.icon) {
+    align-self: center;
   }
 
   .tag--solid {

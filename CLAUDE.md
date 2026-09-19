@@ -120,6 +120,12 @@ Second batch, by category:
   checks along a drifting series), the only coloured marks (theme colour on focus in lists, as the page accent on
   theme pages, where they animate only under `prefers-reduced-motion: no-preference`).
   Links ending in an arrow use `.link-arrow` + the `arrow-right` icon, not a "→" glyph.
+  **More icons (2026-09-19, user request, "like 21st.dev/community/icons"):** Lucide
+  (listed there; ISC licence, verified at its repo, text in `src/icons/LICENSE-lucide.txt`)
+  in `LUCIDE`, 24×24 grid with stroke 1.8 so it renders as our 1.5px at 20px; brand marks
+  (GitHub, Simple Icons CC0) in `BRANDS`, filled. Same neutral rule. Used as pictograms
+  that say the kind of a fact: Tag `icon` (hero, People, About), About funding list,
+  Collaborate audiences and Open positions, footer Contact/Code. Credited in /about Credits.
 - Badges (2026-09-19, from `research/moodboard/_taste/badges`): `Badge.astro` — a pill
   (the one fully rounded shape on the site) with name + mono role on a solid surface and a
   smoke texture at the right end (`--badge-smoke`: seamless SVG turbulence, gradient-mapped

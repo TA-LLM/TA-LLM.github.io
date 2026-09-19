@@ -1,6 +1,7 @@
 ---
 import PageIntro from "../components/PageIntro.astro";
 import InstitutionLogos from "../components/InstitutionLogos.astro";
+import Icon from "../components/Icon.astro";
 import Tag from "../components/Tag.astro";
 import Todo from "../components/Todo.astro";
 import { PROJECT } from "../config/site";
@@ -15,29 +16,43 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   <section id="funding" class="container funding" aria-labelledby="funding-title">
     <h2 id="funding-title" class="funding__title">Funding</h2>
     <ul role="list" class="tags" aria-label="Funding in brief" data-reveal>
-      <li><Tag variant="solid">MUR · FIS 2</Tag></li>
-      <li><Tag>{PROJECT.code}</Tag></li>
-      <li><Tag>36 months</Tag></li>
+      <li><Tag variant="solid" icon="landmark">MUR · FIS 2</Tag></li>
+      <li><Tag icon="hash">{PROJECT.code}</Tag></li>
+      <li><Tag icon="calendar-range">36 months</Tag></li>
     </ul>
     <dl class="funding__list" data-reveal>
-      <div><dt class="label muted">Funder</dt><dd>{PROJECT.funder}</dd></div>
-      <div><dt class="label muted">Programme</dt><dd>{PROJECT.programme}</dd></div>
-      <div><dt class="label muted">Project code</dt><dd class="mono">{PROJECT.code}</dd></div>
-      <div><dt class="label muted">CUP</dt><dd class="mono">{PROJECT.cup}</dd></div>
+      <div><dt class="label muted"><Icon name="landmark" size={18} />Funder</dt><dd>{PROJECT.funder}</dd></div>
+      <div><dt class="label muted"><Icon name="award" size={18} />Programme</dt><dd>{PROJECT.programme}</dd></div>
+      <div><dt class="label muted"><Icon name="hash" size={18} />Project code</dt><dd class="mono">{PROJECT.code}</dd></div>
+      <div><dt class="label muted"><Icon name="receipt" size={18} />CUP</dt><dd class="mono">{PROJECT.cup}</dd></div>
       <div>
-        <dt class="label muted">Duration</dt>
+        <dt class="label muted"><Icon name="calendar-range" size={18} />Duration</dt>
         <dd class="mono">
           <time datetime={PROJECT.start}>18/08/2026</time> – <time datetime={PROJECT.end}>17/08/2029</time>
         </dd>
       </div>
       <div>
-        <dt class="label muted">Host</dt>
+        <dt class="label muted"><Icon name="building" size={18} />Host</dt>
         <dd>{PROJECT.host}</dd>
       </div>
-      <div><dt class="label muted">Principal investigator</dt><dd>Luca Cagliero</dd></div>
+      <div><dt class="label muted"><Icon name="user" size={18} />Principal investigator</dt><dd>Luca Cagliero</dd></div>
     </dl>
     <InstitutionLogos class="funding__logos" size={6.5} />
     <p><Todo what="mandatory attribution wording, logos and scholarship funding (DAUIN) to be verified with Politecnico" /></p>
+  </section>
+
+  <section id="credits" class="container credits" aria-labelledby="credits-title">
+    <h2 id="credits-title" class="funding__title">Credits</h2>
+    <ul role="list" class="credits__list">
+      <li>
+        Icons from <a href="https://lucide.dev">Lucide</a>, ISC licence, © Lucide Icons and Contributors. The GitHub mark
+        from <a href="https://simpleicons.org">Simple Icons</a> (CC0); it remains a trademark of GitHub, Inc.
+      </li>
+      <li>
+        Page photographs from <a href="https://www.pexels.com">Pexels</a>, under the Pexels licence; other images and the
+        hero video are AI-generated for this project.
+      </li>
+    </ul>
   </section>
 
 </BaseLayout>
@@ -47,6 +62,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     display: grid;
     gap: var(--space-m);
     padding-top: var(--space-xl);
+  }
+
+  .credits {
+    display: grid;
+    gap: var(--space-s);
+    padding-block: var(--space-xl) 0;
+  }
+
+  .credits__list {
+    display: grid;
+    gap: var(--space-xs);
+    max-width: var(--measure);
+    color: var(--text-muted);
   }
 
   .funding__title {
@@ -75,6 +103,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       gap: var(--space-m);
       align-items: baseline;
     }
+  }
+
+  /* Each fact led by its pictogram, so the list scans by kind. */
+  .funding__list dt {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
   }
 
   .funding__list dd {

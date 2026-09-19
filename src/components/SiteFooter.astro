@@ -38,9 +38,9 @@ const fundingItems = [
       </nav>
 
       <div>
-        <p class="label muted footer__heading">Contact</p>
+        <p class="label muted footer__heading footer__heading--icon"><Icon name="mail" size={16} />Contact</p>
         <p><Todo what="public contact addresses (researchers, companies, press)" /></p>
-        <p class="label muted footer__heading footer__heading--next">Code</p>
+        <p class="label muted footer__heading footer__heading--next footer__heading--icon"><Icon name="github" size={16} />Code</p>
         <a class="footer__out" href={GITHUB} rel="noopener">GitHub · TA-LLM<Icon name="external" size={16} /></a>
       </div>
     </div>
@@ -117,6 +117,12 @@ const fundingItems = [
 
   .footer__list a:hover {
     text-decoration: underline;
+  }
+
+  .footer__heading--icon {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
   }
 
   .footer__heading--next {

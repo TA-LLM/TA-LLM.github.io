@@ -3,8 +3,11 @@
  * A utility icon from src/icons/icons.ts. Decorative by default (hidden from
  * assistive technology, the text beside it carries the meaning); pass `label`
  * only when the icon stands alone.
+ *
+ * Three families, one look: our own 20×20 icons; Lucide's 24×24 ones, whose
+ * stroke is scaled (1.8 units = 1.5px at 20px); and filled brand marks.
  */
-import { ICONS, type IconName } from "../icons/icons";
+import { BRANDS, ICONS, LUCIDE, type IconName } from "../icons/icons";
 
 interface Props {
   name: IconName;
@@ -14,23 +17,31 @@ interface Props {
 }
 
 const { name, size = 20, label, class: className } = Astro.props;
+
+const own = name in ICONS;
+const brand = name in BRANDS;
+const markup = own
+  ? ICONS[name as keyof typeof ICONS]
+  : brand
+    ? BRANDS[name as keyof typeof BRANDS]
+    : LUCIDE[name as keyof typeof LUCIDE];
 ---
 
 <svg
   class:list={["icon", className]}
-  viewBox="0 0 20 20"
+  viewBox={own ? "0 0 20 20" : "0 0 24 24"}
   width={size}
   height={size}
-  fill="none"
-  stroke="currentColor"
-  stroke-width="1.5"
+  fill={brand ? "currentColor" : "none"}
+  stroke={brand ? "none" : "currentColor"}
+  stroke-width={own ? "1.5" : "1.8"}
   stroke-linecap="round"
   stroke-linejoin="round"
   role={label ? "img" : undefined}
   aria-label={label}
   aria-hidden={label ? undefined : "true"}
   focusable="false"
-  set:html={ICONS[name]}
+  set:html={markup}
 />
 
 <style>
