@@ -355,8 +355,8 @@ html.theme-switching [style*="view-transition-name"] {
 
   [data-media-motion] {
     transition:
-      opacity 2400ms cubic-bezier(0.4, 0, 0.2, 1) 150ms,
-      filter 4000ms cubic-bezier(0.45, 0, 0.25, 1) 150ms;
+      opacity 1800ms cubic-bezier(0.4, 0, 0.2, 1) 150ms,
+      filter 3000ms cubic-bezier(0.45, 0, 0.25, 1) 150ms;
   }
 
   [data-media-motion] img {
@@ -428,11 +428,13 @@ html.theme-switching [style*="view-transition-name"] {
   }
 }
 
+/* --media-zoom (default 1) lets an image hold a closer framing while it
+   drifts, around its own transform-origin. */
 @keyframes media-drift {
   from {
-    transform: scale(1.08) translate3d(2%, 0.5%, 0);
+    transform: scale(calc(var(--media-zoom, 1) * 1.08)) translate3d(2%, 0.5%, 0);
   }
   to {
-    transform: scale(1.1) translate3d(-3%, -1%, 0);
+    transform: scale(calc(var(--media-zoom, 1) * 1.1)) translate3d(-3%, -1%, 0);
   }
 }

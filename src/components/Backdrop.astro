@@ -70,6 +70,8 @@ const { image, intensity = 0.85, motion } = Astro.props;
       linear-gradient(to right, transparent 12%, #000 62%, #000 92%, transparent),
       linear-gradient(to bottom, transparent, #000 16%, #000 34%, transparent 74%);
     mask-composite: intersect;
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
     opacity: var(--backdrop-intensity);
   }
 

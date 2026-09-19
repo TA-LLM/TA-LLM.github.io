@@ -118,9 +118,11 @@ const audiences = [
        ground, not the page: it must be the page's own surface. */
     background: var(--surface);
     mask-image:
-      linear-gradient(to right, transparent, #000 14%, #000 52%, transparent 88%),
-      linear-gradient(to bottom, transparent, #000 14%, #000 82%, transparent);
+      linear-gradient(to right, transparent, #000 12%, #000 58%, transparent 90%),
+      linear-gradient(to bottom, transparent, #000 12%, #000 86%, transparent);
     mask-composite: intersect;
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
   }
 
   .split__visual :global(picture),
@@ -132,9 +134,13 @@ const audiences = [
 
   /* As a banner, the crop keeps the figure on the ledge and the horizon;
      the full panel on desktop shows the whole picture. */
+  /* The figure on the ledge is the subject: the asset itself is cropped
+     closer around it (scripts/prepare-backdrops.mjs) — a CSS zoom inside
+     this masked, blended frame leaks pixels at its edges in Chrome. */
   .split__visual :global(img) {
     object-fit: cover;
-    object-position: 60% 72%;
+    object-position: 55% 62%;
+    transform-origin: 55% 62%;
     mix-blend-mode: lighten;
   }
 
@@ -237,7 +243,7 @@ const audiences = [
      the viewport allows, content right. */
   @media (min-width: 64rem) {
     .split {
-      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
       gap: var(--space-2xl);
       align-items: start;
       padding-top: var(--space-xl);

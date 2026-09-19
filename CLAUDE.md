@@ -131,11 +131,13 @@ Second batch, by category:
   on all four sides, never under text: no edge may ever be visible. Lists over a backdrop
   use transparent rows ruled with borders, not a 1px gap over a rule-coloured ground.
   **Image motion** (2026-09-19, `src/scripts/media-motion.ts` + base.css,
-  `data-media-motion`): each page image comes into focus once as it enters (fade 2.4 s,
-  sharpening 4 s, gentle curves) and then plays one slow movement chosen for its subject —
+  `data-media-motion`): each page image comes into focus once as it enters (fade 1.8 s,
+  sharpening 3 s, gentle curves) and then plays one slow movement chosen for its subject —
   Research `flow` (along the trails), Publications `push` (lean in to the letter), Events
   `turn` (the clock spiral, one turn per 4 min), Collaborate `drift` (clouds). Transforms
-  on the `<img>` only; on-screen and visible tab only; nothing under reduced motion.
+  on the `<img>` only; on-screen and visible tab only; nothing under reduced motion. Reframe
+  an image by cropping the asset (prep script), never by a CSS zoom: a scaled image inside
+  a masked, blended frame leaks 1px past the mask at fractional edges in Chrome.
   Home hero: the video has no loop of its own on top (it already moves): it comes into
   focus like the others (`focus`), its poster fades out once it plays, and leaving the
   hero it recedes with the scroll (CSS `animation-timeline: scroll()`, longhands only —

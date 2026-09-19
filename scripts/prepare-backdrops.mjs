@@ -35,7 +35,13 @@ const BACKDROPS = {
   publications: { file: "publications.jpg", crop: { left: 0, top: 0.162, width: 1, height: 0.375 }, grade: true },
   events: { file: "events.jpg", crop: { left: 0, top: 0.21875, width: 1, height: 0.5625 }, grade: true, invert: true },
   // Collaborate: a framed panel, not a dissolved backdrop (AI-generated, Krea 2).
-  collaborate: { file: "collaborate.png", grade: true, gamma: 2.1 },
+  // Cropped around the figure on the ledge (the subject), ~1.35x closer.
+  collaborate: {
+    file: "collaborate.png",
+    crop: { left: 0.2227, top: 0.354, width: 0.741, height: 0.5574 },
+    grade: true,
+    gamma: 2.1,
+  },
 };
 
 /** Luminance stops (0–1) → sRGB colour: ink, a warm shadow, deep amber,
