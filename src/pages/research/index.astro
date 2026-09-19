@@ -85,7 +85,9 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
   @media (min-width: 48rem) {
     .theme {
       grid-template-columns: 6.5rem minmax(0, 1fr) auto;
-      align-items: baseline;
+      /* Number, glyph, title and badges share the row's vertical centre,
+         also when a long title wraps onto two lines. */
+      align-items: center;
       gap: var(--space-m);
     }
   }
