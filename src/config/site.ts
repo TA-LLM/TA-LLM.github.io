@@ -17,6 +17,9 @@ export const SITE = {
   locale: "en",
 } as const;
 
+/** The project's code: the GitHub organization. */
+export const GITHUB = "https://github.com/TA-LLM";
+
 /** Project span, as funded. Used by the D10 progress thread and /about. */
 export const PROJECT = {
   start: "2026-08-18",

@@ -6,4 +6,5 @@ affiliation: Politecnico di Torino
 order: 1
 themes:
   - agentic-temporal-reasoning
+polito: https://www.polito.it/en/staff?p=giorgio.bongiovanni
 ---

@@ -46,6 +46,10 @@ const people = defineCollection({
     orcid: z.string().optional(),
     scholar: z.url().optional(),
     website: z.url().optional(),
+    /** Official Politecnico di Torino staff page (polito.it/en/staff?p=…). */
+    polito: z.url().optional(),
+    /** LinkedIn profile, only when verified to be this person. */
+    linkedin: z.url().optional(),
     /** Real portraits only (taste.md D4); no placeholder imagery. */
     portrait: z.string().optional(),
   }),

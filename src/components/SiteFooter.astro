@@ -5,7 +5,8 @@
  * legal line. The attribution wording is to be verified with Politecnico, so
  * the line is marked as such.
  */
-import { NAV, PROJECT } from "../config/site";
+import { GITHUB, NAV, PROJECT } from "../config/site";
+import Icon from "./Icon.astro";
 import InstitutionLogos from "./InstitutionLogos.astro";
 import Todo from "./Todo.astro";
 
@@ -39,6 +40,8 @@ const fundingItems = [
       <div>
         <p class="label muted footer__heading">Contact</p>
         <p><Todo what="public contact addresses (researchers, companies, press)" /></p>
+        <p class="label muted footer__heading footer__heading--next">Code</p>
+        <a class="footer__out" href={GITHUB} rel="noopener">GitHub · TA-LLM<Icon name="external" size={16} /></a>
       </div>
     </div>
   </div>
@@ -113,6 +116,22 @@ const fundingItems = [
   }
 
   .footer__list a:hover {
+    text-decoration: underline;
+  }
+
+  .footer__heading--next {
+    margin-top: var(--space-m);
+  }
+
+  .footer__out {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    min-height: 1.5rem;
+    text-decoration: none;
+  }
+
+  .footer__out:hover {
     text-decoration: underline;
   }
 

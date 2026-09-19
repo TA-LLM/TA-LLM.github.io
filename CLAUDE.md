@@ -13,6 +13,9 @@ Website of the research project **TA-LLM — Large Language Models: a matter of 
   3. Continual Learning for Generative Models (co-supervisor: E. Baralis; PhD: Michele Pantaleo)
   4. Time-Aware RLAIF (co-supervisor: P. Garza; PhD: Davide Benotto)
 - Postdoctoral researcher: Lorenzo Vaiani (added 2026-09-19; no theme assigned yet).
+- People profile links (`polito`, `linkedin` in the people collection): PoliTo staff pages
+  checked on polito.it; LinkedIn added only when the profile is verifiably that person
+  (faculty so far). Project code: GitHub organization https://github.com/TA-LLM (footer).
 
 ## Sources (read before writing content)
 - `sources/private/general_project_info.txt` — official abstract and project data

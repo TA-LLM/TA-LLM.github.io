@@ -6,4 +6,5 @@ affiliation: Politecnico di Torino
 order: 2
 themes:
   - topology-aware-reasoning
+polito: https://www.polito.it/en/staff?p=enrico.ferrari
 ---

@@ -11,6 +11,7 @@
  */
 import type { CollectionEntry } from "astro:content";
 import Badge from "./Badge.astro";
+import Icon from "./Icon.astro";
 
 interface Props {
   person: CollectionEntry<"people">;
@@ -18,7 +19,11 @@ interface Props {
 }
 
 const { person, themes } = Astro.props;
-const { name, position, role, portrait } = person.data;
+const { name, position, role, portrait, polito, linkedin } = person.data;
+const profiles = [
+  { href: polito, label: "PoliTo", title: `${name} on the Politecnico di Torino website` },
+  { href: linkedin, label: "LinkedIn", title: `${name} on LinkedIn` },
+].filter((p) => p.href);
 const initials = name
   .split(/\s+/)
   .filter((part, i, all) => i === 0 || i === all.length - 1)
@@ -39,6 +44,21 @@ const initials = name
   <h3 class="person__name">{name}</h3>
   <p class="person__position">{position}</p>
   {role === "pi" && <p class="person__role"><Badge name="Principal investigator" label /></p>}
+
+  {
+    profiles.length > 0 && (
+      <ul role="list" class="person__links">
+        {profiles.map((p) => (
+          <li>
+            <a class="label" href={p.href} aria-label={p.title} rel="noopener">
+              {p.label}
+              <Icon name="external" size={14} />
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
 
   {
     themes.length > 0 && (
@@ -164,6 +184,38 @@ const initials = name
 
   .person__role {
     margin-top: var(--space-2xs);
+  }
+
+  /* Profiles elsewhere: plain mono links, neutral (the card's one accent is
+     its ring); each keeps a 24px target. */
+  .person__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 var(--space-s);
+    margin-top: var(--space-2xs);
+  }
+
+  /* Phones, two cards to a row: the pair stays on one line. */
+  @media (max-width: 39.99rem) {
+    .person__links {
+      gap: 0 var(--space-2xs);
+    }
+  }
+
+  .person__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25em;
+    min-height: 1.5rem;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .person__links a:is(:hover, :focus-visible) {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   .person__themes {
