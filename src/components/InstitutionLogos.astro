@@ -1,0 +1,105 @@
+---
+/**
+ * The institutional logo row: MUR (funder), DAUIN – Politecnico di Torino
+ * (host; the mark includes the PoliTo seal) and MINDS (research group).
+ *
+ * - One colour for the set (--institution-mark: paper on ink, ink on paper),
+ *   each logo drawn as a mask of its own artwork (scripts/prepare-logos.mjs),
+ *   so the row reads as one family in both themes and the artwork is never
+ *   redrawn. In forced-colours mode the logos take the system text colour.
+ * - Same size means same visual weight, not same height: every logo covers
+ *   the same area (size² ), so height = size / √(width/height). A square mark
+ *   and a wide lockup then look equally present. All are centred on one line.
+ */
+import mindsLogo from "../assets/logos/minds.webp";
+import murLogo from "../assets/logos/mur.webp";
+import dauinLogo from "../assets/logos/dauin.webp";
+
+interface Props {
+  /** Side of the square each logo's area equals, in rem. */
+  size?: number;
+  class?: string;
+}
+
+const { size = 5.5, class: className } = Astro.props;
+
+const LOGOS = [
+  { image: murLogo, name: "Ministero dell'Università e della Ricerca (MUR)", href: "https://www.mur.gov.it/" },
+  {
+    image: dauinLogo,
+    name: "Department of Control and Computer Engineering (DAUIN), Politecnico di Torino",
+    href: "https://www.dauin.polito.it/",
+  },
+  { image: mindsLogo, name: "MINDS — Machine Intelligence and Data Science Group" },
+];
+
+const items = LOGOS.map((logo) => {
+  const ratio = logo.image.width / logo.image.height;
+  return { ...logo, ratio, shrink: 1 / Math.sqrt(ratio) };
+});
+---
+
+<ul
+  role="list"
+  class:list={["logos", className]}
+  aria-label="Funder, host and research group"
+  style={`--logo-size: ${size}rem`}
+>
+  {
+    items.map(({ image, name, href, ratio, shrink }) => {
+      const mark = (
+        <span
+          class="logos__mark"
+          role="img"
+          aria-label={name}
+          style={`--logo: url(${image.src}); --ratio: ${ratio.toFixed(4)}; --shrink: ${shrink.toFixed(4)}`}
+        />
+      );
+      return <li>{href ? <a class="logos__link" href={href}>{mark}</a> : mark}</li>;
+    })
+  }
+</ul>
+
+<style>
+  .logos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-m) var(--space-xl);
+  }
+
+  .logos > li {
+    display: flex;
+    align-items: center;
+  }
+
+  .logos__link {
+    display: block;
+    line-height: 0;
+  }
+
+  .logos__mark {
+    display: block;
+    height: calc(var(--logo-size) * var(--shrink));
+    aspect-ratio: var(--ratio);
+    background: var(--institution-mark);
+    mask: var(--logo) center / contain no-repeat;
+  }
+
+  /* Phones: one size for every row, small enough that the three stay on one
+     line, spread across it; still one visual weight. */
+  @media (max-width: 39.99rem) {
+    .logos {
+      --logo-size: 3.9rem !important;
+      gap: var(--space-s);
+      justify-content: space-between;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .logos__mark {
+      forced-color-adjust: none;
+      background: CanvasText;
+    }
+  }
+</style>

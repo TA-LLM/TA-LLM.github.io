@@ -79,7 +79,7 @@ const pairs = [
   ["--theme-topology-ink", "--surface", TEXT, "theme 03 as text"],
   ["--theme-agentic-ink", "--surface", TEXT, "theme 04 as text"],
   ["--focus", "--surface", NON_TEXT, "focus ring"],
-  ["--institution-mark", "--surface", NON_TEXT, "host institution logo"],
+  ["--institution-mark", "--surface", NON_TEXT, "institution logos"],
   ["--thread-fill", "--surface", NON_TEXT, "D10 project thread"],
   ["--thread-fill", "--thread-track", NON_TEXT, "thread fill against its track"],
   ["--rule-strong", "--surface", NON_TEXT, "control outline"],

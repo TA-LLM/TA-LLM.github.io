@@ -130,6 +130,11 @@ Second batch, by category:
   pale gold). Blended with `lighten` over ink (inverted + `multiply` over paper), masked
   on all four sides, never under text: no edge may ever be visible. Lists over a backdrop
   use transparent rows ruled with borders, not a 1px gap over a rule-coloured ground.
+- Institution logos (2026-09-19, `InstitutionLogos.astro` + `scripts/prepare-logos.mjs`):
+  MUR (funder), DAUIN–PoliTo lockup (host; it includes the PoliTo seal, so no separate
+  PoliTo logo) and MINDS (group), as one-colour masks of their own artwork
+  (`--institution-mark`: paper on ink, ink on paper). Same size = same area, centred on
+  one line; one row on phones. In the footer (every page) and in /about Funding.
 - Accessibility: WCAG AA contrast, keyboard navigation, alt text on every image.
 
 ## Decisions from the reference-site analysis

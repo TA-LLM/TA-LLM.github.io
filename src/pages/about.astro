@@ -1,6 +1,6 @@
 ---
 import PageIntro from "../components/PageIntro.astro";
-import PolitoLogo from "../components/PolitoLogo.astro";
+import InstitutionLogos from "../components/InstitutionLogos.astro";
 import Todo from "../components/Todo.astro";
 import { PROJECT } from "../config/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -26,13 +26,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </div>
       <div>
         <dt class="label muted">Host</dt>
-        <dd class="host">
-          {PROJECT.host}
-          <PolitoLogo height="4.5rem" />
-        </dd>
+        <dd>{PROJECT.host}</dd>
       </div>
       <div><dt class="label muted">Principal investigator</dt><dd>Luca Cagliero</dd></div>
     </dl>
+    <InstitutionLogos class="funding__logos" size={6.5} />
     <p><Todo what="mandatory attribution wording, logos and scholarship funding (DAUIN) to be verified with Politecnico" /></p>
   </section>
 
@@ -77,10 +75,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     margin: 0;
   }
 
-  .host {
-    display: grid;
-    justify-items: start;
-    gap: var(--space-s);
+  .funding__logos {
+    padding-block: var(--space-s);
   }
 
   .mono {

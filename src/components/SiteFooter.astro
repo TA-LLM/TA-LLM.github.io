@@ -1,12 +1,12 @@
 ---
 /**
  * Site footer: navigation, contacts by audience, the mono funding line
- * (synthesis §4) and the institutional line with the host's logo. The MUR
- * logo waits for the official artwork, and the attribution wording is to be
- * verified with Politecnico, so the line is marked as such.
+ * (synthesis §4) with the funder, host and group logos above it, and the
+ * legal line. The attribution wording is to be verified with Politecnico, so
+ * the line is marked as such.
  */
 import { NAV, PROJECT } from "../config/site";
-import PolitoLogo from "./PolitoLogo.astro";
+import InstitutionLogos from "./InstitutionLogos.astro";
 import Todo from "./Todo.astro";
 
 /* Short facts are unbreakable; the long funder name may wrap (at 390px it is
@@ -45,6 +45,7 @@ const fundingItems = [
 
   <div class="row">
     <div class="container footer__stack">
+      <InstitutionLogos class="footer__logos" />
       <p class="funding-line">
         {
           fundingItems.map((item) => (
@@ -58,16 +59,13 @@ const fundingItems = [
           <time datetime={PROJECT.start}>18/08/2026</time> – <time datetime={PROJECT.end}>17/08/2029</time>
         </span>
       </p>
-      <p><Todo what="MUR logo and attribution wording to be verified with Politecnico" /></p>
+      <p><Todo what="attribution wording and logo guidelines (MUR, PoliTo) to be verified with Politecnico" /></p>
     </div>
   </div>
 
   <div class="row">
     <div class="container footer__stack">
-      <div class="footer__institution">
-        <PolitoLogo height="3.25rem" />
-        <p class="label muted">TA-LLM · DAUIN, Politecnico di Torino</p>
-      </div>
+      <p class="label muted">TA-LLM · DAUIN, Politecnico di Torino</p>
       <p><Todo what="privacy notice and accessibility statement" /></p>
     </div>
   </div>
@@ -121,12 +119,8 @@ const fundingItems = [
     padding-block: var(--space-m);
   }
 
-  .footer__institution {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-s) var(--space-l);
-    padding-bottom: var(--space-2xs);
+  .footer__logos {
+    padding-block: var(--space-xs) var(--space-s);
   }
 
   .funding-line {
