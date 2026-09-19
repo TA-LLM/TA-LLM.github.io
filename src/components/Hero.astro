@@ -40,7 +40,7 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
               <>
                 <span class="hero__word" style={`--i: ${i}`}>
                   {word}
-                  {i === words.length - 1 && <span class="hero__q" data-hero-q>?</span>}
+                  {i === words.length - 1 && <span class="hero__q"><span class="hero__q-hook">?</span><span class="hero__q-dot" data-hero-q>?</span></span>}
                 </span>
                 {i < words.length - 1 && " "}
               </>
@@ -97,17 +97,17 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
     video.addEventListener("playing", () => video.closest("[data-hero-visual]")?.classList.add("is-playing"), {
       once: true,
     });
-    // The "?" catches the light: once per loop of the sand, a pale-gold
-    // sheen passes slowly across the amber glyph, like light over gilding,
-    // then it rests. Driven by the video's own clock, so it stays locked to
+    // The "?"'s dot is a grain of sand: once per loop of the glass it sinks a
+    // little and fades, as if falling through the neck, then a new one forms
+    // in its place. Driven by the video's own clock, so it stays locked to
     // the footage; still whenever the video is paused or motion is reduced.
-    const q = document.querySelector<HTMLElement>("[data-hero-q]");
-    if (q && typeof q.animate === "function" && CSS.supports("background-clip", "text")) {
-      let sheen: Animation | undefined;
+    const dot = document.querySelector<HTMLElement>("[data-hero-q]");
+    if (dot && typeof dot.animate === "function") {
+      let fall: Animation | undefined;
       let period = 0;
       const sync = () => {
-        if (!sheen || !period) return;
-        sheen.currentTime = (video.currentTime * 1000) % period;
+        if (!fall || !period) return;
+        fall.currentTime = (video.currentTime * 1000) % period;
       };
       const tick = () => {
         sync();
@@ -116,28 +116,25 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
       video.addEventListener("playing", () => {
         if (reduced || !video.duration) return;
         period = video.duration * 1000;
-        if (!sheen) {
-          q.classList.add("is-lit");
-          sheen = q.animate(
-            [
-              { backgroundPosition: "100% 0", offset: 0, easing: "cubic-bezier(0.45, 0, 0.25, 1)" },
-              { backgroundPosition: "0% 0", offset: 0.42 },
-              { backgroundPosition: "0% 0", offset: 1 },
-            ],
-            { duration: period, iterations: Infinity },
-          );
-          sheen.pause();
-        }
+        fall ??= dot.animate(
+          [
+            { transform: "translateY(0)", opacity: 1, offset: 0 },
+            { transform: "translateY(0)", opacity: 1, offset: 0.1, easing: "cubic-bezier(0.55, 0, 0.85, 0.35)" },
+            { transform: "translateY(0.16em)", opacity: 0, offset: 0.3 },
+            { transform: "translateY(0)", opacity: 0, offset: 0.36, easing: "cubic-bezier(0.25, 0, 0.25, 1)" },
+            { transform: "translateY(0)", opacity: 1, offset: 0.62 },
+            { transform: "translateY(0)", opacity: 1, offset: 1 },
+          ],
+          { duration: period, iterations: Infinity },
+        );
+        fall.pause();
         requestAnimationFrame(tick);
       });
-      const stop = () => {
-        sheen?.cancel();
-        sheen = undefined;
-        q.classList.remove("is-lit");
-      };
       video.addEventListener("pause", () => sync());
       onReducedMotionChange((isReduced) => {
-        if (isReduced) stop();
+        if (!isReduced) return;
+        fall?.cancel();
+        fall = undefined;
       });
     }
 
@@ -205,39 +202,25 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
   }
 
   /* One accent on this view: the question mark shares the amber of the sand. */
+  /* The "?" is drawn twice, clipped apart: the hook stays, the dot (a grain
+     of sand, script above) can fall on its own. The split sits in the gap
+     between Gelasio's hook and dot: 63.5% down the line box (measured at
+     the headline's line height). */
   .hero__q {
+    position: relative;
     display: inline-block;
     color: var(--accent-text);
   }
 
-  /* The sheen (script above): the glyph is painted by a wide amber gradient
-     with one pale-gold band, clipped to its letterform; moving the gradient
-     carries the band across. Only set once motion starts, so the static "?"
-     stays a plain amber glyph (and forced colours keep their own). */
-  .hero__q.is-lit {
-    background-image: linear-gradient(
-      105deg,
-      var(--amber) 0%,
-      var(--amber) 45.5%,
-      #f6d79a 48%,
-      #fff4e0 50%,
-      #f6d79a 52%,
-      var(--amber) 54.5%,
-      var(--amber) 100%
-    );
-    /* The band is about a third of the glyph's width. */
-    background-size: 400% 100%;
-    background-position: 0% 0;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  .hero__q-hook {
+    display: block;
+    clip-path: inset(-0.2em -0.2em 36.5% -0.2em);
   }
 
-  @media (forced-colors: active) {
-    .hero__q.is-lit {
-      background: none;
-      -webkit-text-fill-color: currentColor;
-    }
+  .hero__q-dot {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(63.5% -0.2em -0.4em -0.2em);
   }
 
   .hero__link {

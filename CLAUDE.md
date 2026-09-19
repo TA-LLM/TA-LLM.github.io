@@ -158,9 +158,10 @@ Second batch, by category:
   focus like the others (`focus`), its poster fades out once it plays, and leaving the
   hero it recedes with the scroll (CSS `animation-timeline: scroll()`, longhands only —
   the `animation` shorthand resets the timeline; the poster never takes the dimming).
-  The amber "?" (2026-09-19, replacing a scale-and-glow beat judged unrefined): once per
-  loop of the sand, a narrow pale-gold sheen crosses the glyph (gradient clipped to the
-  text, `.is-lit`), locked to the video's clock; plain amber when still or reduced.
+  The amber "?" (2026-09-19; a scale-and-glow beat and then a gilded sheen were rejected):
+  its dot is a grain of sand — drawn as a second "?" clipped to the dot, it sinks 0.16em and
+  fades once per loop of the glass, then re-forms in place; locked to the video's clock,
+  still when paused or under reduced motion.
 - Institution logos (2026-09-19, `InstitutionLogos.astro` + `scripts/prepare-logos.mjs`):
   MUR (funder), DAUIN–PoliTo lockup (host; it includes the PoliTo seal, so no separate
   PoliTo logo) and MINDS (group), as one-colour masks of their own artwork
