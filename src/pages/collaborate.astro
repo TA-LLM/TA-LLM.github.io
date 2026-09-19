@@ -1,11 +1,242 @@
 ---
-import PageIntro from "../components/PageIntro.astro";
+/**
+ * Collaborate — after the `collaborate` reference (a split screen: an image
+ * panel on the left, the content on the right), rebuilt for this project:
+ * no sign-in form. The right column holds the invitation and the two
+ * audiences of taste.md §2.3 (cards_5 grammar): researchers and companies,
+ * each with a short status label with a dot, a title, two lines and one link.
+ *
+ * - The image (AI-generated, graded into the palette by
+ *   scripts/prepare-backdrops.mjs) is a framed standalone surface (radius
+ *   within D2's 8–12px), sticky beside the content on desktop and a short
+ *   banner above it on phones. It is an ink surface in both themes.
+ * - Applications go to an external PoliTo form (CLAUDE.md): no personal data
+ *   is ever collected by this site. Its address, and the public contact
+ *   addresses, are still to come, so those links are marked.
+ */
+import { Picture } from "astro:assets";
+import collaborateImage from "../assets/backdrops/collaborate.webp";
+import Icon from "../components/Icon.astro";
 import Todo from "../components/Todo.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const audiences = [
+  {
+    id: "researchers",
+    status: "Researchers",
+    title: "Work on a theme with us",
+    text: "Bring data, benchmarks or methods on time-aware language models, or propose a joint study on one of the four research themes.",
+    link: { href: "/research/", label: "See the four themes" },
+  },
+  {
+    id: "companies",
+    status: "Companies",
+    title: "Test a problem that changes over time",
+    text: "Sensor streams, logs, documents that keep changing: real time-evolving data is where the project's methods are meant to be tried.",
+    link: null,
+  },
+];
 ---
 
 <BaseLayout title="Collaborate" description="Collaborate with TA-LLM: researchers and companies.">
-  <PageIntro eyebrow="Collaborate" title="Collaborate">
-    <p><Todo what="page for researchers and companies — Phase 4; application-form URL still missing" /></p>
-  </PageIntro>
+  <div class="split container">
+    <figure class="split__visual" aria-hidden="true" data-reveal>
+      <Picture
+        src={collaborateImage}
+        alt=""
+        formats={["avif"]}
+        fallbackFormat="webp"
+        widths={[480, 768]}
+        sizes="(min-width: 64rem) 40vw, 100vw"
+        loading="eager"
+      />
+    </figure>
+
+    <div class="split__content">
+      <header class="intro">
+        <p class="label muted" data-reveal>Collaborate</p>
+        <h1 class="intro__title" data-reveal="mask">Work with us</h1>
+        <p class="intro__lede" data-reveal>
+          TA-LLM studies how large language models deal with time, at Politecnico di Torino from 2026 to 2029. We welcome
+          collaborations that bring data, problems or expertise to its research.
+        </p>
+      </header>
+
+      <ul role="list" class="audiences">
+        {
+          audiences.map((a) => (
+            <li class="audience" aria-labelledby={`${a.id}-title`} data-reveal>
+              <p class="label audience__status">
+                <span class="audience__dot" aria-hidden="true" />
+                {a.status}
+              </p>
+              <h2 id={`${a.id}-title`} class="audience__title">
+                {a.title}
+              </h2>
+              <p class="audience__text">{a.text}</p>
+              <div class="audience__links">
+                {a.link && (
+                  <a class="label link-arrow audience__link" href={a.link.href}>
+                    {a.link.label}
+                    <Icon name="arrow-right" size={16} />
+                  </a>
+                )}
+                <Todo what="contact address" />
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <section class="apply" aria-labelledby="apply-title" data-reveal>
+        <h2 id="apply-title" class="label muted">Open positions</h2>
+        <p>
+          Calls for PhD, research and visiting positions are published by Politecnico di Torino; applications are made
+          there, never through this site.
+        </p>
+        <p><Todo what="link to the PoliTo application form and current calls" /></p>
+      </section>
+    </div>
+  </div>
 </BaseLayout>
+
+<style>
+  .split {
+    display: grid;
+    gap: var(--space-l);
+    padding-block: var(--space-l) var(--space-2xl);
+  }
+
+  /* The image panel: an ink surface in both themes, so the graded image
+     keeps its ground. */
+  .split__visual {
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--radius-surface);
+    background: var(--ink);
+    aspect-ratio: 16 / 9;
+  }
+
+  .split__visual :global(picture),
+  .split__visual :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* As a banner, the crop keeps the figure on the ledge and the horizon;
+     the full panel on desktop shows the whole picture. */
+  .split__visual :global(img) {
+    object-fit: cover;
+    object-position: 60% 72%;
+  }
+
+  .split__content {
+    display: grid;
+    align-content: start;
+    gap: var(--space-xl);
+    min-width: 0;
+  }
+
+  .intro {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .intro__title {
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+  }
+
+  .intro__lede {
+    max-width: var(--measure);
+    font-size: var(--step-1);
+    color: var(--text-muted);
+  }
+
+  /* The two audiences: a ruled list, no cards, no tints (one accent). */
+  .audiences {
+    display: grid;
+    border-top: var(--hairline) solid var(--rule);
+  }
+
+  .audience {
+    display: grid;
+    gap: var(--space-xs);
+    padding-block: var(--space-l);
+    border-bottom: var(--hairline) solid var(--rule);
+  }
+
+  .audience__status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    color: var(--text-muted);
+  }
+
+  .audience__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .audience__title {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+  }
+
+  .audience__text {
+    max-width: var(--measure);
+    color: var(--text-muted);
+  }
+
+  .audience__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs) var(--space-m);
+    margin-top: var(--space-2xs);
+  }
+
+  .audience__link {
+    color: var(--accent-text);
+    text-decoration: none;
+  }
+
+  .apply {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .apply > p {
+    max-width: var(--measure);
+  }
+
+  /* Desktop: the split of the reference — image left, sticky and as tall as
+     the viewport allows, content right. */
+  @media (min-width: 64rem) {
+    .split {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--space-2xl);
+      align-items: start;
+      padding-top: var(--space-xl);
+    }
+
+    .split__visual :global(img) {
+      object-position: 50% 50%;
+    }
+
+    .split__visual {
+      position: sticky;
+      /* Sticks exactly where it starts, and fits the viewport below it. */
+      top: calc(var(--header-h) + var(--thread-h) + var(--space-xl));
+      aspect-ratio: auto;
+      height: min(calc(100dvh - var(--header-h) - var(--thread-h) - var(--space-xl) - var(--space-l)), 52rem);
+    }
+
+    .split__content {
+      padding-top: var(--space-l);
+    }
+  }
+</style>

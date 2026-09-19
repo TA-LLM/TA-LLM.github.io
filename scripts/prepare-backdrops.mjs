@@ -27,12 +27,15 @@ const OUT = fileURLToPath(new URL("../src/assets/backdrops/", import.meta.url));
  * name → source in images/, optional crop {left, top, width, height} as
  * fractions of the source, optional `grade` (gradient map into the palette),
  * optional `invert` (map the negative: for light sources, whose dark marks
- * should become the glowing lines on ink).
+ * should become the glowing lines on ink), optional `gamma` (> 1 darkens the
+ * mid-tones before mapping, so a bright source keeps only its highlights gold).
  */
 const BACKDROPS = {
   research: { file: "research.jpg", crop: { left: 0.45, top: 0.3, width: 0.55, height: 0.4757 }, grade: true },
   publications: { file: "publications.jpg", crop: { left: 0, top: 0.162, width: 1, height: 0.375 }, grade: true },
   events: { file: "events.jpg", crop: { left: 0, top: 0.21875, width: 1, height: 0.5625 }, grade: true, invert: true },
+  // Collaborate: a framed panel, not a dissolved backdrop (AI-generated, Krea 2).
+  collaborate: { file: "collaborate.png", grade: true, gamma: 2.1 },
 };
 
 /** Luminance stops (0–1) → sRGB colour: ink, a warm shadow, deep amber,
@@ -60,7 +63,7 @@ function mapLuminance(l) {
 
 mkdirSync(OUT, { recursive: true });
 
-for (const [name, { file, crop, grade, invert }] of Object.entries(BACKDROPS)) {
+for (const [name, { file, crop, grade, invert, gamma = 1 }] of Object.entries(BACKDROPS)) {
   const input = `${RAW}${file}`;
   if (!existsSync(input)) {
     console.log(`skip ${name}: images/${file} not found`);
@@ -84,7 +87,7 @@ for (const [name, { file, crop, grade, invert }] of Object.entries(BACKDROPS)) {
     const out = Buffer.alloc(data.length);
     for (let i = 0; i < data.length; i += 3) {
       const lum = (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255;
-      const [r, g, b] = mapLuminance(invert ? 1 - lum : lum);
+      const [r, g, b] = mapLuminance((invert ? 1 - lum : lum) ** gamma);
       out[i] = r;
       out[i + 1] = g;
       out[i + 2] = b;
