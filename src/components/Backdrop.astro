@@ -15,6 +15,12 @@
  *   page title sits) and the bottom (where the content begins), short at the
  *   top and right, so no edge of the image is ever visible.
  * - Decorative: hidden from assistive technology, no alt text needed.
+ * - `motion` (trial, 2026-09-19): the image comes into focus once as it
+ *   enters (blur and opacity, 1.6 s), then breathes: a 40 s slow drift in
+ *   scale and position, back and forth, so the picture feels alive without
+ *   ever being noticed as an animation. Only transforms, filter and
+ *   opacity; paused off-screen and on hidden tabs; none of it under reduced
+ *   motion, where the image simply shows.
  *
  * The page's <main> is the positioning context (base.css).
  */
@@ -25,12 +31,19 @@ interface Props {
   image: ImageMetadata;
   /** Strength on ink, 0–1: lower for sources with large bright areas. */
   intensity?: number;
+  /** Focus-in on entrance and a slow drift (see above). */
+  motion?: boolean;
 }
 
-const { image, intensity = 0.85 } = Astro.props;
+const { image, intensity = 0.85, motion = false } = Astro.props;
 ---
 
-<div class="backdrop" aria-hidden="true" style={`--backdrop-intensity: ${intensity}`}>
+<div
+  class:list={["backdrop", { "backdrop--motion": motion }]}
+  aria-hidden="true"
+  style={`--backdrop-intensity: ${intensity}`}
+  data-backdrop-motion={motion ? "" : undefined}
+>
   <Picture
     src={image}
     alt=""
@@ -42,6 +55,26 @@ const { image, intensity = 0.85 } = Astro.props;
     fetchpriority="low"
   />
 </div>
+
+<script>
+  import { onReducedMotionChange, prefersReducedMotion, whenVisible } from "../scripts/motion";
+
+  for (const el of document.querySelectorAll<HTMLElement>("[data-backdrop-motion]")) {
+    let reduced = prefersReducedMotion();
+    let visible = false;
+    const update = () => el.toggleAttribute("data-playing", visible && !reduced);
+    whenVisible(el, (isVisible) => {
+      visible = isVisible;
+      if (isVisible) el.classList.add("is-in");
+      update();
+    });
+    onReducedMotionChange((isReduced) => {
+      reduced = isReduced;
+      el.classList.add("is-in");
+      update();
+    });
+  }
+</script>
 
 <style>
   .backdrop {
@@ -96,6 +129,43 @@ const { image, intensity = 0.85 } = Astro.props;
   @media (forced-colors: active) {
     .backdrop {
       display: none;
+    }
+  }
+
+  /* ------------------------------------------------------------ motion */
+  @media (prefers-reduced-motion: no-preference) {
+    /* Entrance: out of focus and faint until it enters, then settles. The
+       hidden state exists only under html.motion (Head.astro). */
+    :global(html.motion) .backdrop--motion:not(.is-in) {
+      opacity: 0;
+      filter: blur(14px);
+    }
+
+    .backdrop--motion {
+      transition:
+        opacity 1400ms var(--ease),
+        filter 1800ms var(--ease);
+    }
+
+    /* The drift: on the image itself, so its blending is untouched. The
+       mask clips the scaled image to the frame. */
+    .backdrop--motion :global(img) {
+      transform-origin: 70% 40%;
+      animation: backdrop-drift 40s ease-in-out infinite alternate;
+      animation-play-state: paused;
+    }
+
+    .backdrop--motion[data-playing] :global(img) {
+      animation-play-state: running;
+    }
+  }
+
+  @keyframes backdrop-drift {
+    from {
+      transform: scale(1) translate3d(0, 0, 0);
+    }
+    to {
+      transform: scale(1.06) translate3d(-1.5%, 1%, 0);
     }
   }
 </style>
