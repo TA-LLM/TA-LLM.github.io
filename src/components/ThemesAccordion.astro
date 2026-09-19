@@ -207,7 +207,7 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
   @media (min-width: 64rem) {
     .acc {
       display: flex;
-      height: 38rem;
+      height: 30rem;
       container-type: inline-size;
     }
 
@@ -257,8 +257,8 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
     .acc__open {
       width: calc(100cqw * 4.5 / 7.5 - 2px);
       align-content: end;
-      gap: var(--space-s);
-      padding: var(--space-l);
+      gap: var(--space-xs);
+      padding: var(--space-m) var(--space-l);
       opacity: 0;
       visibility: hidden;
     }
@@ -278,17 +278,19 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
     }
 
     .acc__glyph :global(.glyph) {
-      width: 5.5rem;
-      height: 5.5rem;
+      width: 4.5rem;
+      height: 4.5rem;
     }
 
+    /* Sized so the whole section, heading included, fits one screen. */
     .acc__name {
-      max-width: 26ch;
-      font-size: var(--step-3);
+      max-width: 32ch;
+      font-size: var(--step-2);
     }
 
     .acc__lede {
-      max-width: 46ch;
+      max-width: 56ch;
+      font-size: var(--step--1);
     }
   }
 
