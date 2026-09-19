@@ -6,4 +6,5 @@ affiliation: Politecnico di Torino
 order: 1
 themes: []
 polito: https://www.polito.it/en/staff?p=lorenzo.vaiani
+portrait: ../../assets/people/lorenzo-vaiani.webp
 ---

@@ -9,6 +9,7 @@
  * Portraits must be real (D4). Until one exists, the ring holds the person's
  * initials in the display face: a designed state, not a placeholder image.
  */
+import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 import Badge from "./Badge.astro";
 import Icon from "./Icon.astro";
@@ -35,7 +36,7 @@ const initials = name
   <span class="person__spot" aria-hidden="true"></span>
 
   <div class="person__portrait">
-    {portrait ? <img src={portrait} alt={`Portrait of ${name}`} width="144" height="144" loading="lazy" /> : <span class="person__initials" aria-hidden="true">{initials}</span>}
+    {portrait ? <Image src={portrait} alt={`Portrait of ${name}`} width={144} height={144} densities={[1, 2]} loading="lazy" /> : <span class="person__initials" aria-hidden="true">{initials}</span>}
     <svg class="person__ring" viewBox="0 0 100 100" aria-hidden="true">
       <circle cx="50" cy="50" r="49" pathLength="1"></circle>
     </svg>

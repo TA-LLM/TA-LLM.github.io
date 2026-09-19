@@ -16,6 +16,11 @@ Website of the research project **TA-LLM — Large Language Models: a matter of 
 - People profile links (`polito`, `linkedin` in the people collection): PoliTo staff pages
   checked on polito.it; LinkedIn added only when the profile is verifiably that person
   (faculty so far). Project code: GitHub organization https://github.com/TA-LLM (footer).
+- Portraits (2026-09-19): photos supplied by the user in `images/people/` (git-ignored), cut
+  out by the user with rembg (`u2net_human_seg`) into `images/people/nobg/`, then
+  `scripts/prepare-portraits.mjs` crops a square around each face and flattens it on
+  **plain white** (user: one background for everyone) → `src/assets/people/*.webp`, set in
+  the card's circle via `astro:assets` (1x/2x). Six so far: the five faculty and L. Vaiani.
 
 ## Sources (read before writing content)
 - `sources/private/general_project_info.txt` — official abstract and project data

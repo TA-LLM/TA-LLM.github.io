@@ -34,25 +34,27 @@ const themes = defineCollection({
 
 const people = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/people" }),
-  schema: z.object({
-    name: z.string(),
-    role: z.enum(["pi", "co-supervisor", "postdoc", "phd", "researcher", "collaborator"]),
-    /** Academic position, as stated by the project (e.g. "Associate Professor"). */
-    position: z.string(),
-    affiliation: z.string(),
-    /** Order within the person's group on /people. */
-    order: z.number().int(),
-    themes: z.array(reference("themes")).default([]),
-    orcid: z.string().optional(),
-    scholar: z.url().optional(),
-    website: z.url().optional(),
-    /** Official Politecnico di Torino staff page (polito.it/en/staff?p=…). */
-    polito: z.url().optional(),
-    /** LinkedIn profile, only when verified to be this person. */
-    linkedin: z.url().optional(),
-    /** Real portraits only (taste.md D4); no placeholder imagery. */
-    portrait: z.string().optional(),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      name: z.string(),
+      role: z.enum(["pi", "co-supervisor", "postdoc", "phd", "researcher", "collaborator"]),
+      /** Academic position, as stated by the project (e.g. "Associate Professor"). */
+      position: z.string(),
+      affiliation: z.string(),
+      /** Order within the person's group on /people. */
+      order: z.number().int(),
+      themes: z.array(reference("themes")).default([]),
+      orcid: z.string().optional(),
+      scholar: z.url().optional(),
+      website: z.url().optional(),
+      /** Official Politecnico di Torino staff page (polito.it/en/staff?p=…). */
+      polito: z.url().optional(),
+      /** LinkedIn profile, only when verified to be this person. */
+      linkedin: z.url().optional(),
+      /** Real portraits only (taste.md D4); no placeholder imagery. A square
+          crop from scripts/prepare-portraits.mjs (src/assets/people/). */
+      portrait: image().optional(),
+    }),
 });
 
 const events = defineCollection({
