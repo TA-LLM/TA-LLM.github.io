@@ -6,19 +6,16 @@
  * audiences of taste.md §2.3 (cards_5 grammar): researchers and companies,
  * each with a short status label with a dot, a title, two lines and one link.
  *
- * - The image (AI-generated) fills the whole page in its original colours,
- *   in both themes (user decision, 2026-09-19): no grade, no blend. On
- *   desktop it stays in place behind the page while the content scrolls
- *   over it on the left, on a veil of the page's surface that clears towards
- *   the figure on the ledge; the text may overlap the picture slightly. On
- *   phones it is a full-width opening image the content rises over.
+ * - The picture (AI-generated, PageScene.astro) fills the page in its
+ *   original colours; the content runs down the left over its veil, and the
+ *   figure on the ledge stays clear on the right.
  * - Applications go to an external PoliTo form (CLAUDE.md): no personal data
  *   is ever collected by this site. Its address, and the public contact
  *   addresses, are still to come, so those links are marked.
  */
-import { Picture } from "astro:assets";
 import collaborateImage from "../assets/backdrops/collaborate.webp";
 import Icon from "../components/Icon.astro";
+import PageScene from "../components/PageScene.astro";
 import Tag from "../components/Tag.astro";
 import Todo from "../components/Todo.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -42,19 +39,7 @@ const audiences = [
 ---
 
 <BaseLayout title="Collaborate" description="Collaborate with TA-LLM: researchers and companies.">
-  <div class="scene" aria-hidden="true">
-    <figure class="scene__frame" data-media-motion="drift">
-      <Picture
-        src={collaborateImage}
-        alt=""
-        formats={["avif"]}
-        fallbackFormat="webp"
-        widths={[480, 800, 1200, 1600, 2400]}
-        sizes="100vw"
-        loading="eager"
-      />
-    </figure>
-  </div>
+  <PageScene image={collaborateImage} position="50% 70%" mobilePosition="60% 72%" origin="66% 74%" motion="drift" />
 
   <div class="split container">
 
@@ -109,58 +94,6 @@ const audiences = [
 </BaseLayout>
 
 <style>
-  /* ------------------------------------------------- the picture
-     Phones: a full-width opening image, fading into the page at its foot;
-     the content rises a little over it. */
-  .scene {
-    position: relative;
-    z-index: -1;
-    height: min(78dvh, 44rem);
-    margin-bottom: calc(-1 * var(--space-3xl, 6rem));
-  }
-
-  .scene__frame {
-    position: relative;
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
-  }
-
-  .scene__frame :global(picture),
-  .scene__frame :global(img) {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
-  /* The picture is clipped a few pixels short of the frame's foot, inside
-     the veil's solid band: clipped at the frame's own fractional edge, the
-     drifting image's last row showed past the veil as a 1px line. */
-  .scene__frame :global(picture) {
-    height: calc(100% - 4px);
-    overflow: hidden;
-  }
-
-  .scene__frame :global(img) {
-    object-fit: cover;
-    object-position: 60% 72%;
-    transform-origin: 66% 74%;
-  }
-
-  /* The veil: the page's own surface, so the page never shows a seam. */
-  .scene__frame::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, transparent 45%, color-mix(in srgb, var(--surface) 70%, transparent) 72%, var(--surface) 90%);
-  }
-
-  @media (forced-colors: active) {
-    .scene {
-      display: none;
-    }
-  }
-
   .split {
     display: grid;
     gap: var(--space-l);
@@ -246,37 +179,8 @@ const audiences = [
     max-width: var(--measure);
   }
 
-  /* Desktop: the picture fills the page and stays in place (sticky inside
-     a layer as tall as <main>, so it ends with the page, never behind the
-     footer); the content runs down the left over a veil of the surface that
-     clears towards the figure on the right. */
+  /* Desktop: the content runs down the left, over the picture's veil. */
   @media (min-width: 64rem) {
-    .scene {
-      position: absolute;
-      inset: 0;
-      height: auto;
-      margin: 0;
-    }
-
-    .scene__frame {
-      position: sticky;
-      top: calc(var(--header-h) + var(--thread-h));
-      height: calc(100dvh - var(--header-h) - var(--thread-h));
-    }
-
-    /* A short fade at the foot, so the picture never ends on an edge where
-       the page meets the footer. The whole width of the picture shows; the slice keeps the sunset and
-       the figure on the ledge in view. */
-    .scene__frame :global(img) {
-      object-position: 50% 70%;
-    }
-
-    .scene__frame::after {
-      background:
-        linear-gradient(to right, var(--surface) 0%, var(--surface) 30%, color-mix(in srgb, var(--surface) 82%, transparent) 44%, color-mix(in srgb, var(--surface) 35%, transparent) 54%, transparent 64%),
-        linear-gradient(to bottom, color-mix(in srgb, var(--surface) 12%, transparent), transparent 14%, transparent 82%, var(--surface) 98%);
-    }
-
     .split {
       grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
       padding-top: var(--space-2xl);

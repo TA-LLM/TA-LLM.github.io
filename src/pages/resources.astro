@@ -1,23 +1,35 @@
 ---
 import { getCollection } from "astro:content";
+import resourcesImage from "../assets/backdrops/resources.webp";
 import EmptyState from "../components/EmptyState.astro";
 import PageIntro from "../components/PageIntro.astro";
+import PageScene from "../components/PageScene.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const resources = await getCollection("resources");
 ---
 
 <BaseLayout title="Resources" description="Datasets, benchmarks, models and code released by TA-LLM.">
-  <PageIntro eyebrow="Resources" title="Released resources" />
-  {
-    resources.length === 0 && (
-      <EmptyState
-        icon="dataset"
-        label="0 resources"
-        message="Datasets, benchmarks, models and code released by the project will be listed here, each with its licence, citation and repository."
-        href="/research/"
-        linkText="Read about the research themes"
-      />
-    )
-  }
+  <PageScene
+    image={resourcesImage}
+    position="50% 45%"
+    mobilePosition="55% 42%"
+    origin="56% 47%"
+    motion="push"
+    veil="narrow"
+  />
+  <div class="scene-content">
+    <PageIntro eyebrow="Resources" title="Released resources" />
+    {
+      resources.length === 0 && (
+        <EmptyState
+          icon="dataset"
+          label="0 resources"
+          message="Datasets, benchmarks, models and code released by the project will be listed here, each with its licence, citation and repository."
+          href="/research/"
+          linkText="Read about the research themes"
+        />
+      )
+    }
+  </div>
 </BaseLayout>

@@ -133,7 +133,7 @@ Second batch, by category:
   accordion, whose accent is the theme colour. Facts only, never invented claims.
 - Page backdrops (2026-09-19, `Backdrop.astro` + `scripts/prepare-backdrops.mjs`): one
   illustration per page, top-right behind the opening, on Research, Publications and
-  Events (Resources still to come). Sources: AI-generated images or free-licence photos (Pexels, licence checked
+  Events (Collaborate and Resources use a full-page picture instead, below). Sources: AI-generated images or free-licence photos (Pexels, licence checked
   at the source), cropped and gradient-mapped into the palette (ink → deep amber → amber →
   pale gold). Blended with `lighten` over ink (inverted + `multiply` over paper), masked
   on all four sides, never under text: no edge may ever be visible. Lists over a backdrop
@@ -146,11 +146,14 @@ Second batch, by category:
   on the `<img>` only; on-screen and visible tab only; nothing under reduced motion. Reframe
   an image by cropping the asset (prep script), never by a CSS zoom: a scaled image inside
   a masked, blended frame leaks 1px past the mask at fractional edges in Chrome.
-  **Collaborate** (user decision, 2026-09-19) is the exception to the grading: its
+  **Full-page pictures** (`PageScene.astro`; Collaborate, then Resources — a hand touching a
+  dissolving clock, `push`) are the exception to the grading (user decision, 2026-09-19): the
   AI-generated picture (upscaled 4x with Topaz, encoded at 2400px) is used in its **original colours**, unblended, in both themes,
   filling the page (desktop: sticky behind the content, text on the left over a veil of
   `--surface` that clears towards the figure; phones: a full-width opening image the
-  content rises over). The text may overlap the picture slightly.
+  content rises over). The text may overlap the picture slightly. Page blocks go in a
+  `.scene-content` wrapper. `veil="narrow"` (short page, subject mid-picture) applies only to
+  dark pictures on ink; the light theme keeps the wide veil.
   Home hero: the video has no loop of its own on top (it already moves): it comes into
   focus like the others (`focus`), its poster fades out once it plays, and leaving the
   hero it recedes with the scroll (CSS `animation-timeline: scroll()`, longhands only —

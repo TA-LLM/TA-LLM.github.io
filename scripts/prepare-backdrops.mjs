@@ -39,6 +39,9 @@ const BACKDROPS = {
   // 2026-09-19). Upscaled 4x with Topaz from the 768px original; only
   // re-encoded, wider than the rest since it fills the whole page.
   collaborate: { file: "collaborate.png", width: 2400 },
+  // Resources: a hand touching a clock that dissolves into light (AI-generated,
+  // Krea 2 via ElevenLabs); used as it is, like Collaborate (PageScene.astro).
+  resources: { file: "ElevenLabs_image_krea-2-large_Ultra-realistic_2026-09-19T10_07_18.png", width: 2400 },
 };
 
 /** Luminance stops (0–1) → sRGB colour: ink, a warm shadow, deep amber,
