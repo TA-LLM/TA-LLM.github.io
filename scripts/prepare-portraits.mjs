@@ -1,8 +1,9 @@
 /**
  * Prepares the team portraits for /people from the photos in
  * images/people/nobg/ (git-ignored): the user's photos (2026-09-19) with
- * their backgrounds removed by rembg (u2net_human_seg), so every portrait is
- * set on the same plain white ground.
+ * their backgrounds removed by rembg (u2net_human_seg), so every portrait
+ * sits on the same ground: the card's circle, in the palette's raised
+ * surface (PersonCard.astro), not the photo's own background.
  *
  * Run: node scripts/prepare-portraits.mjs
  *
@@ -11,7 +12,9 @@
  * (cx, cy of width and height) — and written as a 320px WebP in
  * src/assets/people/, from which Astro builds the sizes the card needs. The
  * card shows it in a circle, so the crop leaves room for the head and a
- * little of the shoulders. The cut-out is flattened onto white; the
+ * little of the shoulders. The cut-out keeps its transparency, with its soft
+ * edge tightened (alpha remapped from 0.3–0.9 to 0–1) so the lighter fringe
+ * of the old background does not show as a halo on a dark ground. The
  * person's colours are left as they are.
  */
 import { existsSync, mkdirSync } from "node:fs";
@@ -42,11 +45,18 @@ for (const [slug, { file, cx, cy, size }] of Object.entries(PORTRAITS)) {
   const side = Math.round(Math.min(width, height) * size);
   const left = Math.min(Math.max(0, Math.round(cx * width - side / 2)), width - side);
   const top = Math.min(Math.max(0, Math.round(cy * height - side / 2)), height - side);
-  const info = await sharp(input)
+  const { data, info: raw } = await sharp(input)
     .extract({ left, top, width: side, height: side })
-    .flatten({ background: "#ffffff" })
     .resize(320, 320)
-    .webp({ quality: 88 })
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  for (let i = 3; i < data.length; i += 4) {
+    const a = data[i] / 255;
+    data[i] = Math.round(255 * Math.min(1, Math.max(0, (a - 0.3) / 0.6)));
+  }
+  const info = await sharp(data, { raw })
+    .webp({ quality: 88, alphaQuality: 90 })
     .toFile(`${OUT}${slug}.webp`);
   console.log(`${slug}: ${side}px crop -> ${info.width}x${info.height}, ${Math.round(info.size / 1024)} kB`);
 }

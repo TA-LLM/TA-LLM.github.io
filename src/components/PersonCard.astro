@@ -121,7 +121,9 @@ const initials = name
     margin-bottom: var(--space-s);
     border-radius: 50%;
     border: var(--hairline) solid var(--rule-strong);
-    background: var(--surface);
+    /* Portraits are cut out (scripts/prepare-portraits.mjs): every face sits
+       on this one ground, a tone of the palette just off the page. */
+    background: var(--surface-raised);
   }
 
   .person__portrait img {
