@@ -10,7 +10,7 @@ const publications = await getCollection("publications");
 ---
 
 <BaseLayout title="Publications" description="Publications of the TA-LLM research project.">
-  <Backdrop image={publicationsBackdrop} />
+  <Backdrop image={publicationsBackdrop} motion="push" />
   <PageIntro eyebrow="Publications" title="Publications" />
   {
     publications.length === 0 && (

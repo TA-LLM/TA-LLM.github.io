@@ -26,9 +26,11 @@ const { title, description } = Astro.props;
     </main>
     <SiteFooter />
     <script>
+      import { initMediaMotion } from "../scripts/media-motion";
       import { initReveal } from "../scripts/reveal";
 
       initReveal();
+      initMediaMotion();
     </script>
   </body>
 </html>

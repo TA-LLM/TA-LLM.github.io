@@ -10,7 +10,7 @@ const events = await getCollection("events");
 ---
 
 <BaseLayout title="Events" description="Seminars, talks and workshops of the TA-LLM project.">
-  <Backdrop image={eventsBackdrop} intensity={0.65} />
+  <Backdrop image={eventsBackdrop} intensity={0.65} motion="turn" />
   <PageIntro eyebrow="Events" title="Events" />
   {
     events.length === 0 && (

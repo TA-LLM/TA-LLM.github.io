@@ -12,7 +12,7 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
 ---
 
 <BaseLayout title="Research" description="The four starting research themes of the TA-LLM project.">
-  <Backdrop image={researchBackdrop} motion />
+  <Backdrop image={researchBackdrop} motion="flow" />
   <PageIntro eyebrow="Research" title="Four starting themes" />
 
   <section class="container themes-section" aria-label="Research themes">

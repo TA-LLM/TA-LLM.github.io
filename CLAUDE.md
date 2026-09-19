@@ -130,6 +130,12 @@ Second batch, by category:
   pale gold). Blended with `lighten` over ink (inverted + `multiply` over paper), masked
   on all four sides, never under text: no edge may ever be visible. Lists over a backdrop
   use transparent rows ruled with borders, not a 1px gap over a rule-coloured ground.
+  **Image motion** (2026-09-19, `src/scripts/media-motion.ts` + base.css,
+  `data-media-motion`): each page image comes into focus once as it enters (fade 2.4 s,
+  sharpening 4 s, gentle curves) and then plays one slow movement chosen for its subject —
+  Research `flow` (along the trails), Publications `push` (lean in to the letter), Events
+  `turn` (the clock spiral, one turn per 4 min), Collaborate `drift` (clouds). Transforms
+  on the `<img>` only; on-screen and visible tab only; nothing under reduced motion.
 - Institution logos (2026-09-19, `InstitutionLogos.astro` + `scripts/prepare-logos.mjs`):
   MUR (funder), DAUIN–PoliTo lockup (host; it includes the PoliTo seal, so no separate
   PoliTo logo) and MINDS (group), as one-colour masks of their own artwork
