@@ -147,7 +147,7 @@ Second batch, by category:
   an image by cropping the asset (prep script), never by a CSS zoom: a scaled image inside
   a masked, blended frame leaks 1px past the mask at fractional edges in Chrome.
   **Collaborate** (user decision, 2026-09-19) is the exception to the grading: its
-  AI-generated picture is used in its **original colours**, unblended, in both themes,
+  AI-generated picture (upscaled 4x with Topaz, encoded at 2400px) is used in its **original colours**, unblended, in both themes,
   filling the page (desktop: sticky behind the content, text on the left over a veil of
   `--surface` that clears towards the figure; phones: a full-width opening image the
   content rises over). The text may overlap the picture slightly.

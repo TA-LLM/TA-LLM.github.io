@@ -11,7 +11,7 @@
  * Each raw image is optionally cropped (fractions of its width and height),
  * optionally gradient-mapped into the site's palette (its luminance mapped
  * through ink → deep amber → amber → pale gold, so any source reads as one of
- * ours), resized to 1600px wide and written as a WebP source in
+ * ours), resized to 1600px wide (or its own `width`) and written as a WebP source in
  * src/assets/backdrops/, from which Astro builds AVIF/WebP at display sizes.
  * On the page the image is blended with `lighten` over the ink surface and
  * faded out by masks, so it never shows an edge (Backdrop.astro).
@@ -36,8 +36,9 @@ const BACKDROPS = {
   events: { file: "events.jpg", crop: { left: 0, top: 0.21875, width: 1, height: 0.5625 }, grade: true, invert: true },
   // Collaborate: the whole page's picture (AI-generated, Krea 2), used as it
   // is — the original colours and framing, no crop, no grade (user decision,
-  // 2026-09-19). Only re-encoded.
-  collaborate: { file: "collaborate.png" },
+  // 2026-09-19). Upscaled 4x with Topaz from the 768px original; only
+  // re-encoded, wider than the rest since it fills the whole page.
+  collaborate: { file: "collaborate.png", width: 2400 },
 };
 
 /** Luminance stops (0–1) → sRGB colour: ink, a warm shadow, deep amber,
@@ -65,7 +66,7 @@ function mapLuminance(l) {
 
 mkdirSync(OUT, { recursive: true });
 
-for (const [name, { file, crop, grade, invert, gamma = 1 }] of Object.entries(BACKDROPS)) {
+for (const [name, { file, crop, grade, invert, gamma = 1, width: outWidth = 1600 }] of Object.entries(BACKDROPS)) {
   const input = `${RAW}${file}`;
   if (!existsSync(input)) {
     console.log(`skip ${name}: images/${file} not found`);
@@ -82,7 +83,7 @@ for (const [name, { file, crop, grade, invert, gamma = 1 }] of Object.entries(BA
       height: Math.round(crop.height * height),
     });
   }
-  image = image.resize({ width: 1600, withoutEnlargement: true });
+  image = image.resize({ width: outWidth, withoutEnlargement: true });
 
   if (grade) {
     const { data, info } = await image.removeAlpha().raw().toBuffer({ resolveWithObject: true });
