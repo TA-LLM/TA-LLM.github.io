@@ -123,6 +123,14 @@ Second batch, by category:
   it drifts only on hover/focus/active and never under reduced motion; text never sits on
   the smoke. Used for supervisors, co-supervisors and PhD students (research list, theme
   pages linking to `/people/#id`, home accordion) and the PI tag (`label` variant).
+- Amber tags (2026-09-19, user asked for a livelier site): `Tag.astro` — short facts in
+  the mono label style on an amber pill, in a `ul.tags` row. `solid` (amber fill, ink text,
+  8.41:1) at most one per row, for the key fact; `soft` (default: amber wash + amber text
+  and rule, `--tag-soft-*`, 6.3:1+, in the contrast gate); `dot` for open/live states,
+  breathing only without reduced motion. Used on Home hero (MUR · FIS 2, dates, PoliTo),
+  Research, People, Collaborate (open to researchers/companies, calls via PoliTo), About
+  funding and every empty state ("Coming soon"). Not on theme pages or the themes
+  accordion, whose accent is the theme colour. Facts only, never invented claims.
 - Page backdrops (2026-09-19, `Backdrop.astro` + `scripts/prepare-backdrops.mjs`): one
   illustration per page, top-right behind the opening, on Research, Publications and
   Events (Resources still to come). Sources: AI-generated images or free-licence photos (Pexels, licence checked

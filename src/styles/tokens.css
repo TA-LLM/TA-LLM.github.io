@@ -42,6 +42,11 @@
   --thread-fill: var(--amber);    /* D10 project thread */
   --thread-track: var(--rule);
   --institution-mark: var(--paper); /* funder/host/group logos, one colour */
+  /* Amber tags (Tag.astro): a solid pill (--accent fill, --on-accent text)
+     or a soft one — an amber wash over the surface, amber text, amber rule. */
+  --tag-soft-bg: #312B25;         /* 16% amber over ink */
+  --tag-soft-text: var(--amber);
+  --tag-soft-rule: #8A5A10;
   /* Badge smoke (Badge.astro): seamless fractal noise gradient-mapped (sRGB)
      through ink, ink-blue, deep amber and amber — the site's own palette in
      the reference's smoky pill. The light theme maps paper to deep amber. */
@@ -161,6 +166,9 @@
   --thread-fill: var(--amber-deep); /* non-text graphic, needs ≥3:1 */
   --thread-track: var(--rule);
   --institution-mark: var(--ink);  /* one colour for the whole logo set */
+  --tag-soft-bg: #F3DFBC;         /* amber wash over paper */
+  --tag-soft-text: #6E4608;       /* deeper than --amber-deep: the wash darkens the ground */
+  --tag-soft-rule: #C98A2A;
   --badge-smoke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='96'%3E%3Cfilter id='s' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006 0.024' numOctaves='6' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='2.4 0 0 0 -0.7 2.4 0 0 0 -0.7 2.4 0 0 0 -0.7 0 0 0 0 1'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='table' tableValues='0.953 0.953 0.93 0.90 0.54 0.12'/%3E%3CfeFuncG type='table' tableValues='0.933 0.933 0.84 0.635 0.353 0.18'/%3E%3CfeFuncB type='table' tableValues='0.894 0.894 0.66 0.235 0.063 0.33'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23s%29'/%3E%3C/svg%3E");
 
   --theme-rlaif-ink: var(--amber-deep);

@@ -74,6 +74,7 @@ const pairs = [
   ["--text-muted", "--surface-raised", TEXT, "muted text on raised panels"],
   ["--accent-text", "--surface", TEXT, "accent as text"],
   ["--on-accent", "--accent", TEXT, "text on the accent fill"],
+  ["--tag-soft-text", "--tag-soft-bg", TEXT, "soft amber tag"],
   ["--theme-rlaif-ink", "--surface", TEXT, "theme 01 as text"],
   ["--theme-cl-ink", "--surface", TEXT, "theme 02 as text"],
   ["--theme-topology-ink", "--surface", TEXT, "theme 03 as text"],

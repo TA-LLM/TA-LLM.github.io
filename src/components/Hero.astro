@@ -20,6 +20,7 @@
  */
 import { getImage } from "astro:assets";
 import Icon from "./Icon.astro";
+import Tag from "./Tag.astro";
 import posterSource from "../assets/hero/hourglass-poster.png";
 
 const poster = await getImage({ src: posterSource, format: "webp", width: 480 });
@@ -47,6 +48,11 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
           }
         </span>
       </h1>
+      <ul role="list" class="tags hero__tags" aria-label="The project in brief">
+        <li><Tag variant="solid">Funded by MUR · FIS 2</Tag></li>
+        <li><Tag>2026 – 2029</Tag></li>
+        <li><Tag>Politecnico di Torino</Tag></li>
+      </ul>
       <a class="hero__link label link-arrow" href="/research/">Research themes<Icon name="arrow-right" size={16} /></a>
     </div>
 
@@ -153,6 +159,9 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
     --accent-text: var(--amber);
     --thread-fill: var(--amber);
     --focus: var(--amber);
+    --tag-soft-bg: #312B25;
+    --tag-soft-text: var(--amber);
+    --tag-soft-rule: var(--amber-deep);
     color-scheme: dark;
 
     padding-block: var(--space-xl) var(--space-2xl);

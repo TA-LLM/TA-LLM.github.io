@@ -1,6 +1,7 @@
 ---
 import PageIntro from "../components/PageIntro.astro";
 import InstitutionLogos from "../components/InstitutionLogos.astro";
+import Tag from "../components/Tag.astro";
 import Todo from "../components/Todo.astro";
 import { PROJECT } from "../config/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -13,6 +14,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   <section id="funding" class="container funding" aria-labelledby="funding-title">
     <h2 id="funding-title" class="funding__title">Funding</h2>
+    <ul role="list" class="tags" aria-label="Funding in brief" data-reveal>
+      <li><Tag variant="solid">MUR · FIS 2</Tag></li>
+      <li><Tag>{PROJECT.code}</Tag></li>
+      <li><Tag>36 months</Tag></li>
+    </ul>
     <dl class="funding__list" data-reveal>
       <div><dt class="label muted">Funder</dt><dd>{PROJECT.funder}</dd></div>
       <div><dt class="label muted">Programme</dt><dd>{PROJECT.programme}</dd></div>

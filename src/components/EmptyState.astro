@@ -5,6 +5,7 @@
  */
 import type { IconName } from "../icons/icons";
 import Icon from "./Icon.astro";
+import Tag from "./Tag.astro";
 
 interface Props {
   icon?: IconName;
@@ -17,7 +18,10 @@ const { icon, label, message, href, linkText } = Astro.props;
 ---
 
 <section class="empty container" aria-label={label} data-reveal>
-  <p class="label muted empty__label">{icon && <Icon name={icon} size={20} />}{label}</p>
+  <div class="empty__head">
+    <p class="label muted empty__label">{icon && <Icon name={icon} size={20} />}{label}</p>
+    <Tag dot>Coming soon</Tag>
+  </div>
   <p class="empty__message">{message}</p>
   {href && linkText && <a class="empty__link label link-arrow" href={href}>{linkText}<Icon name="arrow-right" size={16} /></a>}
 </section>
@@ -28,6 +32,13 @@ const { icon, label, message, href, linkText } = Astro.props;
     gap: var(--space-s);
     padding-block: var(--space-xl);
     border-top: var(--hairline) solid var(--rule);
+  }
+
+  .empty__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs) var(--space-s);
   }
 
   .empty__label {

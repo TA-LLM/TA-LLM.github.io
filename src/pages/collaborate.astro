@@ -18,6 +18,7 @@
 import { Picture } from "astro:assets";
 import collaborateImage from "../assets/backdrops/collaborate.webp";
 import Icon from "../components/Icon.astro";
+import Tag from "../components/Tag.astro";
 import Todo from "../components/Todo.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -67,9 +68,8 @@ const audiences = [
         {
           audiences.map((a) => (
             <li class="audience" aria-labelledby={`${a.id}-title`} data-reveal>
-              <p class="label audience__status">
-                <span class="audience__dot" aria-hidden="true" />
-                {a.status}
+              <p class="audience__status">
+                <Tag dot>Open · {a.status}</Tag>
               </p>
               <h2 id={`${a.id}-title`} class="audience__title">
                 {a.title}
@@ -90,7 +90,10 @@ const audiences = [
       </ul>
 
       <section class="apply" aria-labelledby="apply-title" data-reveal>
-        <h2 id="apply-title" class="label muted">Open positions</h2>
+        <div class="apply__head">
+          <h2 id="apply-title" class="label muted">Open positions</h2>
+          <Tag variant="solid">Calls via Politecnico</Tag>
+        </div>
         <p>
           Calls for PhD, research and visiting positions are published by Politecnico di Torino; applications are made
           there, never through this site.
@@ -194,17 +197,14 @@ const audiences = [
   }
 
   .audience__status {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2xs);
-    color: var(--text-muted);
+    margin-bottom: var(--space-2xs);
   }
 
-  .audience__dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background: var(--accent);
+  .apply__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs) var(--space-s);
   }
 
   .audience__title {

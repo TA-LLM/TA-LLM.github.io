@@ -8,6 +8,7 @@
 import { getCollection, getEntries } from "astro:content";
 import Icon from "../components/Icon.astro";
 import PageIntro from "../components/PageIntro.astro";
+import Tag from "../components/Tag.astro";
 import PersonCard from "../components/PersonCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -37,6 +38,11 @@ const groups = [
       title="The team"
       lede="Five faculty members of Politecnico di Torino lead the project. Four PhD students each take on one of its research themes."
     >
+      <ul role="list" class="tags team__tags" aria-label="The team in brief">
+        <li><Tag variant="solid">5 faculty · 4 PhD students</Tag></li>
+        <li><Tag>DAUIN · Politecnico di Torino</Tag></li>
+        <li><Tag dot>Open to collaboration</Tag></li>
+      </ul>
       <a class="label link-arrow team__join" href="/collaborate/">Work with us<Icon name="arrow-right" size={16} /></a>
     </PageIntro>
 
@@ -81,6 +87,10 @@ const groups = [
     background-size: 32px 32px;
     opacity: 0.35;
     mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 100%);
+  }
+
+  .team__tags {
+    margin-bottom: var(--space-s);
   }
 
   .team__join {

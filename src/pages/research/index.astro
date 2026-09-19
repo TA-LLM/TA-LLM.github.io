@@ -4,6 +4,7 @@ import researchBackdrop from "../../assets/backdrops/research.webp";
 import Backdrop from "../../components/Backdrop.astro";
 import Badge from "../../components/Badge.astro";
 import PageIntro from "../../components/PageIntro.astro";
+import Tag from "../../components/Tag.astro";
 import ThemeGlyph from "../../components/ThemeGlyph.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { personAnchor } from "../../lib/people";
@@ -13,7 +14,14 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
 
 <BaseLayout title="Research" description="The four starting research themes of the TA-LLM project.">
   <Backdrop image={researchBackdrop} motion="flow" />
-  <PageIntro eyebrow="Research" title="Four starting themes" />
+  <PageIntro eyebrow="Research" title="Four starting themes">
+    <ul role="list" class="tags" aria-label="The themes in brief">
+      <li><Tag variant="solid">4 themes · 4 PhD students</Tag></li>
+      <li><Tag>Time series</Tag></li>
+      <li><Tag>Temporal drift</Tag></li>
+      <li><Tag>Starting points, not limits</Tag></li>
+    </ul>
+  </PageIntro>
 
   <section class="container themes-section" aria-label="Research themes">
     <ul role="list" class="themes">
