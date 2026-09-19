@@ -107,10 +107,11 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
     min-width: 0;
   }
 
+  /* The link sits on the heading's baseline, not on the bottom of its box. */
   .themes__head {
     display: grid;
     grid-template-columns: 1fr auto;
-    align-items: end;
+    align-items: last baseline;
     gap: var(--space-2xs) var(--space-m);
   }
 
@@ -123,9 +124,16 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
     font-size: var(--step-3);
   }
 
+  /* The link's baseline must come from its text, not from the arrow's
+     bottom edge, so it sits exactly on the heading's baseline. */
   .themes__all {
+    align-items: last baseline;
     color: var(--text-muted);
     text-decoration: none;
+  }
+
+  .themes__all :global(.icon) {
+    align-self: center;
   }
 
   .themes__all:hover {
@@ -161,15 +169,25 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
     display: none;
   }
 
-  /* ------------------------------------------- phone and tablet: a list */
+  /* ------------------------------------------- phone and tablet: a list
+     One vertical rhythm, set by margins rather than a uniform gap: label
+     and glyph are a group, the title leads its text, and people and link
+     each stand a step apart. */
   .acc__open {
     display: grid;
     justify-items: start;
-    gap: var(--space-xs);
+    align-content: start;
     padding: var(--space-m);
   }
 
+  .acc__eyebrow {
+    margin-bottom: var(--space-s);
+  }
+
   .acc__glyph {
+    display: block;
+    line-height: 0;
+    margin-bottom: var(--space-s);
     color: var(--text-muted);
   }
 
@@ -179,13 +197,16 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
   }
 
   .acc__name {
+    margin-bottom: var(--space-2xs);
     font-family: var(--font-display);
     font-size: var(--step-1);
+    line-height: var(--leading-heading);
     color: var(--text);
   }
 
   .acc__lede {
     max-width: var(--measure);
+    margin-bottom: var(--space-s);
     color: var(--text-muted);
   }
 
@@ -193,6 +214,7 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2xs);
+    margin-bottom: var(--space-s);
   }
 
   .acc__cta {
@@ -253,14 +275,20 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
 
     /* Exactly the open column's width (4.5 of 7.5 shares of the list), so
        the content fits at any desktop width and still never reflows while
-       the column is widening. */
+       the column is widening. Its vertical grid matches the rails': the same
+       padding, the label and glyph on the rails' number and glyph lines, free
+       space in the middle, and the link ending where the upright titles end. */
     .acc__open {
       width: calc(100cqw * 4.5 / 7.5 - 2px);
-      align-content: end;
-      gap: var(--space-xs);
-      padding: var(--space-m) var(--space-l);
+      grid-template-rows: auto auto 1fr auto auto auto auto;
+      align-content: stretch;
+      padding: var(--space-l);
       opacity: 0;
       visibility: hidden;
+    }
+
+    .acc__eyebrow {
+      margin-bottom: var(--space-m);
     }
 
     .acc__item[data-active] .acc__open {
@@ -273,9 +301,19 @@ const firstSentence = (text = "") => text.split(/(?<=\.)\s/)[0];
       color: var(--theme-ink);
     }
 
+    /* Every element on its own row of the shared grid; row 3 is the free
+       space between the top group and the text. */
+    .acc__eyebrow { grid-row: 1; }
+
     .acc__glyph {
-      margin-bottom: auto;
+      grid-row: 2;
+      margin-bottom: 0;
     }
+
+    .acc__name { grid-row: 4; }
+    .acc__lede { grid-row: 5; }
+    .acc__people { grid-row: 6; }
+    .acc__cta { grid-row: 7; }
 
     .acc__glyph :global(.glyph) {
       width: 4.5rem;
