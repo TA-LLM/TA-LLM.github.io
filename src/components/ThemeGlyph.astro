@@ -4,20 +4,29 @@
  * text (chosen 2026-09-18 from three candidates each). 48×48 grid; the stroke
  * stays 1.5px at any size (non-scaling), matching the utility icons.
  *
- *   agentic   — observe, reason, act on a loop; one step calls an external
- *               tool (agentic frameworks, tool calling)
+ *   agentic   — the user's own icon (2026-09-20): an AI agent's head, a chip
+ *               in its mind, drawn as a mask so only its colour is ours
  *   topology  — balls grow around points until a ring closes around a hole;
  *               the long bar is the hole's lifetime, the short one is noise
  *               (persistent topological structures)
  *   cl        — a learning curve rises at each task boundary and the earlier
  *               ones stay high (learning without catastrophic forgetting)
- *   rlaif     — preference checks arrive one after another along a drifting
- *               series (AI feedback renewed over time)
+ *   rlaif     — the user's own icon (2026-09-20): a reinforcement loop, drawn
+ *               as a mask so only its colour is ours
  *
  * Colour is `currentColor`: the caller decides when the glyph takes its theme
  * colour (one accent per view). With `animated`, only the element that carries
- * the idea moves, slowly; under reduced motion the glyph is static.
+ * the idea moves, slowly; under reduced motion the glyph is static. The two
+ * supplied icons are bitmaps used exactly as they are (the user's rule), so
+ * they take the colour but not the motion: they are painted through a mask,
+ * the same technique as the institution logos.
  */
+import agenticIcon from "../assets/theme-icons/agentic.webp";
+import rlaifIcon from "../assets/theme-icons/rlaif.webp";
+
+/** The themes drawn from the user's own artwork, by mask. */
+const SUPPLIED = { agentic: agenticIcon, rlaif: rlaifIcon } as const;
+
 interface Props {
   theme: "agentic" | "topology" | "cl" | "rlaif";
   size?: number;
@@ -30,6 +39,10 @@ interface Props {
 }
 
 const { theme, size = 48, animated = false, hover = false, class: className } = Astro.props;
+
+const supplied = theme in SUPPLIED ? SUPPLIED[theme as keyof typeof SUPPLIED] : undefined;
+// Several glyphs of the same theme can share a page: each mask needs its own id.
+const maskId = `glyph-mask-${theme}-${Math.random().toString(36).slice(2, 8)}`;
 
 // Eight points on the topology ring, starting at the top.
 const ring = Array.from({ length: 8 }, (_, i) => {
@@ -52,15 +65,12 @@ const ring = Array.from({ length: 8 }, (_, i) => {
   focusable="false"
 >
   {
-    theme === "agentic" && (
+    supplied && (
       <>
-        <circle class="glyph__faint" cx="22" cy="20" r="10" stroke-dasharray="1.5 3" />
-        <circle class="glyph__step glyph__step--1" cx="22" cy="10" r="2.5" fill="currentColor" stroke="none" />
-        <circle class="glyph__step glyph__step--2" cx="30.66" cy="25" r="2.5" fill="currentColor" stroke="none" />
-        <circle class="glyph__step glyph__step--3" cx="13.34" cy="25" r="2.5" fill="currentColor" stroke="none" />
-        <path d="M32.5 27.5 37 32.5" />
-        <rect class="glyph__step glyph__step--2" x="37" y="32.5" width="7" height="7" rx="1.5" />
-        <path class="glyph__faint" d="M4 44h40" />
+        <mask id={maskId}>
+          <image href={supplied.src} x="2" y="2" width="44" height="44" preserveAspectRatio="xMidYMid meet" />
+        </mask>
+        <rect x="0" y="0" width="48" height="48" fill="currentColor" stroke="none" mask={`url(#${maskId})`} />
       </>
     )
   }
@@ -87,25 +97,6 @@ const ring = Array.from({ length: 8 }, (_, i) => {
           <path d="M6 38c3 0 4-24 8-24h30" />
           <path d="M18 38c3 0 4-20 8-20h18" />
           <path d="M30 38c3 0 4-16 8-16h6" />
-        </g>
-      </>
-    )
-  }
-  {
-    theme === "rlaif" && (
-      <>
-        <path d="M5 38l7-4 7 3 7-6 7 2 10-7" />
-        <g class="glyph__step glyph__step--1">
-          <path d="m9 20 2.5 2.5L16 18" />
-          <path class="glyph__faint" d="M12 25v7" stroke-dasharray="1.5 2.5" />
-        </g>
-        <g class="glyph__step glyph__step--2">
-          <path d="m23 17 2.5 2.5L30 15" />
-          <path class="glyph__faint" d="M26 22v7" stroke-dasharray="1.5 2.5" />
-        </g>
-        <g class="glyph__step glyph__step--3">
-          <path d="m37 12 2.5 2.5L44 10" />
-          <path class="glyph__faint" d="M40 17v7" stroke-dasharray="1.5 2.5" />
         </g>
       </>
     )

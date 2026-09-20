@@ -128,7 +128,11 @@ Second batch, by category:
   glyphs** in `ThemeGlyph.astro` — 48×48, non-scaling 1.5px stroke, each drawn from the
   idea at the centre of its theme text (chosen by the user from three candidates each:
   agent loop + tool, filtration ring + barcode, task curves that stay high, preference
-  checks along a drifting series), the only coloured marks (theme colour on focus in lists, as the page accent on
+  checks along a drifting series). **Agentic and RLAIF now use the user's own artwork**
+  (2026-09-20, `research/moodboard/_taste/icons/`, prepared by
+  `scripts/prepare-theme-icons.mjs` into alpha masks): used exactly as supplied, painted
+  through a `<mask>` inside the glyph's svg so **only the colour** is ours — they take the
+  theme colour but not the stroke motion. They are the only coloured marks (theme colour on focus in lists, as the page accent on
   theme pages, where they animate only under `prefers-reduced-motion: no-preference`).
   Links ending in an arrow use `.link-arrow` + the `arrow-right` icon, not a "→" glyph.
   **More icons (2026-09-19, user request, "like 21st.dev/community/icons"):** Lucide
