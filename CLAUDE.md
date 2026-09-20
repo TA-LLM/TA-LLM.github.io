@@ -214,9 +214,14 @@ Second batch, by category:
   Home, after the hero and before the themes, each `clamp(16rem, 42vh, 30rem)` deep: the
   user first tried the dithered gold gradient of `_taste/background` and found it too small
   in that place, so that band (and its prep script) was removed.
-  Uniforms are the recipe's except the palette, which is ours (ink, amber, pale gold, deep
-  amber — so `u_hue` stays 0), the ground darkened to land back on ink, and `seed` per band
-  so two bands are never the same picture. One frame is always drawn; the loop runs only on
+  Also **one band per theme page**, between the supervision row and the long text (the user
+  rejected the foot of the page: "it looks left over"), in that theme's own colour — there
+  the theme colour is already the page's one accent — and **one in /about**, between the
+  three goals and Funding, where the story gives way to the institutional data.
+  Uniforms are the recipe's except the palette, which is ours (`tone`: amber, or a theme's
+  colour, as ground + colour + pale tint + deep tint — so `u_hue` stays 0), the ground
+  darkened to land back on ink, and `seed` per band so two bands are never the same
+  picture. One frame is always drawn; the loop runs only on
   screen in a visible tab, never under reduced motion, the clock carrying across pauses;
   DPR capped at 1.75; a lost context just stops it. The pointer lights it (the recipe's
   spotlight), never from touch. **A separator, never a ground for text.** `taste.md` D7

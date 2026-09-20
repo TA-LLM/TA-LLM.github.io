@@ -2,6 +2,7 @@
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import Badge from "../../components/Badge.astro";
 import PageIntro from "../../components/PageIntro.astro";
+import ShaderBand from "../../components/ShaderBand.astro";
 import ThemeGlyph from "../../components/ThemeGlyph.astro";
 import Todo from "../../components/Todo.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -42,6 +43,8 @@ const { Content } = await render(theme);
     </ul>
     {!approved && <p><Todo what="theme description, pending approval" /></p>}
   </section>
+
+  {approved && <ShaderBand tone={colour} seed={Number(number) * 421 + 97} />}
 
   {
     approved && (

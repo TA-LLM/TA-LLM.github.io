@@ -25,15 +25,20 @@ void main() {
 }
 `;
 
-/** ink, amber, pale gold, deep amber — the reference's ramp in our colours. */
-const COLORS = [
-  // Darker than ink on purpose: the recipe's contrast lifts the low end, and
-  // this lands the band's ground back on the page's own ink.
-  [0.022, 0.031, 0.055],
-  [0.902, 0.635, 0.235],
-  [0.98, 0.91, 0.769],
-  [0.541, 0.353, 0.063],
-];
+/** The reference's ramp in our colours, one set per tone: the ground (darker
+    than ink on purpose — the recipe's contrast lifts the low end, and this
+    lands the band back on the page's own ink), the colour itself, its pale
+    tint, and its deep one. `amber` is the site's accent; the four others are
+    the research themes, so a theme's page keeps its own single colour. */
+const GROUND = [0.022, 0.031, 0.055];
+
+const TONES: Record<string, number[][]> = {
+  amber: [GROUND, [0.902, 0.635, 0.235], [0.98, 0.91, 0.769], [0.541, 0.353, 0.063]],
+  rlaif: [GROUND, [0.902, 0.635, 0.235], [0.98, 0.91, 0.769], [0.541, 0.353, 0.063]],
+  cl: [GROUND, [0.498, 0.702, 0.627], [0.886, 0.953, 0.925], [0.208, 0.42, 0.345]],
+  topology: [GROUND, [0.557, 0.486, 0.765], [0.906, 0.878, 0.969], [0.416, 0.333, 0.659]],
+  agentic: [GROUND, [0.435, 0.659, 0.863], [0.867, 0.929, 0.98], [0.184, 0.427, 0.639]],
+};
 
 const SPEED = 1.05;
 const MAX_DPR = 1.75;
@@ -88,8 +93,9 @@ function setup(canvas: HTMLCanvasElement): void {
   const uSpace = at("u_space");
   const uCursor = at("u_cursor");
 
+  const colours = TONES[canvas.dataset.tone ?? "amber"] ?? TONES.amber;
   const palette = new Float32Array(8 * 3);
-  COLORS.forEach((colour, i) => palette.set(colour, i * 3));
+  colours.forEach((colour, i) => palette.set(colour, i * 3));
   gl.uniform3fv(uColors, palette);
   // scale, intensity, paramA, warp — the recipe's shape.
   gl.uniform4f(uShape, 1.26, 0.35, 0.28, 0.0);
@@ -122,7 +128,7 @@ function setup(canvas: HTMLCanvasElement): void {
   };
 
   const render = (time: number) => {
-    gl.uniform4f(uScene, width, height, time * SPEED, COLORS.length);
+    gl.uniform4f(uScene, width, height, time * SPEED, colours.length);
     gl.uniform4f(uSpace, -0.09, 0.01, pointer[0], pointer[1]);
     // presence, effect (4 = spotlight), strength, radius.
     gl.uniform4f(uCursor, presence, 4.0, 0.4, 0.49);

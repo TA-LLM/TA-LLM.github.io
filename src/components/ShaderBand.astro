@@ -14,17 +14,20 @@
  *   site's (ink, amber, pale gold), so it needs no inversion in the light
  *   theme: there it is simply lightened, as a print of the same thing.
  * - `seed` moves the field: two bands on one page are the same shader, never
- *   the same picture.
+ *   the same picture. `tone` picks its colours: the site's amber, or a
+ *   research theme's own colour on that theme's page, where it is already
+ *   the one accent.
  */
 interface Props {
   seed?: number;
+  tone?: "amber" | "rlaif" | "cl" | "topology" | "agentic";
 }
 
-const { seed = 1372 } = Astro.props;
+const { seed = 1372, tone = "amber" } = Astro.props;
 ---
 
 <div class="shader" aria-hidden="true">
-  <canvas class="shader__canvas" data-shader-band data-seed={seed}></canvas>
+  <canvas class="shader__canvas" data-shader-band data-seed={seed} data-tone={tone}></canvas>
 </div>
 
 <script>
