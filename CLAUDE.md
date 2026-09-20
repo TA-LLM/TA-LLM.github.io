@@ -198,10 +198,13 @@ Second batch, by category:
   the project in the record's own words (the heading "Making LLMs aware of time" is ours)
   and the three goals. Not cards: the three stand along **one rule that runs across the
   section** as a time axis, each ticked in amber, each opening with a **drawing of its own
-  problem** — a sampled series, three tracks slipping around one instant, and (third one, after four
-  attempts the user rejected) **the two reference symbols fused**, as the user asked: the
-  site's hourglass with the LLM plate set across its neck and circuit traces radiating to
-  their nodes, amber sand resting above the plate, falling through and gathering below. Bespoke inline SVG on the site's 1.5px non-scaling stroke, one amber accent each;
+  problem** — a sampled series, three tracks slipping around one instant, and (third one, after four attempts
+  the user rejected) **the sum written out**, as the user asked: their two reference marks
+  redrawn in the site's line — the LLM plate wired into a brain, and a solid hourglass with
+  amber sand — a **+** between them, the reference's **merge arrow**, then the **result**:
+  an hourglass whose upper chamber holds the brain, its knowledge falling as amber sand into
+  the chamber below. All three drawings are set to one height (`.goal__art`, 5.5rem) so the
+  section's rule stays continuous; this one is wider and takes the whole column. Bespoke inline SVG on the site's 1.5px non-scaling stroke, one amber accent each;
   drawn on reveal, looping only while on screen in a visible tab, nothing under reduced
   motion. /about keeps the full abstract.
 - Accessibility: WCAG AA contrast, keyboard navigation, alt text on every image.

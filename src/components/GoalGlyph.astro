@@ -9,12 +9,15 @@
  *   right — the knowledge hidden in timestamped values.
  * - `misalignment`: three tracks (picture, words, sound) that drift out of
  *   step around one instant, then fall back in.
- * - `model-and-time`: the two symbols fused, at the user's request (the
- *   LLM plate wired into a brain, and an hourglass): the site's hourglass,
- *   with the model's plate set across its neck and its circuit traces
- *   radiating left and right to their nodes. Amber sand rests above the
- *   plate, falls through it and gathers below — everything the model knows
- *   passes through time.
+ * - `model-and-time`: the sum written out, as the user asked (2026-09-20):
+ *   their two reference marks — the LLM plate wired into a brain, and a
+ *   solid hourglass — stand side by side on one line, a plus between them and
+ *   a merge arrow after them, and the
+ *   result follows: an hourglass whose upper chamber holds the brain, its
+ *   knowledge falling as amber sand into the chamber below. The references
+ *   are redrawn in the site's line, their black taken to the page's own text
+ *   colour and the sand to amber; it is wider than the other two drawings,
+ *   so it takes the whole column.
  *
  * Neutral except for one amber accent per drawing (the samples, the instant,
  * the mark). Drawn once the goal is revealed; the loops run only under
@@ -49,7 +52,7 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
 
 <svg
   class:list={["glyph", `glyph--${kind}`, className]}
-  viewBox="0 0 200 72"
+  viewBox={kind === "model-and-time" ? "0 0 340 100" : "0 0 200 72"}
   fill="none"
   stroke="currentColor"
   stroke-width="1.5"
@@ -89,33 +92,75 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
   {
     kind === "model-and-time" && (
       <>
-        {/* The traces of the first symbol, reaching the plate from both sides. */}
-        <path class="glyph__wires" d="M84 22H60l-10-10H42M84 36H38M84 50H60l-10 10H42M116 22h24l10-10h8M116 36h46M116 50h24l10 10h8" />
-        {[
-          [38.5, 12],
-          [34.5, 36],
-          [38.5, 60],
-          [161.5, 12],
-          [165.5, 36],
-          [161.5, 60],
-        ].map(([x, y]) => (
-          <circle class="glyph__node" cx={x} cy={y} r="2.6" />
-        ))}
-
-        {/* The site's hourglass, enlarged from the icon set. */}
-        <g transform="translate(68 4) scale(3.2)" stroke-width="0.47">
-          <path class="glyph__glass" d="M5 2.5h10M5 17.5h10" />
-          <path class="glyph__glass" d="M6.5 2.5c0 4 7 4.5 7 7.5s-7 3.5-7 7.5M13.5 2.5c0 4-7 4.5-7 7.5s7 3.5 7 7.5" />
+        {/* 1. The model: a brain wired to its leads, carrying the LLM plate. */}
+        <g class="fx-llm" transform="translate(0 12)">
+          <path
+            class="fx-stroke"
+            d="M52 16c-6-7-19-5-21 3-9 0-14 8-10 14-8 4-8 14 0 18-3 9 5 16 13 14 3 7 13 8 18 2M52 16c6-7 19-5 21 3 9 0 14 8 10 14 8 4 8 14 0 18 3 9-5 16-13 14-3 7-13 8-18 2M52 16v51"
+          />
+          <path class="fx-trace" d="M40 26v8h7M64 26v8h-7M38 58v-7h8M66 58v-7h-8" />
+          <path class="fx-lead" d="M31 19l-9-8M73 19l9-8M21 33h-9M83 33h9M24 57l-9 7M80 57l9 7" />
+          {[
+            [20, 10],
+            [84, 10],
+            [10, 33],
+            [94, 33],
+            [13, 66],
+            [91, 66],
+            [47, 34],
+            [57, 34],
+            [46, 51],
+            [58, 51],
+          ].map(([x, y]) => (
+            <circle class="fx-node" cx={x} cy={y} r="2.6" />
+          ))}
+          <rect class="fx-plate" x="30" y="34" width="44" height="17" rx="1.5" />
+          <text class="fx-plate-text" x="52" y="47" text-anchor="middle">
+            LLM
+          </text>
         </g>
 
-        {/* Sand above, falling through the model, gathering below. */}
-        <path class="glyph__sand" d="M89.5 20c5.6 4.2 15.4 4.2 21 0L100 30.5z" />
-        <path class="glyph__fall" d="M100 42.5v9" />
-        <path class="glyph__sand" d="M88 55c5-7.5 19-7.5 24 0z" />
+        {/* ...plus time. */}
+        <path class="fx-plus" d="M100 50h16M108 42v16" />
 
-        {/* The model, set across the neck where time passes. */}
-        <rect class="glyph__plate" x="85" y="30" width="30" height="12" rx="2.5" />
-        <text class="glyph__mark-text" x="100" y="38.6" text-anchor="middle">LLM</text>
+        {/* 2. Time: the hourglass of the reference, solid. */}
+        <g class="fx-glass">
+          <rect class="fx-fill" x="122" y="14" width="46" height="8" rx="1.5" />
+          <rect class="fx-fill" x="122" y="78" width="46" height="8" rx="1.5" />
+          <path class="fx-thick" d="M129 22c0 13 16 15 16 28s-16 15-16 28M161 22c0 13-16 15-16 28s16 15 16 28" />
+          <path class="fx-sand" d="M131 30c8 6 20 5 28-2-3 8-8 11-14 16-6-5-11-8-14-14z" />
+          <path class="fx-sand" d="M131 77c0-11 6-16 14-16s14 5 14 16z" />
+        </g>
+
+        {/* 3. The two joining, after the reference's merge arrow. */}
+        <g class="fx-merge">
+          <path class="fx-strand" d="M186 30c12 0 12 20 24 20" />
+          <path class="fx-strand fx-strand--accent" d="M186 70c12 0 12-20 24-20" />
+          <path class="fx-strand fx-strand--accent" d="M210 50h12" />
+          <path class="fx-strand fx-strand--accent" d="M216 43l8 7-8 7" />
+        </g>
+
+        {/* 4. The result: the brain inside the glass, falling as sand. */}
+        <g class="fx-fusion">
+          <rect class="fx-fill" x="238" y="10" width="72" height="8" rx="1.5" />
+          <rect class="fx-fill" x="238" y="82" width="72" height="8" rx="1.5" />
+          <path class="fx-thick" d="M247 18c0 16 27 20 27 32s-27 16-27 32M301 18c0 16-27 20-27 32s27 16 27 32" />
+          <path
+            class="fx-stroke"
+            d="M274 24c-4-5-13-3-14 2-6 0-9 6-7 9-5 3-5 9 0 12 2 5 8 8 13 5M274 24c4-5 13-3 14 2 6 0 9 6 7 9 5 3 5 9 0 12-2 5-8 8-13 5M274 24v28"
+          />
+          <path class="fx-fall" d="M274 56v10" />
+          <path class="fx-sand" d="M258 81c0-11 7-16 16-16s16 5 16 16z" />
+          <path class="fx-lead" d="M247 30h-9M301 30h9M249 70h-9M299 70h9" />
+          {[
+            [236, 30],
+            [312, 30],
+            [236, 70],
+            [312, 70],
+          ].map(([x, y]) => (
+            <circle class="fx-node" cx={x} cy={y} r="2.6" />
+          ))}
+        </g>
       </>
     )
   }
@@ -123,13 +168,86 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
   </svg>
 
 <style>
+  /* Every drawing is set to the same height, whatever its viewBox, so the
+     three sit on the section's one rule; the sum is simply wider. */
   .glyph {
     display: block;
-    width: 100%;
-    max-width: 13rem;
-    height: auto;
+    width: auto;
+    max-width: 100%;
+    height: 100%;
     color: var(--text-muted);
     overflow: visible;
+  }
+
+  /* The references redrawn: their black becomes the page's text colour,
+     their solids are filled with it, the sand keeps the one accent. */
+  .fx-stroke,
+  .fx-thick,
+  .fx-trace,
+  .fx-lead,
+  .fx-plate,
+  .fx-strand {
+    stroke: var(--text);
+  }
+
+  .fx-stroke,
+  .fx-plate {
+    stroke-width: 1.8;
+  }
+
+  .fx-trace,
+  .fx-lead {
+    stroke-width: 1.6;
+  }
+
+  .fx-thick {
+    stroke-width: 4.5;
+  }
+
+  .fx-strand {
+    stroke-width: 3.6;
+  }
+
+  .fx-plus {
+    stroke: var(--text);
+    stroke-width: 3.2;
+  }
+
+  .fx-strand--accent {
+    stroke: var(--accent-text);
+  }
+
+  .fx-fill {
+    fill: var(--text);
+    stroke: none;
+  }
+
+  .fx-node {
+    fill: var(--surface);
+    stroke: var(--text);
+    stroke-width: 1.6;
+  }
+
+  .fx-plate {
+    fill: var(--surface);
+  }
+
+  .fx-plate-text {
+    fill: var(--text);
+    stroke: none;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+
+  .fx-sand {
+    fill: var(--accent-text);
+    stroke: none;
+  }
+
+  .fx-fall {
+    stroke: var(--accent-text);
+    stroke-width: 2.4;
   }
 
   .glyph__rule,
@@ -193,7 +311,7 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
     stroke-dashoffset: 1;
   }
 
-  :global(html.motion) [data-reveal]:not(.is-revealed) :is(.glyph__dot, .glyph__node, .glyph__sand, .glyph__fall, .glyph__mark-text) {
+  :global(html.motion) [data-reveal]:not(.is-revealed) :is(.glyph__dot, .fx-glass, .fx-merge, .fx-fusion) {
     opacity: 0;
   }
 
@@ -209,26 +327,20 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
       transition: opacity 400ms var(--ease) calc(320ms + var(--i) * 90ms);
     }
 
-    .glyph__mark {
+    /* The sum is read in order: the model, then time, then the result. */
+    .fx-glass {
       opacity: 1;
-      transition: opacity 500ms var(--ease) 1200ms;
+      transition: opacity 500ms var(--ease) 500ms;
     }
 
-    /* The network lights up, then the sand starts to run. */
-    .glyph__node {
+    .fx-merge {
       opacity: 1;
-      transition: opacity 500ms var(--ease) 400ms;
+      transition: opacity 500ms var(--ease) 900ms;
     }
 
-    .glyph__sand,
-    .glyph__fall {
+    .fx-fusion {
       opacity: 1;
-      transition: opacity 600ms var(--ease) 900ms;
-    }
-
-    .glyph__mark-text {
-      opacity: 1;
-      transition: opacity 500ms var(--ease) 700ms;
+      transition: opacity 700ms var(--ease) 1300ms;
     }
 
     /* Then each drawing keeps its own slow movement, which runs only while
@@ -238,8 +350,8 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
       animation-delay: calc(var(--i) * -3s);
     }
 
-    /* The sand keeps falling through the model. */
-    :global([data-glyphs-live]) .glyph--model-and-time .glyph__fall {
+    /* In the result, the sand keeps falling out of the brain. */
+    :global([data-glyphs-live]) .glyph--model-and-time .fx-fall {
       animation: goal-fall 1.8s linear infinite;
     }
 
