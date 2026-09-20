@@ -187,6 +187,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     border-bottom: var(--hairline) solid var(--rule);
   }
 
+  /* The last goal closes on the shader band, not on a rule. */
+  .goal:last-child {
+    border-bottom: none;
+  }
+
   /* The official wording of each goal is a full sentence, so the titles run
      longer than a label: they keep the display face, at body-ish size. */
   .goal__title {
