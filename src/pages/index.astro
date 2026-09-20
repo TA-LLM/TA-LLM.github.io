@@ -2,10 +2,12 @@
 /**
  * Home. Phase 2: the hero. Phase 3, section by section: what the project is
  * about (the record's own words, with a drawing per goal), then the four
- * themes (accordion); the other sections follow.
+ * themes (accordion), with the gold band of the moodboard between them; the
+ * other sections follow.
  */
 import Hero from "../components/Hero.astro";
 import HomeVision from "../components/HomeVision.astro";
+import TextureBand from "../components/TextureBand.astro";
 import ThemesAccordion from "../components/ThemesAccordion.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
@@ -13,5 +15,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 <BaseLayout>
   <Hero />
   <HomeVision />
+  <TextureBand />
   <ThemesAccordion />
 </BaseLayout>

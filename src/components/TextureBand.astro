@@ -1,0 +1,62 @@
+---
+/**
+ * A full-bleed band of the "Dark gitter gold" gradient
+ * (research/moodboard/_taste/background, 21st.dev), rasterised once by
+ * scripts/prepare-texture.mjs.
+ *
+ * - A separator, never a ground for text: nothing is ever placed on it, so
+ *   its busy cells never fight with the page's type or its one accent.
+ *   Decorative, hidden from assistive technology and in forced colours.
+ * - Still, not animated: the reference's loop would mean a second canvas
+ *   running beside the hero's video.
+ * - On ink it keeps the reference's own dark; on paper it is inverted (hue
+ *   kept) and multiplied, as the page backdrops are, so it prints as gold on
+ *   the paper instead of lying there as a dark smudge. Its top and foot fade
+ *   to nothing, so the band never shows an edge.
+ */
+import { Picture } from "astro:assets";
+import texture from "../assets/textures/gold-grid.webp";
+---
+
+<div class="band" aria-hidden="true">
+  <Picture
+    src={texture}
+    alt=""
+    formats={["avif"]}
+    fallbackFormat="webp"
+    widths={[800, 1200, 1600]}
+    sizes="100vw"
+    loading="lazy"
+  />
+</div>
+
+<style>
+  .band {
+    position: relative;
+    height: clamp(6rem, 11vw, 9rem);
+    overflow: hidden;
+    /* No edge, on either surface. */
+    mask-image: linear-gradient(to bottom, transparent, #000 38%, #000 62%, transparent);
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+  }
+
+  .band :global(picture),
+  .band :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  :global(:root[data-theme="light"]) .band :global(img) {
+    filter: invert(1) hue-rotate(180deg) saturate(0.85) brightness(1.04) contrast(1.05);
+    mix-blend-mode: multiply;
+  }
+
+  @media (forced-colors: active) {
+    .band {
+      display: none;
+    }
+  }
+</style>

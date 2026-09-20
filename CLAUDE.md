@@ -207,6 +207,13 @@ Second batch, by category:
   section's rule stays continuous; this one is wider and takes the whole column. Bespoke inline SVG on the site's 1.5px non-scaling stroke, one amber accent each;
   drawn on reveal, looping only while on screen in a visible tab, nothing under reduced
   motion. /about keeps the full abstract.
+- Texture band (2026-09-20, `TextureBand.astro` + `scripts/prepare-texture.mjs`): the
+  "Dark gitter gold" gradient of `research/moodboard/_taste/background` (21st.dev),
+  rasterised once from its parameters (Bayer-dithered cell grid, 20° ramp, grain, vignette)
+  — the CSS in the prompt is only an approximation. A **separator, never a ground for
+  text**: one band on Home, between the vision and the themes, top and foot faded to
+  nothing. Still, not animated (the reference's loop would be a second canvas beside the
+  hero video). Dark on ink; inverted + `multiply` on paper, like the backdrops.
 - Accessibility: WCAG AA contrast, keyboard navigation, alt text on every image.
 
 ## Decisions from the reference-site analysis
