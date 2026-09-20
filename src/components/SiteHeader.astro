@@ -5,6 +5,15 @@
  * bar. While the overlay is open, <main> and <footer> are made inert, so focus
  * stays in the header without a hand-written trap; Esc closes it and returns
  * focus to the menu button.
+ *
+ * The bar settles with the scroll (2026-09-20, after agenticsystemslab.org):
+ * at the top it is the page's own surface, unpainted; over the first 7rem its
+ * ground fades in and blurs what passes under it. It is driven by a scroll
+ * timeline in CSS, so it is continuous rather than a state that snaps at a
+ * threshold, and it is a `::before` layer — `backdrop-filter` on the header
+ * itself would make it the containing block for the phone overlay, which is
+ * `position: fixed` inside it. Browsers without scroll timelines, and anyone
+ * who asked for reduced motion, keep the solid bar.
  */
 import { NAV } from "../config/site";
 import ProjectThread from "./ProjectThread.astro";
@@ -108,6 +117,52 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
     z-index: var(--z-header);
     background: var(--surface);
     view-transition-name: site-header;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .site-header {
+        background: transparent;
+      }
+
+      .site-header::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        /* Enough ground that nothing reads through it as a ghost, little
+           enough that the page is felt passing under. */
+        background: color-mix(in srgb, var(--surface) 93%, transparent);
+        backdrop-filter: blur(12px);
+        opacity: 0;
+        animation-name: header-settle;
+        animation-duration: auto;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: scroll(root);
+        animation-range: 0 7rem;
+      }
+
+      /* The home hero is an ink surface in both themes. On paper, a bar
+         without its own ground would put ink text on that ink: there the bar
+         stays painted. */
+      :global(:root[data-theme="light"]) :global(body:has(.hero)) .site-header {
+        background: var(--surface);
+      }
+
+      :global(:root[data-theme="light"]) :global(body:has(.hero)) .site-header::before {
+        content: none;
+      }
+    }
+  }
+
+  @keyframes header-settle {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   /* The theme switch reveals the whole page at once, header included. */

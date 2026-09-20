@@ -267,6 +267,15 @@ Second batch, by category:
   DPR capped at 1.75; a lost context just stops it. The pointer lights it (the recipe's
   spotlight), never from touch. **A separator, never a ground for text.** `taste.md` D7
   ("2D, not WebGL") still holds for the hero; this is the user's decision for these bands.
+- Header settle (2026-09-20, taken from agenticsystemslab.org's scroll-driven nav): the bar
+  starts unpainted and its ground fades in and blurs over the first 7rem of scroll, driven by
+  `animation-timeline: scroll(root)` — continuous, not a class that snaps at a threshold.
+  It is painted on a `::before` layer: `backdrop-filter` on the header itself would make it
+  the containing block for the phone overlay, which is `position: fixed` inside it. Ground
+  `color-mix(--surface 93%)` + `blur(12px)`: no ghost of the text underneath. **Exception:**
+  in the light theme on a page with the ink hero (Home) the bar stays painted, or its ink
+  text would sit on the hero's ink. Without scroll timelines, or under reduced motion, the
+  bar is simply solid.
 - Accessibility: WCAG AA contrast, keyboard navigation, alt text on every image.
 
 ## Decisions from the reference-site analysis
