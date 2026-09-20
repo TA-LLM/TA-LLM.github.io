@@ -6,8 +6,8 @@
  *
  * The three goals are not three cards: they stand along one rule that runs
  * across the section like a time axis, each opening with a drawing of its own
- * problem (GoalGlyph.astro) — a series to read, tracks out of step, a history read
- * and carried forward. The drawings' loops run only while the section is on screen in a
+ * problem (GoalGlyph.astro) — a series to read, tracks out of step, the model itself beside
+ * an hourglass. The drawings' loops run only while the section is on screen in a
  * visible tab, and never under reduced motion.
  */
 import GoalGlyph from "./GoalGlyph.astro";
@@ -25,7 +25,7 @@ const goals = [
     note: "We study to what extent LLMs' performance is influenced by the temporal misalignment of the input data available in different modalities.",
   },
   {
-    kind: "forecast" as const,
+    kind: "model-and-time" as const,
     title: "Propose Time-Aware LLM-based Approaches.",
     note: "We design and test new LLM-based time-evolving approaches to address common LLM tasks such as data summarization, question answering, and intent recognition.",
   },
