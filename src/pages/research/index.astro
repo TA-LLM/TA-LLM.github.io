@@ -137,9 +137,13 @@ const themes = (await getCollection("themes")).sort((a, b) => a.data.number.loca
   [data-theme-key="topology"] { --theme-ink: var(--theme-topology-ink); }
   [data-theme-key="agentic"] { --theme-ink: var(--theme-agentic-ink); }
 
+  /* A link, not a heading, so it takes the heading's leading and tracking
+     itself: at the body's 1.6 its lines stood far apart. */
   .theme__title {
     font-family: var(--font-display);
     font-size: var(--step-2);
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-heading);
     text-decoration: none;
     justify-self: start;
   }

@@ -92,6 +92,31 @@ Second batch, by category:
   characterful even at low `opsz`. Text sans **still open** among five OFL candidates — Public Sans,
   Source Sans 3, IBM Plex Sans, Instrument Sans, Archivo — decided by comparing them at
   16px in the same mockup pass. Mono: JetBrains Mono.
+- **Type ladder (2026-09-20, user: "a considered size and weight for every text").** Every
+  piece of text belongs to one role; nothing gets an ad-hoc size. Sizes are the `--step-*`
+  scale, so they are fluid between 390 and 1440px.
+
+  | Role | Family | Size | Weight | Leading | Tracking |
+  |---|---|---|---|---|---|
+  | Hero title | display | `--hero-title-size` (step-5, 40→88) | 400 | 1.05 | −0.02em |
+  | Page title (h1) | display | step-4 (32→60) | 400 | 1.15 | −0.01em |
+  | Section title (h2) | display | step-3 (26→42) | 400 | 1.15 | −0.01em |
+  | Card / row title | display | step-2 (21→30) | 400 | 1.15 | −0.01em |
+  | Small title (h3) | display | step-1 (18→22) | 400 | 1.15 | −0.01em |
+  | Lede | text | step-1 | 400 | 1.6 | normal |
+  | Body | text | step-0 (16→18) | 400 | 1.6 | normal |
+  | Small / note | text | step--1 (13→14) | 400 | 1.6 | normal |
+  | Page label (eyebrow, `.label`) | mono | 12px | 400 | 1.4 | 0.08em, uppercase |
+  | Section label (theme `h2`, empty states) | mono | step--1 | 400 | 1.15 | 0.08em, uppercase |
+  | Role inside a badge | mono | 10px | 400 | 1.2 | 0.08em, uppercase |
+  | Data (code, CUP, dates) | mono | step-0 or 13px in the footer | 400 | 1.6 | normal |
+
+  Rules that go with it: **display-face text in a non-heading element** (a link, a span)
+  must set the heading's leading and tracking itself — `h1`–`h4` get them from base.css,
+  everything else does not (this was the defect on /research's titles, the phone menu's
+  links and the People initials, fixed 2026-09-20). **Capitals as a mark** (the initials)
+  take positive tracking, the only place display tracking is not negative. The
+  bibliography's `ol` is deliberately step--1 and muted: it is a reference list, not body.
 - Fonts: self-hosted, **at most five faces** (display regular, sans regular, sans medium,
   mono regular, one italic only if the content needs it), **WOFF2 only**, **Latin subset**,
   `font-display: swap` with **metric-matched fallback** faces so the swap causes no layout
