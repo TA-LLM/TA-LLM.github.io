@@ -9,10 +9,10 @@
  *   right — the knowledge hidden in timestamped values.
  * - `misalignment`: three tracks (picture, words, sound) that drift out of
  *   step around one instant, then fall back in.
- * - `drift`: an output that starts to leave the band it should stay in; a
- *   mark catches it at that moment and an amber correction bends it back
- *   inside, while the course it would have taken stays as a dashed ghost —
- *   a drift detected and a corrective action taken.
+ * - `refresh`: the same answer written twice along a time axis. Time moves
+ *   (an amber mark travels the axis) and the later answer is not a copy: one
+ *   of its lines no longer holds (it fades to a dash) and a new one is
+ *   written in amber — an LLM task that keeps up with what has changed.
  *
  * Neutral except for one amber accent per drawing (the samples, the instant,
  * the mark). Drawn once the goal is revealed; the loops run only under
@@ -21,7 +21,7 @@
  * carries the meaning.
  */
 interface Props {
-  kind: "series" | "misalignment" | "drift";
+  kind: "series" | "misalignment" | "refresh";
   class?: string;
 }
 
@@ -85,14 +85,19 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
   }
 
   {
-    kind === "drift" && (
+    kind === "refresh" && (
       <>
-        <path class="glyph__band" d="M8 20h184M8 56h184" stroke-dasharray="2 6" />
-        <path class="glyph__line" d="M10 44c18 3 32-1 46-5s26-10 40-16" pathLength="1" />
-        <path class="glyph__stray" d="M96 23c14-5 30-8 50-9" stroke-dasharray="3 5" />
-        <path class="glyph__fix" d="M96 23c16 6 22 16 38 19s32 2 48-2" pathLength="1" />
-        <path class="glyph__arrow" d="M176 34l6 4-7 4" />
-        <circle class="glyph__mark" cx="96" cy="23" r="5.5" />
+        {/* The answer as it stood, then the time axis it has to keep up with. */}
+        <path class="glyph__said" d="M12 14h44M12 26h54M12 38h34" />
+        <path class="glyph__axis" d="M8 58h184" />
+        <path class="glyph__tick" d="M22 54v8M100 54v8M178 54v8" />
+
+        {/* The same answer later: one line has gone stale, one is rewritten. */}
+        <path class="glyph__said" d="M126 14h44" />
+        <path class="glyph__stale" d="M126 38h34" stroke-dasharray="3 5" />
+        <path class="glyph__fresh" d="M126 26h54" pathLength="1" />
+
+        <circle class="glyph__mark" cx="22" cy="58" r="3.5" />
       </>
     )
   }
@@ -109,22 +114,27 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
   }
 
   .glyph__rule,
-  .glyph__band {
+  .glyph__axis,
+  .glyph__tick {
     stroke: var(--rule-strong);
+  }
+
+  /* What the model answered: plain lines of text, never the accent. */
+  .glyph__said,
+  .glyph__stale {
+    stroke: var(--text-muted);
+  }
+
+  .glyph__stale {
+    opacity: 0.55;
   }
 
   /* The one accent in each drawing. */
   .glyph__dot,
   .glyph__instant,
   .glyph__mark,
-  .glyph__fix,
-  .glyph__arrow {
+  .glyph__fresh {
     stroke: var(--accent-text);
-  }
-
-  /* The course the output would have kept, had nothing caught it. */
-  .glyph__stray {
-    stroke: var(--rule-strong);
   }
 
   .glyph__dot {
@@ -132,12 +142,12 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
   }
 
   /* Hidden until the goal is revealed, then drawn left to right. */
-  :global(html.motion) [data-reveal]:not(.is-revealed) :is(.glyph__line, .glyph__fix) {
+  :global(html.motion) [data-reveal]:not(.is-revealed) :is(.glyph__line, .glyph__fresh) {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
   }
 
-  :global(html.motion) [data-reveal]:not(.is-revealed) :is(.glyph__dot, .glyph__mark, .glyph__arrow, .glyph__stray) {
+  :global(html.motion) [data-reveal]:not(.is-revealed) :is(.glyph__dot, .glyph__mark, .glyph__stale) {
     opacity: 0;
   }
 
@@ -153,8 +163,8 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
       transition: opacity 400ms var(--ease) calc(320ms + var(--i) * 90ms);
     }
 
-    .glyph__stray {
-      opacity: 1;
+    .glyph__stale {
+      opacity: 0.55;
       transition: opacity 600ms var(--ease) 900ms;
     }
 
@@ -163,16 +173,11 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
       transition: opacity 500ms var(--ease) 1200ms;
     }
 
-    /* The correction is drawn after the mark has caught the drift. */
-    .glyph__fix {
+    /* The new line is written once time has reached it. */
+    .glyph__fresh {
       stroke-dasharray: 1;
       stroke-dashoffset: 0;
-      transition: stroke-dashoffset 1100ms var(--ease) 1500ms;
-    }
-
-    .glyph__arrow {
-      opacity: 1;
-      transition: opacity 400ms var(--ease) 2500ms;
+      transition: stroke-dashoffset 900ms var(--ease) 1500ms;
     }
 
     /* Then each drawing keeps its own slow movement, which runs only while
@@ -182,13 +187,13 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
       animation-delay: calc(var(--i) * -3s);
     }
 
-    :global([data-glyphs-live]) .glyph--drift .glyph__mark {
-      animation: goal-catch 8s var(--ease) infinite;
+    /* Time moves along the axis, and the answer is rewritten as it passes. */
+    :global([data-glyphs-live]) .glyph--refresh .glyph__mark {
+      animation: goal-now 9s linear infinite;
     }
 
-    /* Every loop the correction is applied again, right after the catch. */
-    :global([data-glyphs-live]) .glyph--drift .glyph__fix {
-      animation: goal-correct 8s var(--ease) infinite;
+    :global([data-glyphs-live]) .glyph--refresh .glyph__fresh {
+      animation: goal-rewrite 9s var(--ease) infinite;
     }
 
     :global([data-glyphs-live]) .glyph--series .glyph__dot {
@@ -207,27 +212,24 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
     }
   }
 
-  /* The mark tightens on the drift it has caught. */
-  @keyframes goal-catch {
-    0%,
-    45%,
-    100% {
-      r: 5.5;
-      opacity: 1;
+  /* Now moves from the first answer to the second, then starts over. */
+  @keyframes goal-now {
+    0% {
+      transform: translateX(0);
     }
-    18% {
-      r: 8;
-      opacity: 0.5;
+    88%,
+    100% {
+      transform: translateX(156px);
     }
   }
 
-  /* ...and the corrective action is drawn again, back into the band. */
-  @keyframes goal-correct {
+  /* The later answer's new line is written as now reaches it. */
+  @keyframes goal-rewrite {
     0%,
-    18% {
+    45% {
       stroke-dashoffset: 1;
     }
-    55%,
+    70%,
     100% {
       stroke-dashoffset: 0;
     }
