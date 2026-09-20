@@ -18,6 +18,8 @@
  * - `coverWidth` (fit `cover`, desktop) narrows the picture to a fraction of
  *   the page and pushes it to the right, its left edge staying under the
  *   veil's solid band: a smaller picture, further from the text.
+ *   `coverShift` moves it further right still, letting it run past the
+ *   page's edge, where the frame clips it.
  * - `position` / `mobilePosition` frame the subject (object-position);
  *   `origin` is where its slow movement centres (media-motion.ts).
  * - Decorative: hidden from assistive technology; hidden in forced colours.
@@ -41,6 +43,7 @@ interface Props {
   fit?: "cover" | "height";
   zoom?: number;
   coverWidth?: number;
+  coverShift?: number;
 }
 
 const {
@@ -53,6 +56,7 @@ const {
   fit = "cover",
   zoom = 1,
   coverWidth = 1,
+  coverShift = 0,
 } = Astro.props;
 const ratio = (image.width / image.height).toFixed(4);
 ---
@@ -60,7 +64,7 @@ const ratio = (image.width / image.height).toFixed(4);
 <div
   class:list={["scene", `scene--${veil}`, `scene--fit-${fit}`]}
   aria-hidden="true"
-  style={`--scene-position: ${position}; --scene-position-mobile: ${mobilePosition}; --scene-origin: ${origin}; --scene-ratio: ${ratio}; --scene-zoom: ${zoom}; --scene-cover: ${coverWidth}`}
+  style={`--scene-position: ${position}; --scene-position-mobile: ${mobilePosition}; --scene-origin: ${origin}; --scene-ratio: ${ratio}; --scene-zoom: ${zoom}; --scene-cover: ${coverWidth}; --scene-shift: ${coverShift}`}
 >
   <figure class="scene__frame" data-media-motion={motion}>
     <Picture
@@ -213,6 +217,7 @@ const ratio = (image.width / image.height).toFixed(4);
     .scene--fit-cover .scene__frame :global(picture) {
       width: calc(100% * var(--scene-cover));
       margin-left: auto;
+      margin-right: calc(-100% * var(--scene-shift));
     }
 
     .scene--fit-height .scene__frame :global(picture) {
