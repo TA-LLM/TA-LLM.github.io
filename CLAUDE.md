@@ -207,18 +207,20 @@ Second batch, by category:
   section's rule stays continuous; this one is wider and takes the whole column. Bespoke inline SVG on the site's 1.5px non-scaling stroke, one amber accent each;
   drawn on reveal, looping only while on screen in a visible tab, nothing under reduced
   motion. /about keeps the full abstract.
-- Texture band (2026-09-20, `TextureBand.astro` + `scripts/prepare-texture.mjs`): the
-  "Dark gitter gold" gradient of `research/moodboard/_taste/background` (21st.dev),
-  rasterised once from its parameters (Bayer-dithered cell grid, 20° ramp, grain, vignette)
-  — the CSS in the prompt is only an approximation. A **separator, never a ground for
-  text**: one band on Home, between the vision and the themes, top and foot faded to
-  nothing. **Animated** (user, 2026-09-20), as the reference is: `src/scripts/texture-band.ts`
-  redraws the ~3,000 cells on a 2D canvas from a rAF clock, the ramp sliding along the grid;
-  drawn cell by cell (never pixel by pixel), colours from a 512-step LUT, 30 fps, DPR capped
-  at 1.5, running only on screen in a visible tab, the phase carried across pauses, nothing
-  under reduced motion. The still lies behind it (ground before the first frame, no-JS and
-  reduced-motion state, and it carries the grain). Dark on ink; inverted + `multiply` on
-  paper, like the backdrops.
+- Shader bands (2026-09-20, `ShaderBand.astro` + `src/scripts/shader-band.ts` +
+  `src/shaders/neuro-noise.ts`): the **"Neuro Noise" shader** of
+  `research/moodboard/_taste/shader` (adapted from Paper Shaders, **Apache-2.0**, credited
+  in /about Credits), run in a plain WebGL1 context on a fullscreen triangle. Two bands on
+  Home, after the hero and before the themes, each `clamp(16rem, 42vh, 30rem)` deep: the
+  user first tried the dithered gold gradient of `_taste/background` and found it too small
+  in that place, so that band (and its prep script) was removed.
+  Uniforms are the recipe's except the palette, which is ours (ink, amber, pale gold, deep
+  amber — so `u_hue` stays 0), the ground darkened to land back on ink, and `seed` per band
+  so two bands are never the same picture. One frame is always drawn; the loop runs only on
+  screen in a visible tab, never under reduced motion, the clock carrying across pauses;
+  DPR capped at 1.75; a lost context just stops it. The pointer lights it (the recipe's
+  spotlight), never from touch. **A separator, never a ground for text.** `taste.md` D7
+  ("2D, not WebGL") still holds for the hero; this is the user's decision for these bands.
 - Accessibility: WCAG AA contrast, keyboard navigation, alt text on every image.
 
 ## Decisions from the reference-site analysis

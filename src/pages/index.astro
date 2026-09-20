@@ -2,19 +2,20 @@
 /**
  * Home. Phase 2: the hero. Phase 3, section by section: what the project is
  * about (the record's own words, with a drawing per goal), then the four
- * themes (accordion), with the gold band of the moodboard between them; the
+ * themes (accordion), with the moodboard's shader band after the hero and again before them; the
  * other sections follow.
  */
 import Hero from "../components/Hero.astro";
 import HomeVision from "../components/HomeVision.astro";
-import TextureBand from "../components/TextureBand.astro";
+import ShaderBand from "../components/ShaderBand.astro";
 import ThemesAccordion from "../components/ThemesAccordion.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout>
   <Hero />
+  <ShaderBand seed={517} />
   <HomeVision />
-  <TextureBand />
+  <ShaderBand />
   <ThemesAccordion />
 </BaseLayout>
