@@ -89,9 +89,14 @@ Second batch, by category:
   editorial. **Weight 400 in both themes**, no heavier cut for light. Georgia is the
   unadjusted fallback (same metrics, no shift). Fraunces was tested and rejected: at
   `opsz` auto its display cut reaches 13:1 contrast, and its `g`/`a` stay too
-  characterful even at low `opsz`. Text sans **still open** among five OFL candidates — Public Sans,
-  Source Sans 3, IBM Plex Sans, Instrument Sans, Archivo — decided by comparing them at
-  16px in the same mockup pass. Mono: JetBrains Mono.
+  characterful even at low `opsz`. Text sans **decided (2026-09-20): IBM Plex Sans**, from a
+  side-by-side of the five OFL candidates (Public Sans, Source Sans 3, IBM Plex Sans,
+  Instrument Sans, Archivo) set in the site's own text at 22/18/14px in both themes: it sits
+  between Gelasio and JetBrains Mono without fighting either, its x-height is 0.74 of the cap
+  (14px notes stay legible), and its lowercase `l` has a tail — the only one of the five where
+  `l`, `I` and `1` stay apart, which matters on a site full of codes (FIS-01152, CUP, dates).
+  Source Sans 3 was rejected for its low caps (the whole page reads a size smaller). Weights
+  **400 and 500 only**. Mono: JetBrains Mono.
 - **Type ladder (2026-09-20, user: "a considered size and weight for every text").** Every
   piece of text belongs to one role; nothing gets an ad-hoc size. Sizes are the `--step-*`
   scale, so they are fluid between 390 and 1440px.
@@ -110,6 +115,7 @@ Second batch, by category:
   | Section label (theme `h2`, empty states) | mono | step--1 | 400 | 1.15 | 0.08em, uppercase |
   | Role inside a badge | mono | 10px | 400 | 1.2 | 0.08em, uppercase |
   | Data (code, CUP, dates) | mono | step-0 or 13px in the footer | 400 | 1.6 | normal |
+  | Emphasis in running text (`strong`) | text | inherited | **500** | inherited | inherited |
 
   Rules that go with it: **display-face text in a non-heading element** (a link, a span)
   must set the heading's leading and tracking itself — `h1`–`h4` get them from base.css,

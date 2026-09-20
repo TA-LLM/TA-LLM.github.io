@@ -62,6 +62,13 @@ p {
   text-wrap: pretty;
 }
 
+/* Emphasis inside running text is the sans's medium, the site's only weight
+   above 400: a bold would shout next to Gelasio's even colour. */
+strong,
+b {
+  font-weight: 500;
+}
+
 /* Long tokens (DOIs, URLs, identifiers) wrap instead of widening the page. */
 p,
 li,

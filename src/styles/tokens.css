@@ -70,7 +70,7 @@
   /* Display is final (D6): Gelasio 400, Georgia's metrics. The text sans is
      decided by the 16px test; until then it falls back to system families. */
   --font-display: var(--font-gelasio, Georgia, serif);
-  --font-text: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-text: var(--font-ibm-plex-sans, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
   --font-mono: var(--font-jetbrains-mono, ui-monospace, monospace);
 
   /* Fluid scale, linear between 390px and 1440px viewports. Each step keeps a
