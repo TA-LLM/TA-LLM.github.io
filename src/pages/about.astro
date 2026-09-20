@@ -10,12 +10,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 <BaseLayout
   title="About"
-  description="TA-LLM studies what large language models are missing when data moves: time series, temporal relations and content that goes out of date."
+  description="TA-LLM addresses the current limitations of Large Language Models while coping with time series data and temporal aspects."
 >
   <PageIntro
     eyebrow="About"
     title="About the project"
-    lede="Large language models read and write fluently, and increasingly look at pictures too. They are far weaker at time: at series of numbers, at the relations that order events, at a world that keeps changing after the model was trained."
+    lede="Large Language Models (LLMs) are one of the most disruptive technologies of the last years as they are revolutionizing information access, creativity, and text processing tasks."
   >
     <p><Todo what="2026–2029 timeline — Phase 4" /></p>
   </PageIntro>
@@ -24,14 +24,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <h2 id="vision-title" class="funding__title">The project</h2>
     <div class="vision__text" data-reveal-children>
       <p>
-        Discovering knowledge from data is a time-dependent process, and the numeric series recorded by sensors and
-        instruments only keep growing. A model that cannot read those series, or that treats every source as if it were
-        written at once, misses most of what the data has to say.
+        Beyond understanding and generating text in natural language, recently proposed LLMs also support visual content
+        as part of the instruction prompts or responses. However, they still show limited capabilities to process time
+        series data, understand temporal relations, and effectively handle time-evolving scenarios. Making LLMs fully
+        aware of the concept of time is of primary importance because the process of knowledge discovery from data is
+        inherently time-dependent and the amount of real-world numeric time series, acquired for instance from sensors or
+        measurement instruments, is ever-increasing.
       </p>
       <p>
-        TA-LLM sets out to make language models aware of time. It studies what a model can learn from timestamped values,
-        how it is affected when the parts of a multimodal source drift apart, and how a system built on it can notice that
-        its answers have gone out of date — and correct them.
+        The TIME-AWARE-LLM project (TA-LLM in short) aims at addressing the current limitations of LLMs while coping with
+        time series data and temporal aspects. The project goal is threefold.
       </p>
     </div>
     <a class="label link-arrow vision__link" href="/research/" data-reveal>
@@ -44,26 +46,32 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <ol role="list" class="goals__list">
       <li class="goal" data-reveal>
         <p class="label muted goal__number">01</p>
-        <h3 class="goal__title">Time series a model can actually use</h3>
+        <h3 class="goal__title">Allow LLMs to effectively and efficiently cope with time series data.</h3>
         <p class="goal__text">
-          Designing and testing LLM-based approaches — in-context learning, parameter-efficient and lightweight
-          fine-tuning — that draw out what is hidden in timestamped series of numbers.
+          We investigate how LLMs can leverage the knowledge hidden in timestamped series of numeric values. To this end,
+          TA-LLM envisages the design and testing of new LLM-based approaches based on in-context learning and
+          parameter-efficient or lightweight fine-tuning.
         </p>
       </li>
       <li class="goal" data-reveal>
         <p class="label muted goal__number">02</p>
-        <h3 class="goal__title">Sources that do not line up in time</h3>
+        <h3 class="goal__title">Mitigate the effects of multimodal content misalignment in LLM data sources.</h3>
         <p class="goal__text">
-          In lecture recordings, news streams and podcasts, picture, words and sound are often out of step. The project
-          measures how much that misalignment costs a model, then designs ways to make up for it.
+          We study to what extent LLMs' performance is influenced by the temporal misalignment of the input data
+          available in different modalities. Specifically, in several multimodal data such as educational videos, news
+          streams, and audio podcasts, the visual, textual, and acoustic sources are likely to be not fully aligned or
+          partially misaligned. TA-LLM aims at first detecting LLMs' challenges related to temporal content misalignment
+          and then proposing ad hoc mitigation strategies.
         </p>
       </li>
       <li class="goal" data-reveal>
         <p class="label muted goal__number">03</p>
-        <h3 class="goal__title">Systems that keep up with change</h3>
+        <h3 class="goal__title">Propose Time-Aware LLM-based Approaches.</h3>
         <p class="goal__text">
-          Summarisation, question answering and intent recognition, rebuilt as time-aware tasks, with systems that detect
-          drifts or inconsistencies in what a model returns and act on them.
+          We design and test new LLM-based time-evolving approaches to address common LLM tasks such as data
+          summarization, question answering, and intent recognition. To make LLM-based systems robust to time-evolving
+          scenarios TA-LLM studies, develops, and tests reactive systems to detect temporal drifts or inconsistencies in
+          LLM outputs and promptly implement corrective actions.
         </p>
       </li>
     </ol>
@@ -172,9 +180,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     border-bottom: var(--hairline) solid var(--rule);
   }
 
+  /* The official wording of each goal is a full sentence, so the titles run
+     longer than a label: they keep the display face, at body-ish size. */
   .goal__title {
+    max-width: var(--measure);
     font-family: var(--font-display);
     font-size: var(--step-1);
+    line-height: var(--leading-heading);
   }
 
   .goal__text {

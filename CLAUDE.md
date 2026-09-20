@@ -34,8 +34,11 @@ and never publish them. Rewrite content and ask before publishing.
 with the **exact text** of `research-themes/*.pdf` (two typos fixed: innovative, interpret) (opening paragraph, Context,
 Challenges, Research objectives, Tentative work plan, Bibliography) in
 `src/content/themes/`. The PDFs themselves, contacts, skills and venues stay private.
-The project's vision on /about ("The project" + "Three goals", 2026-09-20) is **rewritten**
-from the abstract in `general_project_info.txt`, never copied: same three goals, our words.
+**Exception (user decision, 2026-09-20):** /about publishes the **exact text** of the
+abstract in `general_project_info.txt` — its first sentence as the lede, the rest of the
+abstract in "The project", and the three goals verbatim under "Three goals" (two typos
+fixed: "How ever" -> "However", "and and promptly" -> "and promptly"). The file itself and
+the other project data in it stay private.
 
 ## Reference sites (visual benchmark)
 Closest to us, already analysed in detail — see Decisions below:
