@@ -8,10 +8,66 @@ import { PROJECT } from "../config/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="About" description="About the TA-LLM project: funding, host institution, timeline.">
-  <PageIntro eyebrow="About" title="About the project">
-    <p><Todo what="project overview and 2026–2029 timeline — Phase 4" /></p>
+<BaseLayout
+  title="About"
+  description="TA-LLM studies what large language models are missing when data moves: time series, temporal relations and content that goes out of date."
+>
+  <PageIntro
+    eyebrow="About"
+    title="About the project"
+    lede="Large language models read and write fluently, and increasingly look at pictures too. They are far weaker at time: at series of numbers, at the relations that order events, at a world that keeps changing after the model was trained."
+  >
+    <p><Todo what="2026–2029 timeline — Phase 4" /></p>
   </PageIntro>
+
+  <section id="vision" class="container vision" aria-labelledby="vision-title">
+    <h2 id="vision-title" class="funding__title">The project</h2>
+    <div class="vision__text" data-reveal-children>
+      <p>
+        Discovering knowledge from data is a time-dependent process, and the numeric series recorded by sensors and
+        instruments only keep growing. A model that cannot read those series, or that treats every source as if it were
+        written at once, misses most of what the data has to say.
+      </p>
+      <p>
+        TA-LLM sets out to make language models aware of time. It studies what a model can learn from timestamped values,
+        how it is affected when the parts of a multimodal source drift apart, and how a system built on it can notice that
+        its answers have gone out of date — and correct them.
+      </p>
+    </div>
+    <a class="label link-arrow vision__link" href="/research/" data-reveal>
+      The four research themes<Icon name="arrow-right" size={16} />
+    </a>
+  </section>
+
+  <section id="goals" class="container goals" aria-labelledby="goals-title">
+    <h2 id="goals-title" class="funding__title">Three goals</h2>
+    <ol role="list" class="goals__list">
+      <li class="goal" data-reveal>
+        <p class="label muted goal__number">01</p>
+        <h3 class="goal__title">Time series a model can actually use</h3>
+        <p class="goal__text">
+          Designing and testing LLM-based approaches — in-context learning, parameter-efficient and lightweight
+          fine-tuning — that draw out what is hidden in timestamped series of numbers.
+        </p>
+      </li>
+      <li class="goal" data-reveal>
+        <p class="label muted goal__number">02</p>
+        <h3 class="goal__title">Sources that do not line up in time</h3>
+        <p class="goal__text">
+          In lecture recordings, news streams and podcasts, picture, words and sound are often out of step. The project
+          measures how much that misalignment costs a model, then designs ways to make up for it.
+        </p>
+      </li>
+      <li class="goal" data-reveal>
+        <p class="label muted goal__number">03</p>
+        <h3 class="goal__title">Systems that keep up with change</h3>
+        <p class="goal__text">
+          Summarisation, question answering and intent recognition, rebuilt as time-aware tasks, with systems that detect
+          drifts or inconsistencies in what a model returns and act on them.
+        </p>
+      </li>
+    </ol>
+  </section>
 
   <section id="funding" class="container funding" aria-labelledby="funding-title">
     <h2 id="funding-title" class="funding__title">Funding</h2>
@@ -75,6 +131,67 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     gap: var(--space-xs);
     max-width: var(--measure);
     color: var(--text-muted);
+  }
+
+  .vision {
+    display: grid;
+    gap: var(--space-m);
+    padding-top: var(--space-l);
+  }
+
+  .vision__text {
+    display: grid;
+    gap: var(--space-s);
+    max-width: var(--measure);
+    font-size: var(--step-0);
+  }
+
+  .vision__link {
+    justify-self: start;
+    color: var(--accent-text);
+    text-decoration: none;
+  }
+
+  /* The three goals as a ruled table, like the themes list: a number, a
+     title and two lines, no cards. */
+  .goals {
+    display: grid;
+    gap: var(--space-m);
+    padding-top: var(--space-xl);
+  }
+
+  .goals__list {
+    display: grid;
+    border-top: var(--hairline) solid var(--rule);
+  }
+
+  .goal {
+    display: grid;
+    gap: var(--space-2xs);
+    padding-block: var(--space-l);
+    border-bottom: var(--hairline) solid var(--rule);
+  }
+
+  .goal__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+
+  .goal__text {
+    max-width: var(--measure);
+    color: var(--text-muted);
+  }
+
+  @media (min-width: 48rem) {
+    .goal {
+      grid-template-columns: 4rem minmax(0, 1fr);
+      column-gap: var(--space-m);
+    }
+
+    .goal__number {
+      grid-row: 1 / span 2;
+      padding-top: 0.35em;
+    }
   }
 
   .funding__title {

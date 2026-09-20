@@ -34,6 +34,8 @@ and never publish them. Rewrite content and ask before publishing.
 with the **exact text** of `research-themes/*.pdf` (two typos fixed: innovative, interpret) (opening paragraph, Context,
 Challenges, Research objectives, Tentative work plan, Bibliography) in
 `src/content/themes/`. The PDFs themselves, contacts, skills and venues stay private.
+The project's vision on /about ("The project" + "Three goals", 2026-09-20) is **rewritten**
+from the abstract in `general_project_info.txt`, never copied: same three goals, our words.
 
 ## Reference sites (visual benchmark)
 Closest to us, already analysed in detail — see Decisions below:
