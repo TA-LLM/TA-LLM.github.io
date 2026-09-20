@@ -198,11 +198,10 @@ Second batch, by category:
   the project in the record's own words (the heading "Making LLMs aware of time" is ours)
   and the three goals. Not cards: the three stand along **one rule that runs across the
   section** as a time axis, each ticked in amber, each opening with a **drawing of its own
-  problem** — a sampled series, three tracks slipping around one instant, and (third one twice
-  redrawn at the user's request: a drift-and-correction read as control theory, not as a
-  model that understands time) the same answer written twice along a time axis — as an
-  amber "now" travels it, one line of the later answer has gone stale to a dash and a new
-  one is written in amber: an LLM task that keeps up with what has changed. Bespoke inline SVG on the site's 1.5px non-scaling stroke, one amber accent each;
+  problem** — a sampled series, three tracks slipping around one instant, and (third one, after two
+  attempts the user rejected as not about time) an agent reading its history and carrying it
+  forward: a sampled past up to an amber "now", then a dashed amber prediction inside the
+  faint cone of what is still possible, ending on the value it expects. Bespoke inline SVG on the site's 1.5px non-scaling stroke, one amber accent each;
   drawn on reveal, looping only while on screen in a visible tab, nothing under reduced
   motion. /about keeps the full abstract.
 - Accessibility: WCAG AA contrast, keyboard navigation, alt text on every image.

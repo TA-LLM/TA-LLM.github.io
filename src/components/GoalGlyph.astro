@@ -9,10 +9,10 @@
  *   right — the knowledge hidden in timestamped values.
  * - `misalignment`: three tracks (picture, words, sound) that drift out of
  *   step around one instant, then fall back in.
- * - `refresh`: the same answer written twice along a time axis. Time moves
- *   (an amber mark travels the axis) and the later answer is not a copy: one
- *   of its lines no longer holds (it fades to a dash) and a new one is
- *   written in amber — an LLM task that keeps up with what has changed.
+ * - `forecast`: an agent that reads the history it has and carries it
+ *   forward. The past is a sampled series up to an amber "now"; past it, a
+ *   dashed amber line is the agent's prediction, inside the widening cone of
+ *   what is still possible, ending on the value it expects.
  *
  * Neutral except for one amber accent per drawing (the samples, the instant,
  * the mark). Drawn once the goal is revealed; the loops run only under
@@ -21,7 +21,7 @@
  * carries the meaning.
  */
 interface Props {
-  kind: "series" | "misalignment" | "refresh";
+  kind: "series" | "misalignment" | "forecast";
   class?: string;
 }
 
@@ -85,19 +85,29 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
   }
 
   {
-    kind === "refresh" && (
+    kind === "forecast" && (
       <>
-        {/* The answer as it stood, then the time axis it has to keep up with. */}
-        <path class="glyph__said" d="M12 14h44M12 26h54M12 38h34" />
-        <path class="glyph__axis" d="M8 58h184" />
-        <path class="glyph__tick" d="M22 54v8M100 54v8M178 54v8" />
+        {/* What has already happened, sampled. */}
+        <path class="glyph__axis" d="M8 62h184" />
+        <path class="glyph__line" d="M12 48L28 38L44 44L60 30L76 36L92 26L108 32" pathLength="1" />
+        {[
+          [12, 48],
+          [28, 38],
+          [44, 44],
+          [60, 30],
+          [76, 36],
+          [92, 26],
+          [108, 32],
+        ].map(([x, y], i) => (
+          <circle class="glyph__dot" cx={x} cy={y} r="2.4" style={`--i: ${i}`} />
+        ))}
 
-        {/* The same answer later: one line has gone stale, one is rewritten. */}
-        <path class="glyph__said" d="M126 14h44" />
-        <path class="glyph__stale" d="M126 38h34" stroke-dasharray="3 5" />
-        <path class="glyph__fresh" d="M126 26h54" pathLength="1" />
-
-        <circle class="glyph__mark" cx="22" cy="58" r="3.5" />
+        {/* Now, and past it what the agent expects: a prediction inside the
+            cone of what remains possible. */}
+        <path class="glyph__now" d="M112 8v50" stroke-dasharray="3 5" />
+        <path class="glyph__cone" d="M112 32C140 26 158 20 188 12M112 32c28 6 46 12 76 20" />
+        <path class="glyph__ahead" d="M112 32c28-2 48-4 76-10" stroke-dasharray="4 4" pathLength="1" />
+        <circle class="glyph__target" cx="188" cy="22" r="3.4" />
       </>
     )
   }
@@ -114,26 +124,22 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
   }
 
   .glyph__rule,
-  .glyph__axis,
-  .glyph__tick {
+  .glyph__axis {
     stroke: var(--rule-strong);
   }
 
-  /* What the model answered: plain lines of text, never the accent. */
-  .glyph__said,
-  .glyph__stale {
-    stroke: var(--text-muted);
-  }
-
-  .glyph__stale {
-    opacity: 0.55;
+  /* What is still possible: the cone around the prediction, kept faint. */
+  .glyph__cone {
+    stroke: var(--rule-strong);
+    opacity: 0.6;
   }
 
   /* The one accent in each drawing. */
   .glyph__dot,
   .glyph__instant,
-  .glyph__mark,
-  .glyph__fresh {
+  .glyph__now,
+  .glyph__ahead,
+  .glyph__target {
     stroke: var(--accent-text);
   }
 
@@ -142,12 +148,12 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
   }
 
   /* Hidden until the goal is revealed, then drawn left to right. */
-  :global(html.motion) [data-reveal]:not(.is-revealed) :is(.glyph__line, .glyph__fresh) {
+  :global(html.motion) [data-reveal]:not(.is-revealed) :is(.glyph__line, .glyph__ahead) {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
   }
 
-  :global(html.motion) [data-reveal]:not(.is-revealed) :is(.glyph__dot, .glyph__mark, .glyph__stale) {
+  :global(html.motion) [data-reveal]:not(.is-revealed) :is(.glyph__dot, .glyph__cone, .glyph__target) {
     opacity: 0;
   }
 
@@ -163,21 +169,30 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
       transition: opacity 400ms var(--ease) calc(320ms + var(--i) * 90ms);
     }
 
-    .glyph__stale {
-      opacity: 0.55;
-      transition: opacity 600ms var(--ease) 900ms;
-    }
-
     .glyph__mark {
       opacity: 1;
       transition: opacity 500ms var(--ease) 1200ms;
     }
 
-    /* The new line is written once time has reached it. */
-    .glyph__fresh {
-      stroke-dasharray: 1;
+    /* The cone opens, then the prediction is drawn through it. */
+    .glyph__cone {
+      opacity: 0.6;
+      transition: opacity 700ms var(--ease) 1200ms;
+    }
+
+    .glyph__ahead {
+      stroke-dasharray: 4 4;
       stroke-dashoffset: 0;
-      transition: stroke-dashoffset 900ms var(--ease) 1500ms;
+      transition: stroke-dashoffset 1000ms var(--ease) 1500ms;
+    }
+
+    :global(html.motion) [data-reveal]:not(.is-revealed) .glyph__ahead {
+      stroke-dashoffset: 90;
+    }
+
+    .glyph__target {
+      opacity: 1;
+      transition: opacity 500ms var(--ease) 2400ms;
     }
 
     /* Then each drawing keeps its own slow movement, which runs only while
@@ -187,13 +202,14 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
       animation-delay: calc(var(--i) * -3s);
     }
 
-    /* Time moves along the axis, and the answer is rewritten as it passes. */
-    :global([data-glyphs-live]) .glyph--refresh .glyph__mark {
-      animation: goal-now 9s linear infinite;
+    /* The agent keeps looking ahead: the prediction runs out again and its
+       target settles on the value expected. */
+    :global([data-glyphs-live]) .glyph--forecast .glyph__ahead {
+      animation: goal-ahead 9s linear infinite;
     }
 
-    :global([data-glyphs-live]) .glyph--refresh .glyph__fresh {
-      animation: goal-rewrite 9s var(--ease) infinite;
+    :global([data-glyphs-live]) .glyph--forecast .glyph__target {
+      animation: goal-settle 9s var(--ease) infinite;
     }
 
     :global([data-glyphs-live]) .glyph--series .glyph__dot {
@@ -212,26 +228,27 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
     }
   }
 
-  /* Now moves from the first answer to the second, then starts over. */
-  @keyframes goal-now {
-    0% {
-      transform: translateX(0);
+  /* The prediction runs forward, over and over. */
+  @keyframes goal-ahead {
+    from {
+      stroke-dashoffset: 16;
     }
-    88%,
-    100% {
-      transform: translateX(156px);
+    to {
+      stroke-dashoffset: 0;
     }
   }
 
-  /* The later answer's new line is written as now reaches it. */
-  @keyframes goal-rewrite {
+  /* The expected value: caught, then held. */
+  @keyframes goal-settle {
     0%,
-    45% {
-      stroke-dashoffset: 1;
-    }
     70%,
     100% {
-      stroke-dashoffset: 0;
+      r: 3.4;
+      opacity: 1;
+    }
+    35% {
+      r: 5.2;
+      opacity: 0.55;
     }
   }
 
