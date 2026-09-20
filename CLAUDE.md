@@ -221,8 +221,11 @@ Second batch, by category:
   Home, after the hero and before the themes, each `clamp(16rem, 42vh, 30rem)` deep: the
   user first tried the dithered gold gradient of `_taste/background` and found it too small
   in that place, so that band (and its prep script) was removed.
-  Also **one band per theme page**, between the supervision row and the long text (the user
-  rejected the foot of the page: "it looks left over"), in that theme's own colour — there
+  Also **one band per theme page**, between the opening (glyph, title, lede) and the
+  supervision row (the user rejected the foot of the page, "it looks left over", and then
+  the band sitting next to the people badges, "not in the same section"; the badges now
+  belong to the text they introduce and carry no rule of their own), in that theme's own
+  colour — there
   the theme colour is already the page's one accent — and **one in /about**, between the
   three goals and Funding, where the story gives way to the institutional data.
   Uniforms are the recipe's except the palette, which is ours (`tone`: amber, or a theme's

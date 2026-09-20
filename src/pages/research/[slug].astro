@@ -35,6 +35,8 @@ const { Content } = await render(theme);
     </span>
   </PageIntro>
 
+  {approved && <ShaderBand tone={colour} seed={Number(number) * 421 + 97} />}
+
   <section class="container meta" aria-label="Supervision">
     <ul role="list" class="meta__list" data-reveal-children>
       <li><Badge name={supervisor} role="Supervisor" href={personAnchor(supervisor)} /></li>
@@ -43,8 +45,6 @@ const { Content } = await render(theme);
     </ul>
     {!approved && <p><Todo what="theme description, pending approval" /></p>}
   </section>
-
-  {approved && <ShaderBand tone={colour} seed={Number(number) * 421 + 97} />}
 
   {
     approved && (
@@ -61,12 +61,13 @@ const { Content } = await render(theme);
     gap: var(--space-l);
   }
 
+  /* The band above already separates the opening from here, so the people
+     need no rule of their own: they belong to the text that follows. */
   .meta__list {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-xs);
-    padding-top: var(--space-m);
-    border-top: var(--hairline) solid var(--rule);
+    padding-top: var(--space-l);
   }
 
   /* The theme text: one reading column, sections separated by space and a
