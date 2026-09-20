@@ -1,0 +1,172 @@
+---
+/**
+ * Home, right after the hero: what the project is about, in the words of the
+ * project record (user decision, 2026-09-20 — the full abstract stays on
+ * /about), and its three goals.
+ *
+ * The three goals are not three cards: they stand along one rule that runs
+ * across the section like a time axis, each opening with a drawing of its own
+ * problem (GoalGlyph.astro) — a series to read, tracks out of step, a drift
+ * caught. The drawings' loops run only while the section is on screen in a
+ * visible tab, and never under reduced motion.
+ */
+import GoalGlyph from "./GoalGlyph.astro";
+import Icon from "./Icon.astro";
+
+const goals = [
+  {
+    kind: "series" as const,
+    title: "Allow LLMs to effectively and efficiently cope with time series data.",
+    note: "We investigate how LLMs can leverage the knowledge hidden in timestamped series of numeric values.",
+  },
+  {
+    kind: "misalignment" as const,
+    title: "Mitigate the effects of multimodal content misalignment in LLM data sources.",
+    note: "We study to what extent LLMs' performance is influenced by the temporal misalignment of the input data available in different modalities.",
+  },
+  {
+    kind: "drift" as const,
+    title: "Propose Time-Aware LLM-based Approaches.",
+    note: "We design and test new LLM-based time-evolving approaches to address common LLM tasks such as data summarization, question answering, and intent recognition.",
+  },
+];
+---
+
+<section class="vision container" aria-labelledby="vision-title" data-goals>
+  <div class="vision__head">
+    <p class="label muted" data-reveal>The project</p>
+    <h2 id="vision-title" class="vision__title" data-reveal="mask">Making LLMs aware of time</h2>
+    <p class="vision__lede" data-reveal>
+      LLMs still show limited capabilities to process time series data, understand temporal relations, and effectively
+      handle time-evolving scenarios. The TIME-AWARE-LLM project (TA-LLM in short) aims at addressing the current
+      limitations of LLMs while coping with time series data and temporal aspects. The project goal is threefold.
+    </p>
+    <a class="label link-arrow vision__link" href="/about/" data-reveal>About the project<Icon name="arrow-right" size={16} /></a>
+  </div>
+
+  <ol role="list" class="goals">
+    {
+      goals.map((goal, i) => (
+        <li class="goal" data-reveal>
+          <span class="goal__art">
+            <GoalGlyph kind={goal.kind} />
+          </span>
+          <p class="label muted goal__number">{String(i + 1).padStart(2, "0")}</p>
+          <h3 class="goal__title">{goal.title}</h3>
+          <p class="goal__note">{goal.note}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<script>
+  import { whenVisible } from "../scripts/motion";
+
+  for (const section of document.querySelectorAll<HTMLElement>("[data-goals]")) {
+    whenVisible(section, (visible) => section.toggleAttribute("data-glyphs-live", visible));
+  }
+</script>
+
+<style>
+  .vision {
+    display: grid;
+    gap: var(--space-xl);
+    padding-block: var(--space-2xl);
+  }
+
+  .vision__head {
+    display: grid;
+    gap: var(--space-s);
+    justify-items: start;
+  }
+
+  .vision__title {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+  }
+
+  .vision__lede {
+    max-width: var(--measure);
+    font-size: var(--step-1);
+    color: var(--text-muted);
+  }
+
+  .vision__link {
+    color: var(--accent-text);
+    text-decoration: none;
+  }
+
+  /* The three goals share one rule, drawn under the drawings: the section's
+     time axis. Each goal marks it with a tick in the accent. */
+  .goals {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .goal {
+    display: grid;
+    gap: var(--space-2xs);
+    justify-items: start;
+  }
+
+  .goal__art {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding-bottom: var(--space-s);
+    margin-bottom: var(--space-xs);
+    border-bottom: var(--hairline) solid var(--rule);
+    color: var(--text-muted);
+  }
+
+  .goal__art::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 1.5rem;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .goal__title {
+    max-width: 28ch;
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    line-height: var(--leading-heading);
+  }
+
+  .goal__note {
+    max-width: 40ch;
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+
+  .goal:is(:hover, :focus-within) .goal__art {
+    color: var(--text);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .goal__art {
+      transition: color var(--dur-base) var(--ease);
+    }
+  }
+
+  /* Desktop: the three stand side by side and their rules join into one line
+     across the page. */
+  @media (min-width: 48rem) {
+    .goals {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-l);
+    }
+
+    .goal__title {
+      font-size: var(--step-1);
+    }
+
+    /* The rules reach across the gaps, so the three read as one axis. */
+    .goal:not(:last-child) .goal__art {
+      margin-right: calc(-1 * var(--space-l));
+    }
+  }
+</style>

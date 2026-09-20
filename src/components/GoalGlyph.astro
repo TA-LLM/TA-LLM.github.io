@@ -1,0 +1,207 @@
+---
+/**
+ * One of three drawings made for the project's three goals (Home). Each one
+ * states its goal's problem rather than decorating it — the site's second
+ * motion layer, "animated inline SVG where the movement is the subject"
+ * (CLAUDE.md), the same 1.5px non-scaling stroke as the theme glyphs.
+ *
+ * - `series`: a numeric time series, its samples marked, read from left to
+ *   right — the knowledge hidden in timestamped values.
+ * - `misalignment`: three tracks (picture, words, sound) that drift out of
+ *   step around one instant, then fall back in.
+ * - `drift`: a series that leaves the band it should stay in, where a mark
+ *   catches it — a temporal drift, detected.
+ *
+ * Neutral except for one amber accent per drawing (the samples, the instant,
+ * the mark). Drawn once the goal is revealed; the loops run only under
+ * `prefers-reduced-motion: no-preference`, and stop when the goal is not on
+ * screen (the Home section observes them). Decorative: the goal's text
+ * carries the meaning.
+ */
+interface Props {
+  kind: "series" | "misalignment" | "drift";
+  class?: string;
+}
+
+const { kind, class: className } = Astro.props;
+
+/** The series: sampled values, drawn as a path and as its sample marks. */
+const samples: [number, number][] = [
+  [12, 48],
+  [28, 32],
+  [44, 40],
+  [60, 20],
+  [76, 36],
+  [92, 26],
+  [108, 46],
+  [124, 28],
+  [140, 38],
+  [156, 22],
+  [172, 34],
+  [188, 28],
+];
+const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`).join("");
+---
+
+<svg
+  class:list={["glyph", `glyph--${kind}`, className]}
+  viewBox="0 0 200 72"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  vector-effect="non-scaling-stroke"
+  aria-hidden="true"
+  focusable="false"
+>
+  {
+    kind === "series" && (
+      <>
+        <path class="glyph__rule" d="M8 62h184" />
+        <path class="glyph__line" d={seriesPath} pathLength="1" />
+        {samples.map(([x, y], i) => (
+          <circle class="glyph__dot" cx={x} cy={y} r="2.4" style={`--i: ${i}`} />
+        ))}
+      </>
+    )
+  }
+
+  {
+    kind === "misalignment" && (
+      <>
+        <path class="glyph__instant" d="M100 8v56" stroke-dasharray="3 5" />
+        {[
+          { y: 18, shift: -18 },
+          { y: 36, shift: 10 },
+          { y: 54, shift: -6 },
+        ].map((track, i) => (
+          <path class="glyph__track" d={`M40 ${track.y}h120`} style={`--shift: ${track.shift}; --i: ${i}`} />
+        ))}
+      </>
+    )
+  }
+
+  {
+    kind === "drift" && (
+      <>
+        <path class="glyph__band" d="M8 24h184M8 48h184" stroke-dasharray="2 6" />
+        <path class="glyph__line" d="M10 38c22 4 40-6 58-2s30 10 46 2 34-22 76-30" pathLength="1" />
+        <circle class="glyph__mark" cx="150" cy="17.5" r="6" />
+      </>
+    )
+  }
+</svg>
+
+<style>
+  .glyph {
+    display: block;
+    width: 100%;
+    max-width: 13rem;
+    height: auto;
+    color: var(--text-muted);
+    overflow: visible;
+  }
+
+  .glyph__rule,
+  .glyph__band {
+    stroke: var(--rule-strong);
+  }
+
+  /* The one accent in each drawing. */
+  .glyph__dot,
+  .glyph__instant,
+  .glyph__mark {
+    stroke: var(--accent-text);
+  }
+
+  .glyph__dot {
+    fill: var(--surface);
+  }
+
+  /* Hidden until the goal is revealed, then drawn left to right. */
+  :global(html.motion) [data-reveal]:not(.is-revealed) .glyph__line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  :global(html.motion) [data-reveal]:not(.is-revealed) :is(.glyph__dot, .glyph__mark) {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .glyph__line {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1400ms var(--ease) 120ms;
+    }
+
+    .glyph__dot {
+      opacity: 1;
+      transition: opacity 400ms var(--ease) calc(320ms + var(--i) * 90ms);
+    }
+
+    .glyph__mark {
+      opacity: 1;
+      transition: opacity 500ms var(--ease) 1200ms;
+    }
+
+    /* Then each drawing keeps its own slow movement, which runs only while
+       the section is on screen (`data-glyphs-live`). */
+    :global([data-glyphs-live]) .glyph--misalignment .glyph__track {
+      animation: goal-slip 14s var(--ease) infinite alternate;
+      animation-delay: calc(var(--i) * -3s);
+    }
+
+    :global([data-glyphs-live]) .glyph--drift .glyph__mark {
+      animation: goal-catch 6s var(--ease) infinite;
+    }
+
+    :global([data-glyphs-live]) .glyph--series .glyph__dot {
+      animation: goal-sample 9s var(--ease) infinite;
+      animation-delay: calc(var(--i) * 140ms);
+    }
+  }
+
+  /* The three tracks slide out of step around the instant, then back. */
+  @keyframes goal-slip {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(var(--shift) * 1px));
+    }
+  }
+
+  /* The mark tightens on the drift it has caught. */
+  @keyframes goal-catch {
+    0%,
+    60%,
+    100% {
+      r: 6;
+      opacity: 1;
+    }
+    30% {
+      r: 8.5;
+      opacity: 0.55;
+    }
+  }
+
+  /* One sample at a time lights up, as the series is read. */
+  @keyframes goal-sample {
+    0%,
+    88%,
+    100% {
+      fill: var(--surface);
+    }
+    94% {
+      fill: var(--accent-text);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .glyph {
+      display: none;
+    }
+  }
+</style>

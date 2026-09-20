@@ -194,6 +194,14 @@ Second batch, by category:
   Exception (user, 2026-09-19): the DAUIN–PoliTo lockup is boosted ×1.5 (×1.15 on phones),
   its fine type was unreadable at equal area. Every row sizes itself from its own width
   (container query) so it never wraps, from 320px up.
+- Home vision (2026-09-20, `HomeVision.astro` + `GoalGlyph.astro`): right after the hero,
+  the project in the record's own words (the heading "Making LLMs aware of time" is ours)
+  and the three goals. Not cards: the three stand along **one rule that runs across the
+  section** as a time axis, each ticked in amber, each opening with a **drawing of its own
+  problem** — a sampled series, three tracks slipping around one instant, a drift caught by
+  a mark. Bespoke inline SVG on the site's 1.5px non-scaling stroke, one amber accent each;
+  drawn on reveal, looping only while on screen in a visible tab, nothing under reduced
+  motion. /about keeps the full abstract.
 - Accessibility: WCAG AA contrast, keyboard navigation, alt text on every image.
 
 ## Decisions from the reference-site analysis
