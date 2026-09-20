@@ -9,8 +9,10 @@
  *   right — the knowledge hidden in timestamped values.
  * - `misalignment`: three tracks (picture, words, sound) that drift out of
  *   step around one instant, then fall back in.
- * - `drift`: a series that leaves the band it should stay in, where a mark
- *   catches it — a temporal drift, detected.
+ * - `drift`: an output that starts to leave the band it should stay in; a
+ *   mark catches it at that moment and an amber correction bends it back
+ *   inside, while the course it would have taken stays as a dashed ghost —
+ *   a drift detected and a corrective action taken.
  *
  * Neutral except for one amber accent per drawing (the samples, the instant,
  * the mark). Drawn once the goal is revealed; the loops run only under
@@ -85,9 +87,12 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
   {
     kind === "drift" && (
       <>
-        <path class="glyph__band" d="M8 24h184M8 48h184" stroke-dasharray="2 6" />
-        <path class="glyph__line" d="M10 38c22 4 40-6 58-2s30 10 46 2 34-22 76-30" pathLength="1" />
-        <circle class="glyph__mark" cx="150" cy="17.5" r="6" />
+        <path class="glyph__band" d="M8 20h184M8 56h184" stroke-dasharray="2 6" />
+        <path class="glyph__line" d="M10 44c18 3 32-1 46-5s26-10 40-16" pathLength="1" />
+        <path class="glyph__stray" d="M96 23c14-5 30-8 50-9" stroke-dasharray="3 5" />
+        <path class="glyph__fix" d="M96 23c16 6 22 16 38 19s32 2 48-2" pathLength="1" />
+        <path class="glyph__arrow" d="M176 34l6 4-7 4" />
+        <circle class="glyph__mark" cx="96" cy="23" r="5.5" />
       </>
     )
   }
@@ -111,8 +116,15 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
   /* The one accent in each drawing. */
   .glyph__dot,
   .glyph__instant,
-  .glyph__mark {
+  .glyph__mark,
+  .glyph__fix,
+  .glyph__arrow {
     stroke: var(--accent-text);
+  }
+
+  /* The course the output would have kept, had nothing caught it. */
+  .glyph__stray {
+    stroke: var(--rule-strong);
   }
 
   .glyph__dot {
@@ -120,12 +132,12 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
   }
 
   /* Hidden until the goal is revealed, then drawn left to right. */
-  :global(html.motion) [data-reveal]:not(.is-revealed) .glyph__line {
+  :global(html.motion) [data-reveal]:not(.is-revealed) :is(.glyph__line, .glyph__fix) {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
   }
 
-  :global(html.motion) [data-reveal]:not(.is-revealed) :is(.glyph__dot, .glyph__mark) {
+  :global(html.motion) [data-reveal]:not(.is-revealed) :is(.glyph__dot, .glyph__mark, .glyph__arrow, .glyph__stray) {
     opacity: 0;
   }
 
@@ -141,9 +153,26 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
       transition: opacity 400ms var(--ease) calc(320ms + var(--i) * 90ms);
     }
 
+    .glyph__stray {
+      opacity: 1;
+      transition: opacity 600ms var(--ease) 900ms;
+    }
+
     .glyph__mark {
       opacity: 1;
       transition: opacity 500ms var(--ease) 1200ms;
+    }
+
+    /* The correction is drawn after the mark has caught the drift. */
+    .glyph__fix {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1100ms var(--ease) 1500ms;
+    }
+
+    .glyph__arrow {
+      opacity: 1;
+      transition: opacity 400ms var(--ease) 2500ms;
     }
 
     /* Then each drawing keeps its own slow movement, which runs only while
@@ -154,7 +183,12 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
     }
 
     :global([data-glyphs-live]) .glyph--drift .glyph__mark {
-      animation: goal-catch 6s var(--ease) infinite;
+      animation: goal-catch 8s var(--ease) infinite;
+    }
+
+    /* Every loop the correction is applied again, right after the catch. */
+    :global([data-glyphs-live]) .glyph--drift .glyph__fix {
+      animation: goal-correct 8s var(--ease) infinite;
     }
 
     :global([data-glyphs-live]) .glyph--series .glyph__dot {
@@ -176,14 +210,26 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
   /* The mark tightens on the drift it has caught. */
   @keyframes goal-catch {
     0%,
-    60%,
+    45%,
     100% {
-      r: 6;
+      r: 5.5;
       opacity: 1;
     }
-    30% {
-      r: 8.5;
-      opacity: 0.55;
+    18% {
+      r: 8;
+      opacity: 0.5;
+    }
+  }
+
+  /* ...and the corrective action is drawn again, back into the band. */
+  @keyframes goal-correct {
+    0%,
+    18% {
+      stroke-dashoffset: 1;
+    }
+    55%,
+    100% {
+      stroke-dashoffset: 0;
     }
   }
 
