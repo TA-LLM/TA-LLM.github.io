@@ -212,8 +212,13 @@ Second batch, by category:
   rasterised once from its parameters (Bayer-dithered cell grid, 20° ramp, grain, vignette)
   — the CSS in the prompt is only an approximation. A **separator, never a ground for
   text**: one band on Home, between the vision and the themes, top and foot faded to
-  nothing. Still, not animated (the reference's loop would be a second canvas beside the
-  hero video). Dark on ink; inverted + `multiply` on paper, like the backdrops.
+  nothing. **Animated** (user, 2026-09-20), as the reference is: `src/scripts/texture-band.ts`
+  redraws the ~3,000 cells on a 2D canvas from a rAF clock, the ramp sliding along the grid;
+  drawn cell by cell (never pixel by pixel), colours from a 512-step LUT, 30 fps, DPR capped
+  at 1.5, running only on screen in a visible tab, the phase carried across pauses, nothing
+  under reduced motion. The still lies behind it (ground before the first frame, no-JS and
+  reduced-motion state, and it carries the grain). Dark on ink; inverted + `multiply` on
+  paper, like the backdrops.
 - Accessibility: WCAG AA contrast, keyboard navigation, alt text on every image.
 
 ## Decisions from the reference-site analysis

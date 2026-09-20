@@ -1,18 +1,22 @@
 ---
 /**
  * A full-bleed band of the "Dark gitter gold" gradient
- * (research/moodboard/_taste/background, 21st.dev), rasterised once by
- * scripts/prepare-texture.mjs.
+ * (research/moodboard/_taste/background, 21st.dev).
  *
  * - A separator, never a ground for text: nothing is ever placed on it, so
  *   its busy cells never fight with the page's type or its one accent.
  *   Decorative, hidden from assistive technology and in forced colours.
- * - Still, not animated: the reference's loop would mean a second canvas
- *   running beside the hero's video.
- * - On ink it keeps the reference's own dark; on paper it is inverted (hue
- *   kept) and multiplied, as the page backdrops are, so it prints as gold on
- *   the paper instead of lying there as a dark smudge. Its top and foot fade
- *   to nothing, so the band never shows an edge.
+ * - Animated, as the reference is (user decision, 2026-09-20): the cells are
+ *   redrawn on a 2D canvas from a rAF clock, the palette ramp sliding along
+ *   the grid (src/scripts/texture-band.ts). It runs only while the band is
+ *   on screen in a visible tab, and never under reduced motion.
+ * - The still of scripts/prepare-texture.mjs lies behind it: the band is
+ *   complete before the first frame, without JavaScript, and under reduced
+ *   motion. It also carries the grain, which is not redrawn per frame.
+ * - On ink it keeps the reference's own dark; on paper both the still and
+ *   the canvas are inverted (hue kept) and multiplied, as the page backdrops
+ *   are, so the band prints as gold instead of lying there as a dark smudge.
+ *   Its top and foot fade to nothing, so it never shows an edge.
  */
 import { Picture } from "astro:assets";
 import texture from "../assets/textures/gold-grid.webp";
@@ -28,7 +32,14 @@ import texture from "../assets/textures/gold-grid.webp";
     sizes="100vw"
     loading="lazy"
   />
+  <canvas class="band__live" data-band-canvas></canvas>
 </div>
+
+<script>
+  import { initTextureBands } from "../scripts/texture-band";
+
+  initTextureBands();
+</script>
 
 <style>
   .band {
@@ -49,7 +60,28 @@ import texture from "../assets/textures/gold-grid.webp";
     object-fit: cover;
   }
 
-  :global(:root[data-theme="light"]) .band :global(img) {
+  /* The moving cells, over the still; they fade in once the loop starts, so
+     the hand-over is never a flash. */
+  .band__live {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
+
+  .band__live.is-live {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .band__live {
+      transition: opacity 600ms var(--ease);
+    }
+  }
+
+  :global(:root[data-theme="light"]) .band :global(img),
+  :global(:root[data-theme="light"]) .band__live {
     filter: invert(1) hue-rotate(180deg) saturate(0.85) brightness(1.04) contrast(1.05);
     mix-blend-mode: multiply;
   }
