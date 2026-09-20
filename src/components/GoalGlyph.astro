@@ -12,7 +12,8 @@
  * - `model-and-time`: the sum written out, as the user asked (2026-09-20):
  *   their two reference marks — the LLM plate wired into a brain, and a
  *   solid hourglass — stand side by side on one line, a plus between them and
- *   a merge arrow after them, and the
+ *   a merge arrow after them (the plus sits exactly midway between the two,
+ *   strokes counted), and the
  *   result follows: an hourglass whose upper chamber holds the brain, its
  *   knowledge falling as amber sand into the chamber below. The references
  *   are redrawn in the site's line, their black taken to the page's own text
@@ -121,10 +122,10 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
         </g>
 
         {/* ...plus time. */}
-        <path class="fx-plus" d="M100 50h16M108 42v16" />
+        <path class="fx-plus" d="M107.7 50h16M115.7 42v16" />
 
         {/* 2. Time: the hourglass of the reference, solid. */}
-        <g class="fx-glass">
+        <g class="fx-glass" transform="translate(12 0)">
           <rect class="fx-fill" x="122" y="14" width="46" height="8" rx="1.5" />
           <rect class="fx-fill" x="122" y="78" width="46" height="8" rx="1.5" />
           <path class="fx-thick" d="M129 22c0 13 16 15 16 28s-16 15-16 28M161 22c0 13-16 15-16 28s16 15 16 28" />
@@ -133,7 +134,7 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
         </g>
 
         {/* 3. The two joining, after the reference's merge arrow. */}
-        <g class="fx-merge">
+        <g class="fx-merge" transform="translate(12 0)">
           <path class="fx-strand" d="M186 30c12 0 12 20 24 20" />
           <path class="fx-strand fx-strand--accent" d="M186 70c12 0 12-20 24-20" />
           <path class="fx-strand fx-strand--accent" d="M210 50h12" />
@@ -141,7 +142,7 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
         </g>
 
         {/* 4. The result: the brain inside the glass, falling as sand. */}
-        <g class="fx-fusion">
+        <g class="fx-fusion" transform="translate(12 0)">
           <rect class="fx-fill" x="238" y="10" width="72" height="8" rx="1.5" />
           <rect class="fx-fill" x="238" y="82" width="72" height="8" rx="1.5" />
           <path class="fx-thick" d="M247 18c0 16 27 20 27 32s-27 16-27 32M301 18c0 16-27 20-27 32s27 16 27 32" />
