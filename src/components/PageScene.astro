@@ -15,6 +15,9 @@
  *   picture); `height` sets the picture at the screen's height on the right,
  *   so a portrait picture shows almost whole (its left edge fading into the
  *   page), at a light `zoom` (1 = whole height).
+ * - `coverWidth` (fit `cover`, desktop) narrows the picture to a fraction of
+ *   the page and pushes it to the right, its left edge staying under the
+ *   veil's solid band: a smaller picture, further from the text.
  * - `position` / `mobilePosition` frame the subject (object-position);
  *   `origin` is where its slow movement centres (media-motion.ts).
  * - Decorative: hidden from assistive technology; hidden in forced colours.
@@ -37,16 +40,27 @@ interface Props {
   veil?: "wide" | "narrow";
   fit?: "cover" | "height";
   zoom?: number;
+  coverWidth?: number;
 }
 
-const { image, position = "50% 50%", mobilePosition = "50% 50%", origin = "50% 50%", motion, veil = "wide", fit = "cover", zoom = 1 } = Astro.props;
+const {
+  image,
+  position = "50% 50%",
+  mobilePosition = "50% 50%",
+  origin = "50% 50%",
+  motion,
+  veil = "wide",
+  fit = "cover",
+  zoom = 1,
+  coverWidth = 1,
+} = Astro.props;
 const ratio = (image.width / image.height).toFixed(4);
 ---
 
 <div
   class:list={["scene", `scene--${veil}`, `scene--fit-${fit}`]}
   aria-hidden="true"
-  style={`--scene-position: ${position}; --scene-position-mobile: ${mobilePosition}; --scene-origin: ${origin}; --scene-ratio: ${ratio}; --scene-zoom: ${zoom}`}
+  style={`--scene-position: ${position}; --scene-position-mobile: ${mobilePosition}; --scene-origin: ${origin}; --scene-ratio: ${ratio}; --scene-zoom: ${zoom}; --scene-cover: ${coverWidth}`}
 >
   <figure class="scene__frame" data-media-motion={motion}>
     <Picture
@@ -193,6 +207,12 @@ const ratio = (image.width / image.height).toFixed(4);
         color-mix(in srgb, var(--surface) 20%, transparent) calc(100% - var(--art-w) * 0.78),
         transparent calc(100% - var(--art-w) * 0.66)
       );
+    }
+
+    /* A cover picture may be narrowed and pushed right (`coverWidth`). */
+    .scene--fit-cover .scene__frame :global(picture) {
+      width: calc(100% * var(--scene-cover));
+      margin-left: auto;
     }
 
     .scene--fit-height .scene__frame :global(picture) {

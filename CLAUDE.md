@@ -178,6 +178,9 @@ Second batch, by category:
   `fit="height"` (Collaborate, 2026-09-19: "zoom much less, show it almost whole"): on desktop
   the portrait picture stands at the screen's height on the right (zoom 1.1), its left edge
   fading into the page, instead of filling the width.
+  `coverWidth` (Resources, 2026-09-20): a cover picture may be narrowed to a fraction of the
+  page and pushed right on desktop (0.9 there), its left edge staying under the veil's solid
+  band.
   Home hero: the video has no loop of its own on top (it already moves): it comes into
   focus like the others (`focus`), its poster fades out once it plays, and leaving the
   hero it recedes with the scroll (CSS `animation-timeline: scroll()`, longhands only —
