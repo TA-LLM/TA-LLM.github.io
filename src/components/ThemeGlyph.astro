@@ -1,8 +1,12 @@
 ---
 /**
  * The four theme glyphs, each carrying the idea at the centre of its theme
- * text. 48×48 grid; drawn strokes stay 1.5px at any size (non-scaling),
- * matching the utility icons.
+ * text, on a 48×48 grid. **One stroke weight for all four** (2026-09-21, after
+ * measuring: they were at 0.64, 0.86 and 2.38): the two line icons are grown
+ * to 1.38 units in `scripts/prepare-theme-icons.mjs`, and topology is drawn on
+ * the same 1.38 — scaling with the glyph, like the icons beside it, instead of
+ * the 1.5px fixed stroke it had, which made it the heavy one in the lists and
+ * the light one on a theme page.
  *
  *   agentic   — the user's own icon (2026-09-20): an AI agent's head, a chip
  *               in its mind, wired down to two nodes
@@ -47,6 +51,9 @@ interface Props {
 
 const { theme, size = 48, animated = false, hover = false, class: className } = Astro.props;
 
+/** The one weight of the family, in grid units (see the note above). */
+const STROKE = 1.38;
+
 const supplied = theme in SUPPLIED ? SUPPLIED[theme as keyof typeof SUPPLIED] : undefined;
 // Several glyphs of the same theme can share a page: each needs its own ids.
 const uid = `${theme}-${Math.random().toString(36).slice(2, 8)}`;
@@ -68,7 +75,7 @@ const ring = Array.from({ length: 8 }, (_, i) => {
   height={size}
   fill="none"
   stroke="currentColor"
-  stroke-width="1.5"
+  stroke-width={STROKE}
   stroke-linecap="round"
   stroke-linejoin="round"
   aria-hidden="true"
@@ -132,10 +139,6 @@ const ring = Array.from({ length: 8 }, (_, i) => {
   .glyph {
     flex: none;
     overflow: visible;
-  }
-
-  .glyph :global(*) {
-    vector-effect: non-scaling-stroke;
   }
 
   .glyph__ball {

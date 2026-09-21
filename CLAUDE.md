@@ -156,7 +156,8 @@ Second batch, by category:
 - Icons (added 2026-09-18 at the user's request, superseding the `taste.md` §2.2 note
   "no icon set is needed"): **utility icons** in `src/icons/icons.ts` via `Icon.astro` —
   20×20 grid, 1.5px stroke, round caps, `currentColor`, always neutral; **four theme
-  glyphs** in `ThemeGlyph.astro` — 48×48, non-scaling 1.5px stroke, each drawn from the
+  glyphs** in `ThemeGlyph.astro` — 48×48, one stroke weight of **1.38 grid units** for all
+  four, scaling with the glyph (2026-09-21, below), each drawn from the
   idea at the centre of its theme text (chosen by the user from three candidates each:
   agent loop + tool, filtration ring + barcode, task curves that stay high, preference
   checks along a drifting series). **Three of the four now use the user's own artwork**
@@ -174,6 +175,17 @@ Second batch, by category:
   than a line one. They are the only coloured marks (theme colour on focus in lists, as the
   page accent on theme pages, where they animate only under
   `prefers-reduced-motion: no-preference`; in forced colours the icon stays flat).
+  **One weight for the four (2026-09-21, user: "as thick as the RLAIF icon").** Measured on
+  the 48 grid they were at three weights: agentic 0.64, cl 0.86, rlaif 2.38 — rlaif because
+  it is a *filled* icon, not a line one. The two line icons are now **grown** to 1.38 in the
+  prep script (a disc dilation of the ink with a soft edge, at source resolution: the
+  geometry is untouched, only the weight of the line changes), which is as far as those
+  drawings go before their own detail closes — the chip's pins, the bulb's rays. A line icon
+  cannot reach a filled one's mass, so rlaif stays the heaviest at 2.38. Topology, the one
+  we draw, is on the same 1.38 and **scales** like the others: its old 1.5px fixed stroke
+  made it the heavy one at 40px in the lists and the light one at 112px on a theme page.
+  Utility icons are a separate family and were checked coherent (ours 1.5 on a 20 grid,
+  Lucide 1.8 on 24: both render 1.20px at 16px, 1.05px inside a tag).
   Links ending in an arrow use `.link-arrow` + the `arrow-right` icon, not a "→" glyph.
   **More icons (2026-09-19, user request, "like 21st.dev/community/icons"):** Lucide
   (listed there; ISC licence, verified at its repo, text in `src/icons/LICENSE-lucide.txt`)
@@ -251,7 +263,12 @@ Second batch, by category:
   amber sand — a **+** between them, the reference's **merge arrow**, then the **result**:
   an hourglass whose upper chamber holds the brain, its knowledge falling as amber sand into
   the chamber below. All three drawings are set to one height (`.goal__art`, 5.5rem) so the
-  section's rule stays continuous; this one is wider and takes the whole column. Bespoke inline SVG on the site's 1.5px non-scaling stroke, one amber accent each;
+  section's rule stays continuous; this one is wider and takes the whole column. Bespoke
+  inline SVG, one amber accent each. Their strokes **scale** (the root's
+  `vector-effect="non-scaling-stroke"` was inert — that property is not inherited — and was
+  removed 2026-09-21): the first two render at 1.48px, the third at 1.14px with its
+  hourglasses at 2.3–3.2px, heavier because it redraws the user's reference; left as it is
+  by the user's decision (2026-09-21);
   drawn on reveal, looping only while on screen in a visible tab, nothing under reduced
   motion. /about keeps the full abstract.
 - Shader bands (2026-09-20, `ShaderBand.astro` + `src/scripts/shader-band.ts` +

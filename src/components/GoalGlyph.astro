@@ -3,7 +3,15 @@
  * One of three drawings made for the project's three goals (Home). Each one
  * states its goal's problem rather than decorating it — the site's second
  * motion layer, "animated inline SVG where the movement is the subject"
- * (CLAUDE.md), the same 1.5px non-scaling stroke as the theme glyphs.
+ * (CLAUDE.md).
+ *
+ * The strokes **scale** with the drawing (measured 2026-09-21): the first two
+ * render at 1.48px, and `model-and-time`, on a wider viewBox, at 1.14px with
+ * its hourglasses between 2.3 and 3.2px — heavier on purpose, the user's
+ * reference image drawn as it is, and left that way by their decision. The
+ * widths below are therefore tuned for the rendered size, not literal pixels.
+ * The root carried a `vector-effect="non-scaling-stroke"`, which did nothing:
+ * that property is not inherited, so it never reached a single path.
  *
  * - `series`: a numeric time series, its samples marked, read from left to
  *   right — the knowledge hidden in timestamped values.
@@ -59,7 +67,6 @@ const seriesPath = samples.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
   stroke-width="1.5"
   stroke-linecap="round"
   stroke-linejoin="round"
-  vector-effect="non-scaling-stroke"
   aria-hidden="true"
   focusable="false"
 >
