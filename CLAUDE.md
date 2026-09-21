@@ -26,7 +26,10 @@ Website of the research project **TA-LLM — Large Language Models: a matter of 
   `rembg i -m u2net_human_seg`; the model lands in `~/.rembg/models/`). His photo is a tight
   headshot, so the crop square is larger than the photo's shorter side and the missing part
   is padded with transparency — the prep script pads whenever `size` goes past 1, and keeps
-  the old clamped crop at 1 or less so the earlier portraits do not move.
+  the old clamped crop at 1 or less so the earlier portraits do not move. A photo reduced by
+  more than 1.5x also gets a light unsharp mask (`sharpen({ sigma: 0.7 })`): the first crop
+  of it came out soft next to portraits that were already web-sized, and framed wider than
+  theirs — both fixed the same day.
 
 ## Sources (read before writing content)
 - `sources/private/general_project_info.txt` — official abstract and project data

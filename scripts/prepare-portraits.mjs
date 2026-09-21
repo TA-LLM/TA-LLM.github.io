@@ -15,7 +15,8 @@
  * little of the shoulders. The cut-out keeps its transparency, with its soft
  * edge tightened (alpha remapped from 0.3–0.9 to 0–1) so the lighter fringe
  * of the old background does not show as a halo on a dark ground. The
- * person's colours are left as they are.
+ * person's colours are left as they are; a photo reduced by more than 1.5x
+ * gets a light unsharp mask, as any reduction of that size needs.
  */
 import { existsSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -38,7 +39,7 @@ const PORTRAITS = {
   "silvia-chiusano": { file: "silvia_chiusano.png", cx: 0.5, cy: 0.5, size: 1 },
   "francesco-vaccarino": { file: "vaccarino.png", cx: 0.53, cy: 0.38, size: 1 },
   "lorenzo-vaiani": { file: "vaiani.png", cx: 0.5, cy: 0.46, size: 0.72 },
-  "michele-pantaleo": { file: "michele_pantaleo.png", cx: 0.507, cy: 0.343, size: 1.215 },
+  "michele-pantaleo": { file: "michele_pantaleo.png", cx: 0.507, cy: 0.338, size: 1.042 },
 };
 
 mkdirSync(OUT, { recursive: true });
@@ -70,9 +71,12 @@ for (const [slug, { file, cx, cy, size }] of Object.entries(PORTRAITS)) {
     : input;
   const left = padded ? wanted.left + pad.left : Math.min(Math.max(0, wanted.left), width - side);
   const top = padded ? wanted.top + pad.top : Math.min(Math.max(0, wanted.top), height - side);
-  const { data, info: raw } = await sharp(source)
-    .extract({ left, top, width: side, height: side })
-    .resize(320, 320)
+  // A photo much larger than the card needs the usual unsharp mask after the
+  // reduction, or it lands softer than a portrait that was already web-sized
+  // (2026-09-21). Small sources are left exactly as they were.
+  const reduction = side / 320;
+  const cropped = sharp(source).extract({ left, top, width: side, height: side }).resize(320, 320);
+  const { data, info: raw } = await (reduction > 1.5 ? cropped.sharpen({ sigma: 0.7 }) : cropped)
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
@@ -84,6 +88,7 @@ for (const [slug, { file, cx, cy, size }] of Object.entries(PORTRAITS)) {
     .webp({ quality: 88, alphaQuality: 90 })
     .toFile(`${OUT}${slug}.webp`);
   console.log(
-    `${slug}: ${side}px crop${padded ? " (padded)" : ""} -> ${info.width}x${info.height}, ${Math.round(info.size / 1024)} kB`,
+    `${slug}: ${side}px crop${padded ? " (padded)" : ""}${reduction > 1.5 ? " (sharpened)" : ""}` +
+      ` -> ${info.width}x${info.height}, ${Math.round(info.size / 1024)} kB`,
   );
 }
