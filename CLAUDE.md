@@ -124,6 +124,7 @@ Second batch, by category:
   | Page label (eyebrow, `.label`) | mono | 12px | 400 | 1.4 | 0.08em, uppercase |
   | Section label (theme `h2`, empty states) | mono | step--1 | 400 | 1.15 | 0.08em, uppercase |
   | Role inside a badge | mono | 10px | 400 | 1.2 | 0.08em, uppercase |
+  | Button label | mono | 12px | 400 | 1.2 | 0.08em, uppercase |
   | Data (code, CUP, dates) | mono | step-0 or 13px in the footer | 400 | 1.6 | normal |
   | Emphasis in running text (`strong`) | text | inherited | **500** | inherited | inherited |
 
@@ -230,6 +231,27 @@ Second batch, by category:
   Research, People, Collaborate (open to researchers/companies, calls via PoliTo), About
   funding and every empty state ("Coming soon"). Not on theme pages or the themes
   accordion, whose accent is the theme colour. Facts only, never invented claims.
+- Buttons (2026-09-21, `Button.astro` + `src/scripts/induction-button.ts` +
+  `src/shaders/induction-button.ts`): the user's reference
+  `research/moodboard/_taste/button/button_1` — a dark plate whose edge is alive with
+  electric arcs. Rebuilt here rather than ported (`taste.md` D12; the saved prompt names no
+  licence): one signed-distance field for the plate, and six arcs that are the same field
+  read at a wandering offset, so each strand hugs the edge and frays off it. Ours: the
+  **plate is ink on both themes** (a primary action has to hold on ink and on paper; on ink
+  it is the page with a lit edge, on paper a dark key), the arcs take the **page's accent**
+  (amber, or a theme's colour via `tone`, never a second accent), and the idle state is calm
+  — arcs 2.1, rising to 5.7 under the pointer or on focus-visible, one ring on the click.
+  Renders `<a>` with `href`, otherwise a real `<button>`. **The CSS button is the button**:
+  ink plate, `--radius-surface`, 1px accent rule that brightens on hover; the canvas only
+  adds light, so no WebGL, a lost context or reduced motion all leave it whole (under
+  reduced motion the arcs keep the one shape they were dealt and the rule answers instead).
+  The canvas is **24px larger than the button on every side** — that margin is where the
+  arcs fray — `pointer-events: none`, `aria-hidden`, premultiplied so no rectangle shows on
+  any surface, gone in forced colours, DPR capped, loop only on screen in a visible tab.
+  **Placing one near the right edge of a page would put its canvas past it and break the
+  no-horizontal-overflow rule**: so far it is the hero's, left-aligned. One per page, the
+  page's single most important action — Home's "Research themes". The arrow links
+  (`.link-arrow`) stay what they are: buttons are for actions, not for every link.
 - Page backdrops (2026-09-19, `Backdrop.astro` + `scripts/prepare-backdrops.mjs`): one
   illustration per page, top-right behind the opening, on Research, Publications and
   Events (Collaborate and Resources use a full-page picture instead, below). Sources: AI-generated images or free-licence photos (Pexels, licence checked

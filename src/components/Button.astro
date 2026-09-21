@@ -1,0 +1,174 @@
+---
+/**
+ * The site's button (2026-09-21), built to the user's reference
+ * `research/moodboard/_taste/button/button_1`: a dark plate whose edge is
+ * alive with electric arcs, brighter under the pointer, ringing once on the
+ * click. The arcs are WebGL (src/scripts/induction-button.ts); everything
+ * that makes it a button is CSS, so it is whole before — and without — them.
+ *
+ * Two decisions of ours:
+ * - **The plate is ink on both themes.** The reference lives on black. Here a
+ *   primary action has to hold on ink *and* on paper, and one plate that does
+ *   not change is stronger than two that do: on ink it is the page with a lit
+ *   edge, on paper it is a dark key that the amber ties to the rest.
+ * - **The arcs take the page's accent**, amber by default, a theme's colour
+ *   on a theme page (`tone`), so the button never brings a second accent in.
+ *
+ * It renders an `<a>` when given `href`, otherwise a real `<button>`.
+ * Decorative canvas: `aria-hidden`, no pointer events, gone in forced colours.
+ */
+import Icon from "./Icon.astro";
+
+interface Props {
+  href?: string;
+  type?: "button" | "submit";
+  tone?: "amber" | "sage" | "violet" | "ice";
+  /** The arrow of `.link-arrow`, for a button that leads somewhere. */
+  arrow?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { href, type = "button", tone = "amber", arrow = false, class: className, ...rest } = Astro.props;
+const Tag = href ? "a" : "button";
+---
+
+<Tag
+  class:list={["btn", className]}
+  href={href}
+  type={href ? undefined : type}
+  data-induction-button
+  data-tone={tone}
+  {...rest}
+>
+  <canvas class="btn__gl" data-induction aria-hidden="true"></canvas>
+  <span class="btn__label">
+    <slot />
+    {arrow && <Icon name="arrow-right" size={16} />}
+  </span>
+</Tag>
+
+<script>
+  import { initInductionButtons } from "../scripts/induction-button";
+
+  initInductionButtons();
+</script>
+
+<style>
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 1.6rem;
+    border: var(--hairline) solid var(--btn-edge);
+    border-radius: var(--radius-surface);
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    isolation: isolate;
+    /* The plate is the one shape the glow hangs on: it must not be clipped. */
+    overflow: visible;
+  }
+
+  .btn {
+    --btn-edge: color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+
+  .btn[data-tone="sage"] {
+    --btn-edge: color-mix(in srgb, var(--theme-cl) 55%, transparent);
+  }
+
+  .btn[data-tone="violet"] {
+    --btn-edge: color-mix(in srgb, var(--theme-topology) 55%, transparent);
+  }
+
+  .btn[data-tone="ice"] {
+    --btn-edge: color-mix(in srgb, var(--theme-agentic) 55%, transparent);
+  }
+
+  /* The canvas reaches past the button on every side: that margin is where the
+     arcs fray. It never takes the pointer, and it sits under the label. */
+  .btn__gl {
+    position: absolute;
+    inset: -24px;
+    z-index: -1;
+    width: calc(100% + 48px);
+    height: calc(100% + 48px);
+    max-width: none;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .btn__gl.is-ready {
+    opacity: 1;
+  }
+
+  .btn__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    /* The reference's label glows with its edge; ours keeps to the palette and
+       lets the arcs do the light. */
+    color: var(--paper);
+  }
+
+  .btn__label :global(.icon) {
+    transition: transform var(--dur-base) var(--ease);
+  }
+
+  .btn:is(:hover, :focus-visible) .btn__label :global(.icon) {
+    transform: translateX(3px);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .btn {
+      transition:
+        transform var(--dur-base) var(--ease),
+        border-color var(--dur-base) var(--ease);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+  }
+
+  /* Without the arcs — no WebGL, or reduced motion — the edge itself answers. */
+  .btn:is(:hover, :focus-visible) {
+    border-color: var(--accent);
+  }
+
+  .btn[data-tone="sage"]:is(:hover, :focus-visible) {
+    border-color: var(--theme-cl);
+  }
+
+  .btn[data-tone="violet"]:is(:hover, :focus-visible) {
+    border-color: var(--theme-topology);
+  }
+
+  .btn[data-tone="ice"]:is(:hover, :focus-visible) {
+    border-color: var(--theme-agentic);
+  }
+
+  @media (forced-colors: active) {
+    .btn {
+      border: 1px solid ButtonBorder;
+      background: ButtonFace;
+      color: ButtonText;
+    }
+
+    .btn__gl {
+      display: none;
+    }
+  }
+</style>

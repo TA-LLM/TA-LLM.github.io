@@ -19,7 +19,7 @@
  *   exactly ink, so the frame has no edge to hide.
  */
 import { getImage } from "astro:assets";
-import Icon from "./Icon.astro";
+import Button from "./Button.astro";
 import Tag from "./Tag.astro";
 import posterSource from "../assets/hero/hourglass-poster.png";
 
@@ -53,7 +53,7 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
         <li><Tag icon="calendar-range">2026 – 2029</Tag></li>
         <li><Tag icon="school">Politecnico di Torino</Tag></li>
       </ul>
-      <a class="hero__link label link-arrow" href="/research/">Research themes<Icon name="arrow-right" size={16} /></a>
+      <Button class="hero__cta" href="/research/" arrow>Research themes</Button>
     </div>
 
     <div class="hero__visual" aria-hidden="true" data-media-motion="focus" data-hero-visual>
@@ -223,18 +223,10 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
     clip-path: inset(63.5% -0.2em -0.4em -0.2em);
   }
 
-  .hero__link {
+  /* The one button of the page, and the site's first action. */
+  .hero__cta {
     justify-self: start;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2xs);
     min-height: var(--target);
-    color: var(--text-muted);
-    text-decoration: none;
-  }
-
-  .hero__link:hover {
-    color: var(--text);
   }
 
   /* The video is a 2:3 column around the glass, set on an ink ground a little
@@ -335,10 +327,6 @@ const words = ["Large", "Language", "Models:", "a", "matter", "of", "time"];
     .hero__word {
       animation: hero-word var(--dur-slow) var(--ease) both;
       animation-delay: calc(200ms + var(--i) * var(--stagger-step));
-    }
-
-    .hero__link {
-      transition: color var(--dur-fast) var(--ease);
     }
   }
 
