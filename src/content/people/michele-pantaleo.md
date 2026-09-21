@@ -6,4 +6,5 @@ affiliation: Politecnico di Torino
 order: 3
 themes:
   - continual-learning
+portrait: ../../assets/people/michele-pantaleo.webp
 ---

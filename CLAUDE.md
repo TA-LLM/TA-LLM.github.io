@@ -21,7 +21,12 @@ Website of the research project **TA-LLM — Large Language Models: a matter of 
   `scripts/prepare-portraits.mjs` crops a square around each face and keeps the cut-out
   transparent (edge alpha tightened against halos) → `src/assets/people/*.webp`, set in the
   card's circle via `astro:assets` (1x/2x). One ground for everyone (user), tried white first,
-  then chosen: the circle's `--surface-raised` (#1A1F2A on ink, #EAE5DC on paper). Six so far: the five faculty and L. Vaiani.
+  then chosen: the circle's `--surface-raised` (#1A1F2A on ink, #EAE5DC on paper). Seven so
+  far: the five faculty, L. Vaiani and M. Pantaleo (2026-09-21, cut out here with
+  `rembg i -m u2net_human_seg`; the model lands in `~/.rembg/models/`). His photo is a tight
+  headshot, so the crop square is larger than the photo's shorter side and the missing part
+  is padded with transparency — the prep script pads whenever `size` goes past 1, and keeps
+  the old clamped crop at 1 or less so the earlier portraits do not move.
 
 ## Sources (read before writing content)
 - `sources/private/general_project_info.txt` — official abstract and project data

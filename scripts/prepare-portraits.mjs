@@ -24,6 +24,13 @@ import sharp from "sharp";
 const RAW = fileURLToPath(new URL("../images/people/nobg/", import.meta.url));
 const OUT = fileURLToPath(new URL("../src/assets/people/", import.meta.url));
 
+/**
+ * `size` may go past 1: a tight headshot has no room for the circle, and the
+ * square then reaches outside the photo. Since the ground is already gone,
+ * the missing part is padded with transparency and nothing shows (2026-09-21,
+ * M. Pantaleo). At `size` 1 or less the square is kept inside the photo, as
+ * it always was.
+ */
 const PORTRAITS = {
   "elena-baralis": { file: "baralis-300x300.png", cx: 0.52, cy: 0.4, size: 0.78 },
   "luca-cagliero": { file: "cagliero-300x300.png", cx: 0.5, cy: 0.4, size: 0.76 },
@@ -31,6 +38,7 @@ const PORTRAITS = {
   "silvia-chiusano": { file: "silvia_chiusano.png", cx: 0.5, cy: 0.5, size: 1 },
   "francesco-vaccarino": { file: "vaccarino.png", cx: 0.53, cy: 0.38, size: 1 },
   "lorenzo-vaiani": { file: "vaiani.png", cx: 0.5, cy: 0.46, size: 0.72 },
+  "michele-pantaleo": { file: "michele_pantaleo.png", cx: 0.507, cy: 0.343, size: 1.215 },
 };
 
 mkdirSync(OUT, { recursive: true });
@@ -43,9 +51,26 @@ for (const [slug, { file, cx, cy, size }] of Object.entries(PORTRAITS)) {
   }
   const { width, height } = await sharp(input).metadata();
   const side = Math.round(Math.min(width, height) * size);
-  const left = Math.min(Math.max(0, Math.round(cx * width - side / 2)), width - side);
-  const top = Math.min(Math.max(0, Math.round(cy * height - side / 2)), height - side);
-  const { data, info: raw } = await sharp(input)
+  const wanted = { left: Math.round(cx * width - side / 2), top: Math.round(cy * height - side / 2) };
+  const pad = {
+    left: Math.max(0, -wanted.left),
+    top: Math.max(0, -wanted.top),
+    right: Math.max(0, wanted.left + side - width),
+    bottom: Math.max(0, wanted.top + side - height),
+  };
+  // Only a square bigger than the photo is padded; anything that fits is kept
+  // inside it as before, so the portraits done in 2026-09-19 do not move.
+  const padded = size > 1 && (pad.left || pad.top || pad.right || pad.bottom);
+  const source = padded
+    ? await sharp(input)
+        .ensureAlpha()
+        .extend({ ...pad, background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .png()
+        .toBuffer()
+    : input;
+  const left = padded ? wanted.left + pad.left : Math.min(Math.max(0, wanted.left), width - side);
+  const top = padded ? wanted.top + pad.top : Math.min(Math.max(0, wanted.top), height - side);
+  const { data, info: raw } = await sharp(source)
     .extract({ left, top, width: side, height: side })
     .resize(320, 320)
     .ensureAlpha()
@@ -58,5 +83,7 @@ for (const [slug, { file, cx, cy, size }] of Object.entries(PORTRAITS)) {
   const info = await sharp(data, { raw })
     .webp({ quality: 88, alphaQuality: 90 })
     .toFile(`${OUT}${slug}.webp`);
-  console.log(`${slug}: ${side}px crop -> ${info.width}x${info.height}, ${Math.round(info.size / 1024)} kB`);
+  console.log(
+    `${slug}: ${side}px crop${padded ? " (padded)" : ""} -> ${info.width}x${info.height}, ${Math.round(info.size / 1024)} kB`,
+  );
 }
