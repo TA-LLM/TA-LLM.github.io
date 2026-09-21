@@ -157,20 +157,32 @@ Second batch, by category:
   "no icon set is needed"): **utility icons** in `src/icons/icons.ts` via `Icon.astro` —
   20×20 grid, 1.5px stroke, round caps, `currentColor`, always neutral; **four theme
   glyphs** in `ThemeGlyph.astro` — 48×48, one stroke weight of **1.38 grid units** for all
-  four, scaling with the glyph (2026-09-21, below), each drawn from the
-  idea at the centre of its theme text (chosen by the user from three candidates each:
-  agent loop + tool, filtration ring + barcode, task curves that stay high, preference
-  checks along a drifting series). **Three of the four now use the user's own artwork**
+  four, scaling with the glyph (2026-09-21, below), each carrying the
+  idea at the centre of its theme text. **Three of the four use the user's own artwork**
   — Agentic and RLAIF (2026-09-20), Continual Learning (2026-09-21), in
   `research/moodboard/_taste/icons/`, prepared by `scripts/prepare-theme-icons.mjs` into
   alpha masks: used exactly as supplied, painted through a `<mask>` inside the glyph's svg
-  so **only the colour** is ours. Only Topology is still drawn here.
+  so **only the colour** is ours. **Topology is the one we draw: the Möbius band**
+  (2026-09-21, the user's subject, from a reference render they supplied — a shaded 3D
+  mesh, not usable as a one-colour mask, so it is redrawn in our line). One face, one
+  edge: the surface's own parametrisation
+  `P(u,v) = ((R + v cos(u/2)) cos u, (R + v cos(u/2)) sin u, v sin(u/2))`, R = 12,
+  v = ±4.6, seen from 34° above the plane, fitted to the grid and then fixed as path data
+  in the component (the generator's parameters are in its comment). `EDGE` is the whole
+  **boundary in one closed path** — u from 0 to 4π at v = +4.6, because the band has a
+  single edge; `RIBS` are ten cross-sections at 0.4 opacity, the surface, so the
+  silhouette leads. It replaced the filtration ring + barcode of 2026-09-18.
   **Their motion (2026-09-21) also changes only the colour**, never a line: the icon steps
   back to a floor opacity and a light of its own colour travels through it, on a path taken
   from that icon's own drawing — Agentic, the signal falls from the chip down the traces to
   the node (a soft glow translating in y); Continual Learning, a band of light rises along
   the loop's diagonal and the bulb lights as it arrives; RLAIF, the reward goes once
-  clockwise around the loop, the way its arrows point. One beat per icon (4.6/5.4/6s) so two
+  clockwise around the loop, the way its arrows point. **Topology, drawn, follows the same
+  language**: a comet (two dashed copies of `EDGE`, a wide soft one and a short bright one,
+  `pathLength="100"` so the dashes need no retuning if the geometry changes) runs the
+  boundary and returns to where it started only after **two** laps of the ring — the band's
+  single edge, shown rather than stated. Its run fills most of the beat, so it has its own
+  wider dim (`glyph-dim-edge`). One beat per icon (4.6/5.4/6/7.2s) so two
   glyphs on a page never march in step; a solid icon keeps a higher floor (`--glyph-floor`)
   than a line one. They are the only coloured marks (theme colour on focus in lists, as the
   page accent on theme pages, where they animate only under

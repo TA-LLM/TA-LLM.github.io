@@ -10,9 +10,9 @@
  *
  *   agentic   — the user's own icon (2026-09-20): an AI agent's head, a chip
  *               in its mind, wired down to two nodes
- *   topology  — balls grow around points until a ring closes around a hole;
- *               the long bar is the hole's lifetime, the short one is noise
- *               (persistent topological structures) — drawn here
+ *   topology  — the Möbius band (2026-09-21, the user's subject, from their
+ *               reference render): one face, one edge — the shape whose
+ *               property *is* its topology. Drawn here, the only one we draw
  *   cl        — the user's own icon (2026-09-21): a gear and a lightbulb on a
  *               loop that never closes (practice becomes new knowledge)
  *   rlaif     — the user's own icon (2026-09-20): a reward at the centre of a
@@ -30,6 +30,9 @@
  *   agentic — the signal falls from the chip down the traces to the node;
  *   cl      — the light rises from the gear along the loop and the bulb lights;
  *   rlaif   — the reward goes once around the loop, the way the arrows point.
+ * Topology, drawn, follows the same language: a light runs its boundary and
+ * comes back to where it started only after **two** laps of the ring, because
+ * the band has a single edge.
  */
 import agenticIcon from "../assets/theme-icons/agentic.webp";
 import clIcon from "../assets/theme-icons/cl.webp";
@@ -61,11 +64,22 @@ const maskId = `glyph-mask-${uid}`;
 const glowId = `glyph-glow-${uid}`;
 const beamId = `glyph-beam-${uid}`;
 
-// Eight points on the topology ring, starting at the top.
-const ring = Array.from({ length: 8 }, (_, i) => {
-  const a = (i / 8) * 2 * Math.PI - Math.PI / 2;
-  return { x: +(24 + 11 * Math.cos(a)).toFixed(2), y: +(18 + 11 * Math.sin(a)).toFixed(2) };
-});
+/**
+ * The Möbius band, generated from the surface itself and then fixed here (a
+ * drawing, not a runtime computation):
+ *   P(u, v) = ((R + v cos(u/2)) cos u, (R + v cos(u/2)) sin u, v sin(u/2))
+ * with R = 12, v = ±4.6, seen from 34° above the plane, fitted to the grid.
+ * `EDGE` is the **boundary**: one closed curve, u from 0 to 4π at v = +4.6 —
+ * the band's single edge, which is why it can be one path. `RIBS` are ten
+ * cross-sections (u to u + 2π/10, v from −4.6 to +4.6), the surface itself,
+ * kept faint so the silhouette leads. The twist sits at u = π, on the left,
+ * where the band stands on edge and the two strands cross.
+ */
+const EDGE =
+  "M44.5 24C44.50 22.96 44.34 21.91 44.02 20.89C43.70 19.88 43.21 18.86 42.59 17.91C41.97 16.96 41.17 16.02 40.28 15.17C39.39 14.31 38.35 13.50 37.23 12.78C36.11 12.05 34.86 11.39 33.57 10.82C32.28 10.25 30.89 9.75 29.5 9.35C28.11 8.95 26.64 8.64 25.2 8.42C23.76 8.20 22.29 8.07 20.88 8.03C19.47 7.99 18.06 8.03 16.74 8.16C15.42 8.29 14.13 8.51 12.95 8.79C11.77 9.07 10.67 9.43 9.68 9.84C8.69 10.25 7.79 10.73 7.03 11.24C6.27 11.75 5.62 12.32 5.1 12.91C4.58 13.50 4.19 14.12 3.92 14.75C3.65 15.38 3.52 16.03 3.5 16.67C3.48 17.31 3.59 17.95 3.8 18.57C4.01 19.19 4.35 19.81 4.76 20.39C5.17 20.97 5.70 21.54 6.28 22.06C6.86 22.58 7.54 23.07 8.26 23.52C8.97 23.97 9.76 24.38 10.57 24.75C11.38 25.12 12.24 25.44 13.1 25.72C13.96 26.00 14.85 26.23 15.73 26.43C16.61 26.63 17.50 26.77 18.36 26.89C19.22 27.01 20.07 27.08 20.88 27.12C21.69 27.16 22.48 27.17 23.22 27.15C23.96 27.13 24.67 27.07 25.33 27C25.99 26.93 26.60 26.82 27.16 26.7C27.72 26.58 28.23 26.43 28.68 26.28C29.13 26.13 29.53 25.96 29.87 25.78C30.21 25.60 30.49 25.41 30.72 25.22C30.95 25.03 31.13 24.82 31.24 24.62C31.35 24.42 31.41 24.21 31.41 24C31.41 23.79 31.35 23.58 31.24 23.38C31.13 23.18 30.95 22.97 30.72 22.78C30.49 22.59 30.21 22.40 29.87 22.22C29.53 22.04 29.13 21.87 28.68 21.72C28.23 21.57 27.72 21.42 27.16 21.3C26.60 21.18 25.99 21.07 25.33 21C24.67 20.93 23.96 20.87 23.22 20.85C22.48 20.83 21.69 20.84 20.88 20.88C20.07 20.92 19.22 20.99 18.36 21.11C17.50 21.23 16.61 21.38 15.73 21.57C14.85 21.77 13.96 22.00 13.1 22.28C12.24 22.56 11.38 22.88 10.57 23.25C9.76 23.62 8.97 24.03 8.26 24.48C7.54 24.93 6.86 25.42 6.28 25.94C5.70 26.46 5.17 27.03 4.76 27.61C4.35 28.19 4.01 28.81 3.8 29.43C3.59 30.05 3.48 30.69 3.5 31.33C3.52 31.97 3.65 32.62 3.92 33.25C4.19 33.88 4.58 34.51 5.1 35.09C5.62 35.68 6.27 36.25 7.03 36.76C7.79 37.27 8.69 37.75 9.68 38.16C10.67 38.57 11.77 38.93 12.95 39.21C14.13 39.49 15.42 39.71 16.74 39.84C18.06 39.97 19.47 40.01 20.88 39.97C22.29 39.93 23.76 39.80 25.2 39.58C26.64 39.36 28.11 39.05 29.5 38.65C30.89 38.25 32.28 37.75 33.57 37.18C34.86 36.61 36.11 35.95 37.23 35.22C38.35 34.49 39.39 33.68 40.28 32.83C41.17 31.97 41.97 31.04 42.59 30.09C43.21 29.14 43.70 28.13 44.02 27.11C44.34 26.09 44.50 25.04 44.5 24Z";
+
+const RIBS =
+  "M31.41 24L44.5 24M29.66 22.11L39.73 14.66M24.52 20.92L27.79 8.91M16.79 21.36L14.41 8.48M8.7 24.21L5.43 12.56M3.8 29.43L3.8 18.57M5.43 35.44L8.7 23.79M14.41 39.52L16.79 26.64M27.79 39.09L24.52 27.08M39.73 33.34L29.66 25.89";
 ---
 
 <svg
@@ -122,14 +136,15 @@ const ring = Array.from({ length: 8 }, (_, i) => {
   {
     theme === "topology" && (
       <>
-        {ring.map(({ x, y }) => (
-          <circle class="glyph__ball" cx={x} cy={y} r="4.3" fill="currentColor" stroke="none" />
-        ))}
-        {ring.map(({ x, y }) => (
-          <circle cx={x} cy={y} r="1.6" fill="currentColor" stroke="none" />
-        ))}
-        <path class="glyph__reveal" d="M8 38h32" />
-        <path class="glyph__blink" d="M8 44h8" />
+        <g class="glyph__art">
+          <path class="glyph__faint" d={RIBS} />
+          <path d={EDGE} />
+        </g>
+        {/* The same edge twice: a wide soft run and a short bright one inside
+            it, the comet that travels the boundary. `pathLength` normalises
+            the dashes to 100, so the geometry can change without retuning. */}
+        <path class="glyph__trail" d={EDGE} pathLength="100" />
+        <path class="glyph__lead" d={EDGE} pathLength="100" />
       </>
     )
   }
@@ -141,17 +156,27 @@ const ring = Array.from({ length: 8 }, (_, i) => {
     overflow: visible;
   }
 
-  .glyph__ball {
-    opacity: 0.14;
+  /* The band's surface, behind its own edge. */
+  .glyph__faint {
+    opacity: 0.4;
   }
 
-  /* At rest the supplied icons are exactly themselves: one flat colour, no
-     light on them. */
+  /* At rest every glyph is exactly itself: one flat colour, no light on it. */
   .glyph__signal,
   .glyph__beam,
   .glyph__spark,
-  .glyph__orbit {
+  .glyph__orbit,
+  .glyph__trail,
+  .glyph__lead {
     opacity: 0;
+  }
+
+  .glyph__trail {
+    stroke-dasharray: 18 82;
+  }
+
+  .glyph__lead {
+    stroke-dasharray: 6 94;
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -160,6 +185,14 @@ const ring = Array.from({ length: 8 }, (_, i) => {
     .glyph--animated .glyph__art,
     :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .glyph--hover .glyph__art {
       animation: glyph-dim var(--glyph-beat, 5s) ease-in-out infinite;
+    }
+
+    /* Topology's light runs for most of the beat, so its own dim is wider. */
+    .glyph--topology.glyph--animated .glyph__art,
+    :global([data-glyph-host]:is(:hover, :focus-within, [data-active]))
+      .glyph--topology.glyph--hover
+      .glyph__art {
+      animation-name: glyph-dim-edge;
     }
 
     /* Agentic: the chip's signal falls down the traces to the node. */
@@ -187,25 +220,16 @@ const ring = Array.from({ length: 8 }, (_, i) => {
       animation: glyph-orbit var(--glyph-beat, 5s) linear infinite;
     }
 
-    /* Filtration: the balls grow until the ring closes, while the hole's bar
-       is drawn; the noise bar is born and dies. */
-    .glyph--animated .glyph__ball,
-    :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .glyph--hover .glyph__ball {
-      transform-box: fill-box;
-      transform-origin: center;
-      animation: glyph-grow 5s ease-in-out infinite;
+    /* Topology: the light runs the band's single edge, all the way round the
+       ring and round again on what looks like the other side. */
+    .glyph--animated .glyph__trail,
+    :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .glyph--hover .glyph__trail {
+      animation: glyph-edge var(--glyph-beat, 5s) linear infinite;
     }
 
-    .glyph--animated .glyph__blink,
-    :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .glyph--hover .glyph__blink {
-      animation: glyph-blink 5s ease-in-out infinite;
-    }
-
-    /* Time advances left to right; what was drawn stays. Revealed by a clip,
-       not a dash: dash lengths do not survive the non-scaling stroke. */
-    .glyph--animated .glyph__reveal,
-    :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .glyph--hover .glyph__reveal {
-      animation: glyph-reveal 5s ease-in-out infinite;
+    .glyph--animated .glyph__lead,
+    :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .glyph--hover .glyph__lead {
+      animation: glyph-edge-lead var(--glyph-beat, 5s) linear infinite;
     }
   }
 
@@ -221,6 +245,11 @@ const ring = Array.from({ length: 8 }, (_, i) => {
   .glyph--rlaif {
     --glyph-beat: 6s;
     --glyph-floor: 0.5;
+  }
+
+  /* The edge is long: two laps of the ring, so a slower beat. */
+  .glyph--topology {
+    --glyph-beat: 7.2s;
   }
 
   @keyframes glyph-dim {
@@ -241,6 +270,21 @@ const ring = Array.from({ length: 8 }, (_, i) => {
   }
 
   /* From the chip (cy 14.2) down to the node at the foot of the trace (39). */
+  @keyframes glyph-dim-edge {
+    0%,
+    2% {
+      opacity: 1;
+    }
+    9%,
+    76% {
+      opacity: var(--glyph-floor, 0.4);
+    }
+    86%,
+    100% {
+      opacity: 1;
+    }
+  }
+
   @keyframes glyph-signal {
     0%,
     12% {
@@ -327,39 +371,50 @@ const ring = Array.from({ length: 8 }, (_, i) => {
     .glyph__signal,
     .glyph__beam,
     .glyph__spark,
-    .glyph__orbit {
+    .glyph__orbit,
+    .glyph__trail,
+    .glyph__lead {
       display: none;
     }
   }
 
-  @keyframes glyph-grow {
-    0% {
-      transform: scale(0);
+  /* One traversal of the whole boundary. It fades in and out at the same
+     point of the path, so what the eye follows is a full circuit. */
+  @keyframes glyph-edge {
+    0%,
+    6% {
+      opacity: 0;
+      stroke-dashoffset: 0;
     }
-    50%,
+    11% {
+      opacity: 0.5;
+    }
+    73% {
+      opacity: 0.5;
+    }
+    78%,
     100% {
-      transform: scale(1);
+      opacity: 0;
+      stroke-dashoffset: -100;
     }
   }
 
-  @keyframes glyph-blink {
+  @keyframes glyph-edge-lead {
     0%,
-    100% {
-      opacity: 0.15;
+    6% {
+      opacity: 0;
+      stroke-dashoffset: -6;
     }
-    35%,
-    60% {
+    11% {
       opacity: 1;
     }
-  }
-
-  @keyframes glyph-reveal {
-    0% {
-      clip-path: inset(-10% 100% -10% -10%);
+    73% {
+      opacity: 1;
     }
-    50%,
+    78%,
     100% {
-      clip-path: inset(-10% -10% -10% -10%);
+      opacity: 0;
+      stroke-dashoffset: -106;
     }
   }
 </style>
