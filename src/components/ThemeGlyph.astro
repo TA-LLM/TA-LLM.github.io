@@ -1,31 +1,38 @@
 ---
 /**
- * The four theme glyphs, each drawn from the idea at the centre of its theme
- * text (chosen 2026-09-18 from three candidates each). 48×48 grid; the stroke
- * stays 1.5px at any size (non-scaling), matching the utility icons.
+ * The four theme glyphs, each carrying the idea at the centre of its theme
+ * text. 48×48 grid; drawn strokes stay 1.5px at any size (non-scaling),
+ * matching the utility icons.
  *
  *   agentic   — the user's own icon (2026-09-20): an AI agent's head, a chip
- *               in its mind, drawn as a mask so only its colour is ours
+ *               in its mind, wired down to two nodes
  *   topology  — balls grow around points until a ring closes around a hole;
  *               the long bar is the hole's lifetime, the short one is noise
- *               (persistent topological structures)
- *   cl        — a learning curve rises at each task boundary and the earlier
- *               ones stay high (learning without catastrophic forgetting)
- *   rlaif     — the user's own icon (2026-09-20): a reinforcement loop, drawn
- *               as a mask so only its colour is ours
+ *               (persistent topological structures) — drawn here
+ *   cl        — the user's own icon (2026-09-21): a gear and a lightbulb on a
+ *               loop that never closes (practice becomes new knowledge)
+ *   rlaif     — the user's own icon (2026-09-20): a reward at the centre of a
+ *               loop of feedback
  *
  * Colour is `currentColor`: the caller decides when the glyph takes its theme
  * colour (one accent per view). With `animated`, only the element that carries
- * the idea moves, slowly; under reduced motion the glyph is static. The two
- * supplied icons are bitmaps used exactly as they are (the user's rule), so
- * they take the colour but not the motion: they are painted through a mask,
- * the same technique as the institution logos.
+ * the idea moves, slowly; under reduced motion the glyph is static.
+ *
+ * The three supplied icons are bitmaps used exactly as they are (the user's
+ * rule), so they are painted through a mask — the institution-logo technique —
+ * and their motion changes **only the colour**, never a line: the icon dims a
+ * little and a light of its own colour travels through it, on a path drawn
+ * from that icon's own drawing (2026-09-21):
+ *   agentic — the signal falls from the chip down the traces to the node;
+ *   cl      — the light rises from the gear along the loop and the bulb lights;
+ *   rlaif   — the reward goes once around the loop, the way the arrows point.
  */
 import agenticIcon from "../assets/theme-icons/agentic.webp";
+import clIcon from "../assets/theme-icons/cl.webp";
 import rlaifIcon from "../assets/theme-icons/rlaif.webp";
 
 /** The themes drawn from the user's own artwork, by mask. */
-const SUPPLIED = { agentic: agenticIcon, rlaif: rlaifIcon } as const;
+const SUPPLIED = { agentic: agenticIcon, cl: clIcon, rlaif: rlaifIcon } as const;
 
 interface Props {
   theme: "agentic" | "topology" | "cl" | "rlaif";
@@ -41,8 +48,11 @@ interface Props {
 const { theme, size = 48, animated = false, hover = false, class: className } = Astro.props;
 
 const supplied = theme in SUPPLIED ? SUPPLIED[theme as keyof typeof SUPPLIED] : undefined;
-// Several glyphs of the same theme can share a page: each mask needs its own id.
-const maskId = `glyph-mask-${theme}-${Math.random().toString(36).slice(2, 8)}`;
+// Several glyphs of the same theme can share a page: each needs its own ids.
+const uid = `${theme}-${Math.random().toString(36).slice(2, 8)}`;
+const maskId = `glyph-mask-${uid}`;
+const glowId = `glyph-glow-${uid}`;
+const beamId = `glyph-beam-${uid}`;
 
 // Eight points on the topology ring, starting at the top.
 const ring = Array.from({ length: 8 }, (_, i) => {
@@ -67,10 +77,38 @@ const ring = Array.from({ length: 8 }, (_, i) => {
   {
     supplied && (
       <>
-        <mask id={maskId}>
-          <image href={supplied.src} x="2" y="2" width="44" height="44" preserveAspectRatio="xMidYMid meet" />
-        </mask>
-        <rect x="0" y="0" width="48" height="48" fill="currentColor" stroke="none" mask={`url(#${maskId})`} />
+        <defs>
+          <radialGradient id={glowId}>
+            <stop offset="0" stop-color="currentColor" stop-opacity="1" />
+            <stop offset="0.5" stop-color="currentColor" stop-opacity="0.9" />
+            <stop offset="1" stop-color="currentColor" stop-opacity="0" />
+          </radialGradient>
+          {theme === "cl" && (
+            <linearGradient id={beamId} gradientUnits="userSpaceOnUse" x1="0" y1="48" x2="48" y2="0">
+              <stop offset="0.26" stop-color="currentColor" stop-opacity="0" />
+              <stop offset="0.5" stop-color="currentColor" stop-opacity="1" />
+              <stop offset="0.74" stop-color="currentColor" stop-opacity="0" />
+            </linearGradient>
+          )}
+          <mask id={maskId}>
+            <image href={supplied.src} x="2" y="2" width="44" height="44" preserveAspectRatio="xMidYMid meet" />
+          </mask>
+        </defs>
+        <g mask={`url(#${maskId})`}>
+          <rect class="glyph__art" x="0" y="0" width="48" height="48" fill="currentColor" stroke="none" />
+          {theme === "agentic" && (
+            <circle class="glyph__signal" cx="18.5" cy="14.2" r="8" fill={`url(#${glowId})`} stroke="none" />
+          )}
+          {theme === "cl" && (
+            <>
+              <rect class="glyph__beam" x="-24" y="-24" width="96" height="96" fill={`url(#${beamId})`} stroke="none" />
+              <circle class="glyph__spark" cx="32.7" cy="17.9" r="9" fill={`url(#${glowId})`} stroke="none" />
+            </>
+          )}
+          {theme === "rlaif" && (
+            <circle class="glyph__orbit" cx="24" cy="7" r="11" fill={`url(#${glowId})`} stroke="none" />
+          )}
+        </g>
       </>
     )
   }
@@ -88,19 +126,6 @@ const ring = Array.from({ length: 8 }, (_, i) => {
       </>
     )
   }
-  {
-    theme === "cl" && (
-      <>
-        <path class="glyph__faint" d="M18 8v34M30 8v34" stroke-dasharray="1.5 3" />
-        <path class="glyph__faint" d="M6 42h38" />
-        <g class="glyph__reveal">
-          <path d="M6 38c3 0 4-24 8-24h30" />
-          <path d="M18 38c3 0 4-20 8-20h18" />
-          <path d="M30 38c3 0 4-16 8-16h6" />
-        </g>
-      </>
-    )
-  }
 </svg>
 
 <style>
@@ -113,30 +138,50 @@ const ring = Array.from({ length: 8 }, (_, i) => {
     vector-effect: non-scaling-stroke;
   }
 
-  .glyph__faint {
-    opacity: 0.35;
-  }
-
   .glyph__ball {
     opacity: 0.14;
   }
 
+  /* At rest the supplied icons are exactly themselves: one flat colour, no
+     light on them. */
+  .glyph__signal,
+  .glyph__beam,
+  .glyph__spark,
+  .glyph__orbit {
+    opacity: 0;
+  }
+
   @media (prefers-reduced-motion: no-preference) {
-    /* Steps light up in turn: the agent's loop (the tool with the act step),
-       or the preference checks along the series. */
-    .glyph--animated .glyph__step,
-    :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .glyph--hover .glyph__step {
-      animation: glyph-step 3.6s ease-in-out infinite;
+    /* The icon steps back while its own light passes through it, then comes
+       back to full: the only thing that changes is the colour. */
+    .glyph--animated .glyph__art,
+    :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .glyph--hover .glyph__art {
+      animation: glyph-dim var(--glyph-beat, 5s) ease-in-out infinite;
     }
 
-    .glyph--animated .glyph__step--2,
-    :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .glyph--hover .glyph__step--2 {
-      animation-delay: 1.2s;
+    /* Agentic: the chip's signal falls down the traces to the node. */
+    .glyph--animated .glyph__signal,
+    :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .glyph--hover .glyph__signal {
+      animation: glyph-signal var(--glyph-beat, 5s) linear infinite;
     }
 
-    .glyph--animated .glyph__step--3,
-    :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .glyph--hover .glyph__step--3 {
-      animation-delay: 2.4s;
+    /* Continual learning: the light rises from the gear along the loop, and
+       the bulb lights when it arrives. */
+    .glyph--animated .glyph__beam,
+    :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .glyph--hover .glyph__beam {
+      animation: glyph-beam var(--glyph-beat, 5s) linear infinite;
+    }
+
+    .glyph--animated .glyph__spark,
+    :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .glyph--hover .glyph__spark {
+      animation: glyph-spark var(--glyph-beat, 5s) ease-out infinite;
+    }
+
+    /* RLAIF: the reward goes once around the loop, the way the arrows point. */
+    .glyph--animated .glyph__orbit,
+    :global([data-glyph-host]:is(:hover, :focus-within, [data-active])) .glyph--hover .glyph__orbit {
+      transform-origin: 24px 24px;
+      animation: glyph-orbit var(--glyph-beat, 5s) linear infinite;
     }
 
     /* Filtration: the balls grow until the ring closes, while the hole's bar
@@ -161,14 +206,126 @@ const ring = Array.from({ length: 8 }, (_, i) => {
     }
   }
 
-  @keyframes glyph-step {
+  /* One beat per icon, so two glyphs on a page never march in step. */
+  .glyph--agentic {
+    --glyph-beat: 4.6s;
+  }
+
+  .glyph--cl {
+    --glyph-beat: 5.4s;
+  }
+
+  .glyph--rlaif {
+    --glyph-beat: 6s;
+    --glyph-floor: 0.5;
+  }
+
+  @keyframes glyph-dim {
     0%,
-    100% {
-      opacity: 0.3;
-    }
-    15%,
-    40% {
+    14% {
       opacity: 1;
+    }
+    26%,
+    66% {
+      /* A solid icon keeps more of itself than a line one: the same floor
+         would read as a muddy mass. */
+      opacity: var(--glyph-floor, 0.4);
+    }
+    80%,
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* From the chip (cy 14.2) down to the node at the foot of the trace (39). */
+  @keyframes glyph-signal {
+    0%,
+    12% {
+      opacity: 0;
+      transform: translateY(0);
+    }
+    22% {
+      opacity: 1;
+    }
+    62% {
+      opacity: 1;
+      transform: translateY(25px);
+    }
+    76%,
+    100% {
+      opacity: 0;
+      transform: translateY(27px);
+    }
+  }
+
+  /* The band of light crosses the loop along its own diagonal: it stands on
+     the gear at about a third of the way, on the bulb at about two thirds. */
+  @keyframes glyph-beam {
+    0%,
+    14% {
+      opacity: 0;
+      transform: translate(-20px, 20px);
+    }
+    24% {
+      opacity: 1;
+    }
+    62% {
+      opacity: 1;
+    }
+    72%,
+    100% {
+      opacity: 0;
+      transform: translate(20px, -20px);
+    }
+  }
+
+  @keyframes glyph-spark {
+    0%,
+    42% {
+      opacity: 0;
+    }
+    54%,
+    64% {
+      opacity: 1;
+    }
+    78%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* One turn, clockwise, the way the arrows point. */
+  @keyframes glyph-orbit {
+    0%,
+    10% {
+      opacity: 0;
+      transform: rotate(-10deg);
+    }
+    16% {
+      opacity: 1;
+    }
+    74% {
+      opacity: 1;
+    }
+    80%,
+    100% {
+      opacity: 0;
+      transform: rotate(350deg);
+    }
+  }
+
+  /* In forced colours the light has nowhere to go: the icon stays itself. */
+  @media (forced-colors: active) {
+    .glyph__art {
+      opacity: 1 !important;
+      animation: none !important;
+    }
+
+    .glyph__signal,
+    .glyph__beam,
+    .glyph__spark,
+    .glyph__orbit {
+      display: none;
     }
   }
 

@@ -159,12 +159,21 @@ Second batch, by category:
   glyphs** in `ThemeGlyph.astro` — 48×48, non-scaling 1.5px stroke, each drawn from the
   idea at the centre of its theme text (chosen by the user from three candidates each:
   agent loop + tool, filtration ring + barcode, task curves that stay high, preference
-  checks along a drifting series). **Agentic and RLAIF now use the user's own artwork**
-  (2026-09-20, `research/moodboard/_taste/icons/`, prepared by
-  `scripts/prepare-theme-icons.mjs` into alpha masks): used exactly as supplied, painted
-  through a `<mask>` inside the glyph's svg so **only the colour** is ours — they take the
-  theme colour but not the stroke motion. They are the only coloured marks (theme colour on focus in lists, as the page accent on
-  theme pages, where they animate only under `prefers-reduced-motion: no-preference`).
+  checks along a drifting series). **Three of the four now use the user's own artwork**
+  — Agentic and RLAIF (2026-09-20), Continual Learning (2026-09-21), in
+  `research/moodboard/_taste/icons/`, prepared by `scripts/prepare-theme-icons.mjs` into
+  alpha masks: used exactly as supplied, painted through a `<mask>` inside the glyph's svg
+  so **only the colour** is ours. Only Topology is still drawn here.
+  **Their motion (2026-09-21) also changes only the colour**, never a line: the icon steps
+  back to a floor opacity and a light of its own colour travels through it, on a path taken
+  from that icon's own drawing — Agentic, the signal falls from the chip down the traces to
+  the node (a soft glow translating in y); Continual Learning, a band of light rises along
+  the loop's diagonal and the bulb lights as it arrives; RLAIF, the reward goes once
+  clockwise around the loop, the way its arrows point. One beat per icon (4.6/5.4/6s) so two
+  glyphs on a page never march in step; a solid icon keeps a higher floor (`--glyph-floor`)
+  than a line one. They are the only coloured marks (theme colour on focus in lists, as the
+  page accent on theme pages, where they animate only under
+  `prefers-reduced-motion: no-preference`; in forced colours the icon stays flat).
   Links ending in an arrow use `.link-arrow` + the `arrow-right` icon, not a "→" glyph.
   **More icons (2026-09-19, user request, "like 21st.dev/community/icons"):** Lucide
   (listed there; ISC licence, verified at its repo, text in `src/icons/LICENSE-lucide.txt`)

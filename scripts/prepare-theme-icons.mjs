@@ -1,8 +1,9 @@
 /**
- * Prepares the two theme icons the user supplied (2026-09-20) in
- * research/moodboard/_taste/icons/ — an AI agent's head and a reinforcement
- * loop — for ThemeGlyph.astro, which draws them as masks so they take the
- * theme's colour and nothing else about them changes.
+ * Prepares the theme icons the user supplied in
+ * research/moodboard/_taste/icons/ — an AI agent's head, a reinforcement loop
+ * (2026-09-20) and a gear-and-lightbulb loop (2026-09-21) — for
+ * ThemeGlyph.astro, which draws them as masks so they take the theme's colour
+ * and nothing else about them changes.
  *
  * Run: node scripts/prepare-theme-icons.mjs
  *
@@ -24,6 +25,7 @@ const MARGIN = 0.04;
 const ICONS = {
   agentic: "ai_agent.png",
   rlaif: "reinforcement-learning.png",
+  cl: "continual_learning.png",
 };
 
 mkdirSync(OUT, { recursive: true });
