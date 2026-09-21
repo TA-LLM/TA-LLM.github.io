@@ -14,8 +14,10 @@ Website of the research project **TA-LLM — Large Language Models: a matter of 
   4. Time-Aware RLAIF (co-supervisor: P. Garza; PhD: Davide Benotto)
 - Postdoctoral researcher: Lorenzo Vaiani (added 2026-09-19; no theme assigned yet).
 - People profile links (`polito`, `linkedin` in the people collection): PoliTo staff pages
-  checked on polito.it; LinkedIn added only when the profile is verifiably that person
-  (faculty so far). Project code: GitHub organization https://github.com/TA-LLM (footer).
+  checked on polito.it; LinkedIn added only when the profile is verifiably that person —
+  the faculty's, and M. Pantaleo's, which he supplied himself (2026-09-21). His PoliTo page
+  appeared that day and uses the student form of the link,
+  `?p=s372085` rather than `?p=name.surname`. Project code: GitHub organization https://github.com/TA-LLM (footer).
 - Portraits (2026-09-19): photos supplied by the user in `images/people/` (git-ignored), cut
   out by the user with rembg (`u2net_human_seg`) into `images/people/nobg/`, then
   `scripts/prepare-portraits.mjs` crops a square around each face and keeps the cut-out
