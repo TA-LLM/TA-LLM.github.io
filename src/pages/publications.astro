@@ -83,7 +83,7 @@ const dateFormat = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "lo
   }
   {
     publications.length > 0 && (
-      <div class="publications">
+        <section class="container publications-section" aria-label="Publication list">
         <div class="filters" role="group" aria-label="Filter by theme">
           <button type="button" data-theme-filter="all" aria-pressed="true">All themes</button>
           {themes.map((theme) => (
