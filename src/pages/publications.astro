@@ -83,7 +83,8 @@ const dateFormat = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "lo
   }
   {
     publications.length > 0 && (
-        <section class="container publications-section" aria-label="Publication list">
+      <section class="container publications-section" aria-label="Publication list">
+      <div class="publications">
         <div class="filters" role="group" aria-label="Filter by theme">
           <button type="button" data-theme-filter="all" aria-pressed="true">All themes</button>
           {themes.map((theme) => (
@@ -122,6 +123,7 @@ const dateFormat = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "lo
           </section>
         ))}
       </div>
+      </section>
     )
   }
 </BaseLayout>
@@ -146,6 +148,11 @@ const dateFormat = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "lo
 </script>
 
 <style>
+  .publications-section {
+    padding-top: var(--space-l);
+    padding-bottom: var(--space-3xl);
+  }
+
   .publications {
     display: grid;
     gap: var(--space-xl);
