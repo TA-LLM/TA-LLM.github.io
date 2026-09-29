@@ -4,9 +4,67 @@ import publicationsBackdrop from "../assets/backdrops/publications.webp";
 import Backdrop from "../components/Backdrop.astro";
 import EmptyState from "../components/EmptyState.astro";
 import PageIntro from "../components/PageIntro.astro";
+import Tag from "../components/Tag.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const publications = await getCollection("publications");
+type ThemeKey = "agentic" | "topology" | "cl" | "rlaif";
+
+type Publication = {
+  title: string;
+  authors: string[];
+  venue: string;
+  date: Date;
+  status: "preprint" | "accepted" | "published";
+  themes: ThemeKey[];
+  abstract: string;
+  url?: string;
+};
+
+// Placeholder publications (fictional): replace them with the real papers.
+const entries: Publication[] = [
+  {
+    title: "Articolo A",
+    authors: ["Luca Cagliero", "Lorenzo Vaiani"],
+    venue: "arXiv preprint",
+    date: new Date("2026-09-08"),
+    status: "preprint",
+    themes: ["agentic"],
+    abstract:
+      "We study how LLM-based agents plan over sequences of events and propose a benchmark for checking whether their plans respect ordering and duration constraints.",
+  },
+  {
+    title: "Articolo B",
+    authors: ["Lorenzo Vaiani", "Luca Cagliero"],
+    venue: "Workshop paper",
+    date: new Date("2026-09-22"),
+    status: "accepted",
+    themes: ["cl", "rlaif"],
+    abstract:
+      "We analyse how multimodal LLMs forget earlier tasks when they are updated with AI feedback, and compare strategies that keep past skills while learning new ones.",
+  },
+  {
+    title: "Articolo C",
+    authors: ["Luca Cagliero", "Lorenzo Vaiani"],
+    venue: "Technical report, TA-LLM project",
+    date: new Date("2026-09-28"),
+    status: "published",
+    themes: ["topology"],
+    abstract:
+      "This report describes how graph structure extracted from text can guide an LLM's temporal reasoning, and outlines the evaluation protocol the project will follow.",
+  },
+];
+
+const publications = [...entries].sort((a, b) => b.date.valueOf() - a.date.valueOf());
+
+// Theme names come from the Research themes collection, so they always match /research/.
+const themeEntries = await getCollection("themes");
+const themeName = (key: ThemeKey) => themeEntries.find((t) => t.data.colour === key)?.data.shortTitle ?? key;
+
+const years = [...new Set(publications.map((p) => p.date.getFullYear()))];
+const themes = [...new Set(publications.flatMap((p) => p.themes))].sort();
+
+const statusLabel = { preprint: "Preprint", accepted: "Accepted", published: "Published" };
+const dateFormat = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
 ---
 
 <BaseLayout title="Publications" description="Publications of the TA-LLM research project.">
@@ -23,4 +81,161 @@ const publications = await getCollection("publications");
       />
     )
   }
+  {
+    publications.length > 0 && (
+      <div class="publications">
+        <div class="filters" role="group" aria-label="Filter by theme">
+          <button type="button" data-theme-filter="all" aria-pressed="true">All themes</button>
+          {themes.map((theme) => (
+            <button type="button" data-theme-filter={theme} aria-pressed="false">
+              {themeName(theme)}
+            </button>
+          ))}
+        </div>
+
+        {years.map((year) => (
+          <section class="year" data-year>
+            <h2>{year}</h2>
+            <ol>
+              {publications
+                .filter((p) => p.date.getFullYear() === year)
+                .map((p) => (
+                  <li class="pub" data-themes={p.themes.join(",")}>
+                    <p class="meta">
+                      <span class="status">{statusLabel[p.status]}</span>
+                      <time datetime={p.date.toISOString()}>{dateFormat.format(p.date)}</time>
+                    </p>
+                    <h3>{p.url ? <a href={p.url}>{p.title}</a> : p.title}</h3>
+                    <p class="authors">{p.authors.join(", ")}</p>
+                    <p class="venue">{p.venue}</p>
+                    <p class="abstract">{p.abstract}</p>
+                    <ul class="tags">
+                      {p.themes.map((theme) => (
+                        <li>
+                          <Tag>{themeName(theme)}</Tag>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+            </ol>
+          </section>
+        ))}
+      </div>
+    )
+  }
 </BaseLayout>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-theme-filter]");
+  const items = document.querySelectorAll<HTMLElement>("[data-themes]");
+  const years = document.querySelectorAll<HTMLElement>("[data-year]");
+
+  buttons.forEach((button) =>
+    button.addEventListener("click", () => {
+      const theme = button.dataset.themeFilter!;
+      buttons.forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
+      items.forEach((item) => {
+        item.hidden = theme !== "all" && !item.dataset.themes!.split(",").includes(theme);
+      });
+      years.forEach((year) => {
+        year.hidden = !year.querySelector("[data-themes]:not([hidden])");
+      });
+    }),
+  );
+</script>
+
+<style>
+  .publications {
+    display: grid;
+    gap: var(--space-xl);
+    max-width: var(--measure);
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .filters button {
+    min-height: var(--target);
+    padding: 0 var(--space-s);
+    border: var(--hairline) solid var(--rule-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: var(--step--1);
+    cursor: pointer;
+  }
+
+  .filters button[aria-pressed="true"] {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .filters button:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .year h2 {
+    margin: 0 0 var(--space-s);
+    font-family: var(--font-display);
+    font-weight: 400;
+  }
+
+  .year ol {
+    display: grid;
+    gap: var(--space-l);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pub {
+    padding-top: var(--space-s);
+    border-top: var(--hairline) solid var(--rule);
+  }
+
+  .pub h3 {
+    margin: var(--space-3xs) 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+  }
+
+  .meta {
+    display: flex;
+    gap: var(--space-xs);
+    margin: 0;
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+
+  .status {
+    font-weight: 500;
+  }
+
+  .authors,
+  .venue {
+    margin: 0;
+  }
+
+  .venue {
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .abstract {
+    margin: var(--space-xs) 0;
+    line-height: var(--leading-body);
+  }
+
+  .tags {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>
